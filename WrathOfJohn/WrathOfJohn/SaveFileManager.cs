@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -38,12 +41,12 @@ namespace WrathOfJohn
 
 			formatter.Serialize(stream, obj);
 
-			stream.close();
+			stream.Close();
 		}
 
 		public SaveFileData DeserializeData(string path)
 		{
-			Iformatter formatter = new BinaryFormatter();
+			IFormatter formatter = new BinaryFormatter();
 
 			Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 
@@ -63,6 +66,6 @@ namespace WrathOfJohn
 	[Serializable]
 	public class SaveFileData
 	{
-		string version = "-placeholder-";
+		public string version = "-placeholder-";
 	}
 }

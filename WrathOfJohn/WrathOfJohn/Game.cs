@@ -40,7 +40,7 @@ namespace WrathOfJohn
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferHeight = 500;
             graphics.PreferredBackBufferWidth = 700;
-            windowSize = new Point(graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferHeight);
+            windowSize = new Vector2(graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferHeight);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace WrathOfJohn
             splashScreenManager = new SplashScreenManager(this);
             menuManager = new MenuManager(this);
             gameManager = new GameManager(this);
-            checkpointManager = new CheckPointManager(this);
+            checkpointManager = new CheckpointManager(this);
             saveFileManager = new SaveFileManager(this);
 
             Components.Add(splashScreenManager);
@@ -137,9 +137,9 @@ namespace WrathOfJohn
 
         public void setCurrentLevel(GameLevels level)
         {
-            if (currentLevel != level)
+            if (currentGameLevel != level)
             {
-                currentLevel = level;
+                currentGameLevel = level;
                 splashScreenManager.Enabled = false;
                 splashScreenManager.Visible = false;
                 menuManager.Enabled = false;
@@ -148,17 +148,17 @@ namespace WrathOfJohn
                 gameManager.Visible = false;
             }
 
-            switch (currentLevel)
+            switch (currentGameLevel)
             {
                 case GameLevels.SPLASH:
-                    splashManager.Enabled = true;
-                    splashManager.Visible = true;
+                    splashScreenManager.Enabled = true;
+                    splashScreenManager.Visible = true;
                     break;
                 case GameLevels.MENU:
                     menuManager.Enabled = true;
                     menuManager.Visible = true;
                     break;
-                case GameLevels.PLAY:
+                case GameLevels.GAME:
                     gameManager.Enabled = true;
                     gameManager.Visible = true;
                     break;

@@ -8,20 +8,19 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using VoidEngine;
 
-namespace WrathOfJohn
+namespace VoidEngine
 {
     /// <summary>
-    /// This is a game component that implements IUpdateable.
+    /// The main class of this engine.
     /// </summary>
-	public class SplashScreenManager : Microsoft.Xna.Framework.DrawableGameComponent
-	{
-		Game myGame;
-
-		public SplashScreenManager(Game game) : base(game)
-		{
-			myGame = game;
-		}
-	}
+    public class VoidEngine
+    {
+        /// <summary>
+        /// Do not use this modifier, It does nothing.
+        /// </summary>
+        public VoidEngine()
+        {
+        }
+    }
 }

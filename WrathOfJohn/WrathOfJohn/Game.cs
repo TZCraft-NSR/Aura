@@ -38,8 +38,8 @@ namespace WrathOfJohn
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferHeight = 480;
-            graphics.PreferredBackBufferWidth = 640;
+            graphics.PreferredBackBufferHeight = 500;
+            graphics.PreferredBackBufferWidth = 700;
             windowSize = new Point(graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferHeight);
         }
 

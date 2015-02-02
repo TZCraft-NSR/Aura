@@ -19,6 +19,8 @@ namespace WrathOfJohn
 	{
 		Game myGame;
 
+		string version = "v0.1-alpha";
+
 		public SaveFileManager(Game game) : base(game)
 		{
 			myGame = game;
@@ -27,6 +29,8 @@ namespace WrathOfJohn
 		public void SerializeData(SaveFileData saveFileData)
 		{
 			SaveFileData obj = saveFileData;
+
+			obj.version = version;
 
 			IFormatter formatter = new BinaryFormatter();
 
@@ -45,12 +49,20 @@ namespace WrathOfJohn
 
 			SaveFileData saveFileData = (SaveFileData)formatter.Deserialize(stream);
 
-			return saveFileData;
+			if (saveFileData.version != version)
+			{
+				throw new System.ArgumentException("Debug Temp Save File Version does not match.", "original");
+			}
+			else
+			{
+				return saveFileData;
+			}
 		}
 	}
 
 	[Serializable]
 	public class SaveFileData
 	{
+		string version = "-placeholder-";
 	}
 }

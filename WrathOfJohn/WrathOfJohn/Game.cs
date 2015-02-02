@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using VoidEngine;
 
 namespace WrathOfJohn
 {
@@ -19,10 +20,27 @@ namespace WrathOfJohn
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public Vector2 windowSize;
+
+        public bool debugCheckpointManager = false;
+        public bool debugSaveFileManager = false;
+
+        public enum GameLevels { SPLASH, MENU, GAME }
+
+        public SplashScreenManager splashScreenManager;
+        public GameManager gameManager;
+        public MenuManager menuManager;
+        public CheckpointManager checkpointManager;
+        public SaveFileManager saveFileManager;
+        public GameLevels currentGameLevel;
+
         public Game()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferHeight = 480;
+            graphics.PreferredBackBufferWidth = 640;
+            windowSize = new Point(graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferHeight);
         }
 
         /// <summary>
@@ -33,6 +51,33 @@ namespace WrathOfJohn
         /// </summary>
         protected override void Initialize()
         {
+            IsMouseVisible = true;
+
+            splashScreenManager = new SplashScreenManager(this);
+            menuManager = new MenuManager(this);
+            gameManager = new GameManager(this);
+            checkpointManager = new CheckPointManager(this);
+            saveFileManager = new SaveFileManager(this);
+
+            Components.Add(splashScreenManager);
+            Components.Add(menuManager);
+            Components.Add(gameManager);
+            Components.Add(checkpointManager);
+            Components.Add(saveFileManager);
+
+            menuManager.Enabled = false;
+            menuManager.Visible = false;
+            gameManager.Enabled = false;
+            gameManager.Visible = false;
+            splashScreenManager.Enabled = true;
+            splashScreenManager.Visible = true;
+            checkpointManager.Enabled = true;
+            checkpointManager.Visible = debugCheckpointManager;
+            saveFileManager.Enabled = true;
+            saveFileManager.Visible = debugSaveFileManager;
+
+            currentGameLevel = GameLevels.SPLASH;
+
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -88,6 +133,38 @@ namespace WrathOfJohn
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        public void setCurrentLevel(GameLevels level)
+        {
+            if (currentLevel != level)
+            {
+                currentLevel = level;
+                splashScreenManager.Enabled = false;
+                splashScreenManager.Visible = false;
+                menuManager.Enabled = false;
+                menuManager.Visible = false;
+                gameManager.Enabled = false;
+                gameManager.Visible = false;
+            }
+
+            switch (currentLevel)
+            {
+                case GameLevels.SPLASH:
+                    splashManager.Enabled = true;
+                    splashManager.Visible = true;
+                    break;
+                case GameLevels.MENU:
+                    menuManager.Enabled = true;
+                    menuManager.Visible = true;
+                    break;
+                case GameLevels.PLAY:
+                    gameManager.Enabled = true;
+                    gameManager.Visible = true;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

@@ -23,5 +23,34 @@ namespace WrathOfJohn
 		{
 			myGame = game;
 		}
+
+		public void SerializeData(SaveFileData saveFileData)
+		{
+			SaveFileData obj = saveFileData;
+
+			IFormatter formatter = new BinaryFormatter();
+
+			Stream stream = new FileStream(@".\Data.bin", FileMode.Create, FileAccess.Write, FileShare.None);
+
+			formatter.Serialize(stream, obj);
+
+			stream.close();
+		}
+
+		public SaveFileData DeserializeData(string path)
+		{
+			Iformatter formatter = new BinaryFormatter();
+
+			Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+			SaveFileData saveFileData = (SaveFileData)formatter.Deserialize(stream);
+
+			return saveFileData;
+		}
+	}
+
+	[Serializable]
+	public class SaveFileData
+	{
 	}
 }

@@ -1,5 +1,0 @@
-E:\Scripts\WrathOfJohn\WrathOfJohn\VoidEngine\bin\x86\Debug\VoidEngine.dll
-E:\Scripts\WrathOfJohn\WrathOfJohn\VoidEngine\bin\x86\Debug\VoidEngine.pdb
-E:\Scripts\WrathOfJohn\WrathOfJohn\VoidEngine\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-E:\Scripts\WrathOfJohn\WrathOfJohn\VoidEngine\obj\x86\Debug\VoidEngine.dll
-E:\Scripts\WrathOfJohn\WrathOfJohn\VoidEngine\obj\x86\Debug\VoidEngine.pdb

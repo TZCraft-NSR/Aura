@@ -27,6 +27,7 @@ namespace WrathOfJohn
         SpriteBatch spriteBatch;
         int splashScreenPart = 1;
 		Game1 myGame;
+        Label debugLabel;
         string debugText = "";
 
 		public SplashScreenManager(Game1 game) : base(game)
@@ -44,6 +45,8 @@ namespace WrathOfJohn
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             background1 = Game.Content.Load<Texture2D>(@"Images\screens\splash1");
             background2 = Game.Content.Load<Texture2D>(@"Images\screens\splash2");
+
+            debugLabel = new Label(Vector2.Zero, myGame.debugFont, 1f, Color.Black, debugText);
 
             base.LoadContent();
         }
@@ -73,6 +76,7 @@ namespace WrathOfJohn
             }
 
             debugText = "countdownTimer=" + countdownTimer.ToString() + " alphaValue1=" + alphaValue1.ToString() + " alphaValue2=" + alphaValue2.ToString();
+            debugLabel.Update(gameTime, debugText);
 
             base.Update(gameTime);
         }
@@ -85,7 +89,7 @@ namespace WrathOfJohn
             spriteBatch.Begin();
                 spriteBatch.Draw(background1, Vector2.Zero, new Color(255, 255, 255, alphaValue3));
                 spriteBatch.Draw(background2, Vector2.Zero, new Color(alphaValue4, alphaValue4, alphaValue4, alphaValue4));
-                spriteBatch.DrawString(myGame.debugFont, debugText, Vector2.Zero, Color.Black);
+                debugLabel.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

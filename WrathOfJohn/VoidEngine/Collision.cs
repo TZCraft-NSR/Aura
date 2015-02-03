@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace VoidEngine
 {
-    class Collision
+    public class Collision
     {
         public struct MapSegment
         {
@@ -60,6 +60,27 @@ namespace VoidEngine
             return r;
         }
 
+        public static bool CheckSegmentSegmentCollision(MapSegment segemnt1, MapSegment segment2)
+        {
+            Line2D L1, L2;
+            L1.point = new Vector2(segemnt1.point1.X, segemnt1.point1.Y);
+            L2.point = new Vector2(segment2.point1.X, segment2.point1.Y);
+            L1.vector.X = segemnt1.point2.X - segemnt1.point1.X;
+            L1.vector.Y = segemnt1.point2.Y - segemnt1.point1.X;
+            L2.vector.X = segment2.point2.X - segment2.point1.X;
+            L2.vector.Y = segment2.point2.Y - segment2.point1.Y;
+            Vector2 CollisionPoint;
+            CollisionPoint.X = (L2.yInt() - L1.yInt()) / (L1.Slope() - L2.Slope());
+            CollisionPoint.Y = L1.Slope() * CollisionPoint.X + L1.yInt();
+
+            bool cond1 = (Math.Min(segemnt1.point1.X, segemnt1.point1.X) <= CollisionPoint.X && CollisionPoint.X <= Math.Max(segment2.point1.X, segemnt1.point2.X));
+            bool cond2 = (Math.Min(segment2.point1.X, segment2.point2.X) <= CollisionPoint.X && CollisionPoint.X <= Math.Max(segment2.point1.X, segment2.point2.X));
+            bool cond3 = (Math.Min(segemnt1.point1.Y, segemnt1.point2.Y) <= CollisionPoint.Y && CollisionPoint.Y <= Math.Max(segemnt1.point1.Y, segemnt1.point2.Y));
+            bool cond4 = (Math.Min(segment2.point1.Y, segment2.point2.Y) <= CollisionPoint.Y && CollisionPoint.Y <= Math.Max(segment2.point1.Y, segment2.point2.Y));
+
+            return cond1 && cond2 && cond3 && cond4;
+        }
+
         public struct Line2D
         {
             public Vector2 point;
@@ -87,44 +108,44 @@ namespace VoidEngine
             }
         }
 
-        public static bool CheckCircleSegmentCollision(Circle C, MapSegment S)
+        public static bool CheckCircleSegmentCollision(Circle Circle, MapSegment Segement)
         {
-            Line2D L;
-            L.point.X = S.point1.X;
-            L.point.Y = S.point1.Y;
-            L.vector.X = S.point2.X - S.point1.X;
-            L.vector.Y = S.point2.Y - S.point1.Y;
+            Line2D Line;
+            Line.point.X = Segement.point1.X;
+            Line.point.Y = Segement.point1.Y;
+            Line.vector.X = Segement.point2.X - Segement.point1.X;
+            Line.vector.Y = Segement.point2.Y - Segement.point1.Y;
 
 
-            double OH = Math.Abs(((L.vector.X * (C.point.Y)) - (L.vector.Y * (C.point.X - L.point.X))) / (Math.Sqrt(L.vector.X * L.vector.X + L.vector.Y * L.vector.Y)));
+            double OH = Math.Abs(((Line.vector.X * (Circle.point.Y)) - (Line.vector.Y * (Circle.point.X - Line.point.X))) / (Math.Sqrt(Line.vector.X * Line.vector.X + Line.vector.Y * Line.vector.Y)));
 
-            if (OH <= C.radius)
+            if (OH <= Circle.radius)
             {
                 Vector2 CollisionPoint1;
                 Vector2 CollisionPoint2;
 
-                if (L.vector.X != 0)
+                if (Line.vector.X != 0)
                 {
-                    double Dv = L.vector.Y / L.vector.X;
-                    double E = (L.vector.X * L.point.Y - L.vector.Y * L.point.X) / L.vector.X - C.point.Y;
+                    double Dv = Line.vector.Y / Line.vector.X;
+                    double E = (Line.vector.X * Line.point.Y - Line.vector.Y * Line.point.X) / Line.vector.X - Circle.point.Y;
 
                     double a = 1 + Dv * Dv;
-                    double b = -2 * C.point.X + 2 * E * Dv;
-                    double c = C.point.X * C.point.X + E * E - C.radius * C.radius;
+                    double b = -2 * Circle.point.X + 2 * E * Dv;
+                    double c = Circle.point.X * Circle.point.X + E * E - Circle.radius * Circle.radius;
 
                     CollisionPoint1.X = (float)((-b + Math.Sqrt(b * b - 4 * a * c)) / (2 * a));
                     CollisionPoint2.X = (float)((-b - Math.Sqrt(b * b - 4 * a * c)) / (2 * a));
 
-                    CollisionPoint1.Y = L.Slope() * CollisionPoint1.X + L.yInt();
-                    CollisionPoint2.Y = L.Slope() * CollisionPoint1.X + L.yInt();
+                    CollisionPoint1.Y = Line.Slope() * CollisionPoint1.X + Line.yInt();
+                    CollisionPoint2.Y = Line.Slope() * CollisionPoint1.X + Line.yInt();
 
-                    bool cond1 = (Math.Min(S.point1.X, S.point2.X) <= CollisionPoint1.X && CollisionPoint1.X <= Math.Max(S.point1.X, S.point2.X));
+                    bool cond1 = (Math.Min(Segement.point1.X, Segement.point2.X) <= CollisionPoint1.X && CollisionPoint1.X <= Math.Max(Segement.point1.X, Segement.point2.X));
 
-                    bool cond2 = (Math.Min(S.point1.Y, S.point2.Y) <= CollisionPoint1.Y && CollisionPoint1.Y <= Math.Max(S.point1.Y, S.point2.Y));
+                    bool cond2 = (Math.Min(Segement.point1.Y, Segement.point2.Y) <= CollisionPoint1.Y && CollisionPoint1.Y <= Math.Max(Segement.point1.Y, Segement.point2.Y));
 
-                    bool cond3 = (Math.Min(S.point1.X, S.point2.X) <= CollisionPoint2.X && CollisionPoint2.X <= Math.Max(S.point1.X, S.point2.X));
+                    bool cond3 = (Math.Min(Segement.point1.X, Segement.point2.X) <= CollisionPoint2.X && CollisionPoint2.X <= Math.Max(Segement.point1.X, Segement.point2.X));
 
-                    bool cond4 = (Math.Min(S.point1.Y, S.point2.Y) <= CollisionPoint2.Y && CollisionPoint2.Y <= Math.Max(S.point1.Y, S.point2.Y));
+                    bool cond4 = (Math.Min(Segement.point1.Y, Segement.point2.Y) <= CollisionPoint2.Y && CollisionPoint2.Y <= Math.Max(Segement.point1.Y, Segement.point2.Y));
 
                     return (cond1 && cond2) || (cond3 && cond4);
                 }

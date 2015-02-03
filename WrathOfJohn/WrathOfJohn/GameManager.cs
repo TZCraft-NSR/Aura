@@ -17,9 +17,9 @@ namespace WrathOfJohn
     /// </summary>
 	public class GameManager : Microsoft.Xna.Framework.DrawableGameComponent
 	{
-		Game myGame;
+		Game1 myGame;
 
-		public GameManager(Game game) : base(game)
+		public GameManager(Game1 game) : base(game)
 		{
 			myGame = game;
 		}

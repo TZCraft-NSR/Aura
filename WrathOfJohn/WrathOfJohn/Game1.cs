@@ -15,7 +15,7 @@ namespace WrathOfJohn
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game : Microsoft.Xna.Framework.Game
+    public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -34,7 +34,10 @@ namespace WrathOfJohn
         public SaveFileManager saveFileManager;
         public GameLevels currentGameLevel;
 
-        public Game()
+        public SpriteFont debugFont;
+        public SpriteFont segoeUI;
+
+        public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -53,31 +56,6 @@ namespace WrathOfJohn
         {
             IsMouseVisible = true;
 
-            splashScreenManager = new SplashScreenManager(this);
-            menuManager = new MenuManager(this);
-            gameManager = new GameManager(this);
-            checkpointManager = new CheckpointManager(this);
-            saveFileManager = new SaveFileManager(this);
-
-            Components.Add(splashScreenManager);
-            Components.Add(menuManager);
-            Components.Add(gameManager);
-            Components.Add(checkpointManager);
-            Components.Add(saveFileManager);
-
-            menuManager.Enabled = false;
-            menuManager.Visible = false;
-            gameManager.Enabled = false;
-            gameManager.Visible = false;
-            splashScreenManager.Enabled = true;
-            splashScreenManager.Visible = true;
-            checkpointManager.Enabled = true;
-            checkpointManager.Visible = debugCheckpointManager;
-            saveFileManager.Enabled = true;
-            saveFileManager.Visible = debugSaveFileManager;
-
-            currentGameLevel = GameLevels.SPLASH;
-
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -91,6 +69,37 @@ namespace WrathOfJohn
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            debugFont = Content.Load<SpriteFont>(@"Fonts\debug\Segoe UI Mono");
+            segoeUI = Content.Load<SpriteFont>(@"Fonts\Segoe UI");
+
+            splashScreenManager = new SplashScreenManager(this);
+            menuManager = new MenuManager(this);
+            gameManager = new GameManager(this);
+            checkpointManager = new CheckpointManager(this);
+            saveFileManager = new SaveFileManager(this);
+
+            Components.Add(splashScreenManager);
+            Components.Add(menuManager);
+            Components.Add(gameManager);
+            Components.Add(checkpointManager);
+            Components.Add(saveFileManager);
+
+            splashScreenManager.Initialize();
+            menuManager.Initialize();
+
+            menuManager.Enabled = false;
+            menuManager.Visible = false;
+            gameManager.Enabled = false;
+            gameManager.Visible = false;
+            splashScreenManager.Enabled = true;
+            splashScreenManager.Visible = true;
+            checkpointManager.Enabled = true;
+            checkpointManager.Visible = debugCheckpointManager;
+            saveFileManager.Enabled = true;
+            saveFileManager.Visible = debugSaveFileManager;
+
+            currentGameLevel = GameLevels.SPLASH;
 
             // TODO: use this.Content to load your game content here
         }
@@ -128,7 +137,7 @@ namespace WrathOfJohn
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(new Color(50, 50, 50));
+            GraphicsDevice.Clear(Color.White);
 
             // TODO: Add your drawing code here
 

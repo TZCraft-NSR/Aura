@@ -1,0 +1,6 @@
+Content\Images\screens\splash1.xnb
+Content\Images\screens\splash2.xnb
+Content\Images\screens\menu.xnb
+Content\Images\gui\button.xnb
+Content\Fonts\debug\Segoe UI Mono.xnb
+Content\Fonts\Segoe UI.xnb

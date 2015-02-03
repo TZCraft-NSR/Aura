@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>Images\screens\splash1.png</Source>
+      <Name>Images\screens\splash1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Images\screens\splash1.xnb</Output>
+      <Time>2015-02-02T18:38:58.6055813-08:00</Time>
+    </Item>
+    <Item>
+      <Source>Images\screens\splash2.png</Source>
+      <Name>Images\screens\splash2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Images\screens\splash2.xnb</Output>
+      <Time>2015-02-02T18:39:15.9875717-08:00</Time>
+    </Item>
+    <Item>
+      <Source>Images\screens\menu.png</Source>
+      <Name>Images\screens\menu</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Images\screens\menu.xnb</Output>
+      <Time>2015-02-02T20:14:35.7196169-08:00</Time>
+    </Item>
+    <Item>
+      <Source>Images\gui\button.png</Source>
+      <Name>Images\gui\button</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Images\gui\button.xnb</Output>
+      <Time>2015-02-02T19:24:10.2381536-08:00</Time>
+    </Item>
+    <Item>
+      <Source>Fonts\debug\Segoe UI Mono.spritefont</Source>
+      <Name>Fonts\debug\Segoe UI Mono</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Fonts\debug\Segoe UI Mono.xnb</Output>
+      <Time>2015-02-02T18:49:40.2461582-08:00</Time>
+    </Item>
+    <Item>
+      <Source>Fonts\Segoe UI.spritefont</Source>
+      <Name>Fonts\Segoe UI</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Fonts\Segoe UI.xnb</Output>
+      <Time>2015-02-02T19:45:54.9155269-08:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <TargetPlatform>Windows</TargetPlatform>
+      <TargetProfile>HiDef</TargetProfile>
+      <BuildConfiguration>Debug</BuildConfiguration>
+      <CompressContent>false</CompressContent>
+      <RootDirectory>E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohnContent\</RootDirectory>
+      <LoggerRootDirectory>E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\</LoggerRootDirectory>
+      <IntermediateDirectory>E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohnContent\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2010-08-23T12:41:18-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
+        <Value>2010-08-23T12:41:18-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2010-08-23T12:41:18-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2010-08-23T12:41:18-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2010-08-23T12:41:18-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
+        <Value>2010-08-23T12:41:18-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\WINDOWS\Microsoft.Net\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2014-04-01T15:03:49.1059123-07:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>

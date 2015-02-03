@@ -17,9 +17,9 @@ namespace WrathOfJohn
     /// </summary>
 	public class CheckpointManager : Microsoft.Xna.Framework.DrawableGameComponent
 	{
-		Game myGame;
+		Game1 myGame;
 
-		public CheckpointManager(Game game) : base(game)
+		public CheckpointManager(Game1 game) : base(game)
 		{
 			myGame = game;
 		}

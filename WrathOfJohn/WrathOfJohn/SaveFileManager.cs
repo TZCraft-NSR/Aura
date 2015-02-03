@@ -20,11 +20,11 @@ namespace WrathOfJohn
     /// </summary>
 	public class SaveFileManager : Microsoft.Xna.Framework.DrawableGameComponent
 	{
-		Game myGame;
+		Game1 myGame;
 
 		string version = "v0.1-alpha";
 
-		public SaveFileManager(Game game) : base(game)
+		public SaveFileManager(Game1 game) : base(game)
 		{
 			myGame = game;
 		}

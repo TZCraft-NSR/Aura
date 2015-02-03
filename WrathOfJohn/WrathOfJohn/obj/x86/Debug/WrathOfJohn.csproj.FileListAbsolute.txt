@@ -1,9 +1,14 @@
+E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Images\screens\splash1.xnb
+E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Images\screens\splash2.xnb
+E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Images\screens\menu.xnb
+E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Images\gui\button.xnb
+E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Fonts\debug\Segoe UI Mono.xnb
+E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\Fonts\Segoe UI.xnb
 E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\WrathOfJohn.exe
 E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\WrathOfJohn.pdb
+E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\VoidEngine.dll
+E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\VoidEngine.pdb
 E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\obj\x86\Debug\WrathOfJohn.csprojResolveAssemblyReference.cache
 E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\obj\x86\Debug\WrathOfJohn.exe
 E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\obj\x86\Debug\WrathOfJohn.pdb
-E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\Content\splash.xnb
-E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\VoidEngine.dll
-E:\Scripts\WrathOfJohn\WrathOfJohn\WrathOfJohn\bin\x86\Debug\VoidEngine.pdb

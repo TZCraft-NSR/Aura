@@ -3,16 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace VoidEngine
 {
-    public static class Collision
+    class Collision
     {
         public struct MapSegment
         {
@@ -64,6 +58,79 @@ namespace VoidEngine
             r.X = vector.X + coeficient * normal.X;
             r.Y = vector.Y + coeficient * normal.Y;
             return r;
+        }
+
+        public struct Line2D
+        {
+            public Vector2 point;
+            public Vector2 vector;
+
+            public float yInt()
+            {
+                return (-vector.Y * point.X + vector.X * point.Y) / vector.X;
+            }
+            public float Slope()
+            {
+                return vector.Y / vector.X;
+            }
+        }
+
+        public struct Circle
+        {
+            public Vector2 point;
+            public double radius;
+
+            public Circle(Vector2 point, double radius)
+            {
+                this.point = point;
+                this.radius = radius;
+            }
+        }
+
+        public static bool CheckCircleSegmentCollision(Circle C, MapSegment S)
+        {
+            Line2D L;
+            L.point.X = S.point1.X;
+            L.point.Y = S.point1.Y;
+            L.vector.X = S.point2.X - S.point1.X;
+            L.vector.Y = S.point2.Y - S.point1.Y;
+
+
+            double OH = Math.Abs(((L.vector.X * (C.point.Y)) - (L.vector.Y * (C.point.X - L.point.X))) / (Math.Sqrt(L.vector.X * L.vector.X + L.vector.Y * L.vector.Y)));
+
+            if (OH <= C.radius)
+            {
+                Vector2 CollisionPoint1;
+                Vector2 CollisionPoint2;
+
+                if (L.vector.X != 0)
+                {
+                    double Dv = L.vector.Y / L.vector.X;
+                    double E = (L.vector.X * L.point.Y - L.vector.Y * L.point.X) / L.vector.X - C.point.Y;
+
+                    double a = 1 + Dv * Dv;
+                    double b = -2 * C.point.X + 2 * E * Dv;
+                    double c = C.point.X * C.point.X + E * E - C.radius * C.radius;
+
+                    CollisionPoint1.X = (float)((-b + Math.Sqrt(b * b - 4 * a * c)) / (2 * a));
+                    CollisionPoint2.X = (float)((-b - Math.Sqrt(b * b - 4 * a * c)) / (2 * a));
+
+                    CollisionPoint1.Y = L.Slope() * CollisionPoint1.X + L.yInt();
+                    CollisionPoint2.Y = L.Slope() * CollisionPoint1.X + L.yInt();
+
+                    bool cond1 = (Math.Min(S.point1.X, S.point2.X) <= CollisionPoint1.X && CollisionPoint1.X <= Math.Max(S.point1.X, S.point2.X));
+
+                    bool cond2 = (Math.Min(S.point1.Y, S.point2.Y) <= CollisionPoint1.Y && CollisionPoint1.Y <= Math.Max(S.point1.Y, S.point2.Y));
+
+                    bool cond3 = (Math.Min(S.point1.X, S.point2.X) <= CollisionPoint2.X && CollisionPoint2.X <= Math.Max(S.point1.X, S.point2.X));
+
+                    bool cond4 = (Math.Min(S.point1.Y, S.point2.Y) <= CollisionPoint2.Y && CollisionPoint2.Y <= Math.Max(S.point1.Y, S.point2.Y));
+
+                    return (cond1 && cond2) || (cond3 && cond4);
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -29,6 +29,16 @@ namespace VoidEngine
             public Point sheetSize;
             public int fps;
             public Point startPos;
+
+            public AnimationSet(string name2, Texture2D texture2, Point frameSize2, Point sheetSize2, Point startPos2, int fps2)
+            {
+                name = name2;
+                texture = texture2;
+                frameSize = frameSize2;
+                sheetSize = sheetSize2;
+                fps = fps2;
+                startPos = startPos2;
+            }
         }
 
         public bool move = false;
@@ -111,7 +121,7 @@ namespace VoidEngine
             spriteBatch.Draw(currentAnimation.texture, this.position, new Rectangle(currentAnimation.startPos.X + (currentFrame.X * currentAnimation.frameSize.X), currentAnimation.startPos.Y + (currentFrame.Y * currentAnimation.frameSize.Y), currentAnimation.frameSize.X, currentAnimation.frameSize.Y), Color.White);
         }
 
-        public void addAnimation(string name, Texture2D tex, Point frameSize, Point sheetsize, Point startPos, int millisecondsPerFrame)
+        public static AnimationSet addAnimation(string name, Texture2D tex, Point frameSize, Point sheetsize, Point startPos, int millisecondsPerFrame)
         {
             AnimationSet tmpAni;
             tmpAni.name = name;
@@ -120,7 +130,7 @@ namespace VoidEngine
             tmpAni.sheetSize = sheetsize;
             tmpAni.startPos = startPos;
             tmpAni.fps = millisecondsPerFrame;
-            animationSets.Add(tmpAni);
+            return tmpAni;
         }
 
         public void SetAnimation(string setName)
@@ -138,7 +148,7 @@ namespace VoidEngine
             }
         }
 
-        public virtual void AddAnimations(Texture2D texture)
+        public virtual void addAnimations(Texture2D texture)
         {
 
         }

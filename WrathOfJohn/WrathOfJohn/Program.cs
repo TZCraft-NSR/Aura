@@ -10,7 +10,7 @@ namespace WrathOfJohn
             /// </summary>
             static void Main(string[] args)
             {
-                using (Game game = new Game())
+                using (Game1 game = new Game1())
                 {
                     game.Run();
                 }

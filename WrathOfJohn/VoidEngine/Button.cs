@@ -37,9 +37,10 @@ namespace VoidEngine
         /// <param name="position">The position for the button.</param>
         /// <param name="font">The font for the text in the button.</param>
         /// <param name="text">The text in the button.</param>
-        public Button(Vector2 position, SpriteFont font, float scale, Color fontColor, string text) : base(position)
+        public Button(Texture2D texture, Vector2 position, SpriteFont font, float scale, Color fontColor, string text, List<Sprite.AnimationSet> animationSetList) : base(position)
         {
-            label = new Label(new Vector2(position.X + 2, position.Y + 2), font, scale, fontColor, text);
+            animationSets = animationSetList;
+            label = new Label(new Vector2(position.X + (((texture.Width / 3) - font.MeasureString(text).X) / 2), position.Y + ((texture.Height - font.MeasureString(text).Y) / 2)), font, scale, fontColor, text);
         }
 
         /// <summary>
@@ -98,10 +99,7 @@ namespace VoidEngine
 
                 if (currentAnimation.fps > 0)
                 {
-                    currentAnimation.fps = currentAnimation.fps - currentAnimation.fps;
-                }
-                else
-                {
+                    currentAnimation.fps -= currentAnimation.fps;
                 }
             }
         }
@@ -145,15 +143,6 @@ namespace VoidEngine
             base.Draw(gameTime, spriteBatch);
 
             label.Draw(gameTime, spriteBatch);
-        }
-
-        public override void AddAnimations(Texture2D texture)
-        {
-            addAnimation("REG", texture, new Point(85, 23), new Point(0, 0), new Point(0, 0), 1000);
-            addAnimation("HOVER", texture, new Point(85, 23), new Point(1, 0), new Point(85, 0), 1000);
-            addAnimation("PRESSED", texture, new Point(85, 23), new Point(2, 0), new Point(170, 0), 1000);
-            SetAnimation("REG");
-            base.AddAnimations(texture);
         }
     }
 }

@@ -144,6 +144,24 @@ namespace WrathOfJohn
             base.Draw(gameTime);
         }
 
+        /// <summary>
+        /// This will check if the key specified is released.
+        /// </summary>
+        /// <param name="key">The key to check</param>
+        public bool CheckKey(Keys key)
+        {
+            if (keyboardState.IsKeyUp(key) && previousKeyboardState.IsKeyDown(key))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// This sets the current scene or level that the game is at.
+        /// </summary>
+        /// <param name="level">The game level to change to.</param>
         public void setCurrentLevel(GameLevels level)
         {
             if (currentGameLevel != level)

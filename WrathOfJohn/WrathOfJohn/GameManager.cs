@@ -17,12 +17,42 @@ namespace WrathOfJohn
     /// </summary>
 	public class GameManager : Microsoft.Xna.Framework.DrawableGameComponent
 	{
-		Game1 myGame;
-        
+        public SpriteBatch spriteBatch;
+		public Game1 myGame;
 
-		public GameManager(Game1 game) : base(game)
+        public List<Sprite.AnimationSet> npcAnimationSetList;
+        public List<Vector2> npcPositions;
+
+        public Player player;
+        public Texture2D playerTexture;
+
+        public GameManager(Game1 game) : base(game)
 		{
 			myGame = game;
 		}
+
+        public override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            spriteBatch = new SpriteBatch(myGame.GraphicsDevice);
+
+            playerTexture = myGame.Content.Load<Texture2D>(@"Images\");
+
+            base.LoadContent();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+        }
 	}
 }

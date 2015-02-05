@@ -48,8 +48,8 @@ namespace WrathOfJohn
             animationSpriteList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 0), new Point(170, 0), 0));
             animationSpriteList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(2, 0), new Point(340, 0), 0));
 
-            exitButton = new Button(buttonTexture, new Vector2((myGame.windowSize.X) / 2, 366), myGame.segoeUI, 1f, Color.Black, "Exit", animationSpriteList);
-            playButton = new Button(buttonTexture, new Vector2((myGame.windowSize.X) / 2, 190), myGame.segoeUI, 1f, Color.Black, "Play", animationSpriteList);
+            exitButton = new Button(new Vector2((myGame.windowSize.X) / 2, 366), myGame.segoeUI, 1f, Color.Black, "Exit", animationSpriteList);
+            playButton = new Button(new Vector2((myGame.windowSize.X) / 2, 190), myGame.segoeUI, 1f, Color.Black, "Play", animationSpriteList);
 
             base.LoadContent();
         }

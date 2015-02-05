@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,27 +13,28 @@ using VoidEngine;
 
 namespace WrathOfJohn
 {
-    class Player : Sprite
+    public class Player : Sprite
     {
         Game1 myGame;
         public List<Keys> keys = new List<Keys>(); // 0 = left, 1 = up, 2 = right, 3 = down, 4 = jump, 5 = crouch
+        public List<AnimationSet> animationSetList = new List<AnimationSet>();
 
-        public Player(Texture2D texture, Vector2 position, Game1 game, Keys left, Keys right, Keys jump) : base(position)
+        public Player(Texture2D texture, Vector2 position, Game1 game, Keys left, Keys right, Keys jump, List<AnimationSet> animationSetList) : base(position, animationSetList)
         {
+            this.animationSetList = animationSetList;
             myGame = game;
-            addAnimations(texture);
             keys.Add(left);
             keys.Add(Keys.None);
             keys.Add(right);
             keys.Add(Keys.None);
             keys.Add(jump);
             keys.Add(Keys.None);
-            move = true;
+            canMove = true;
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (move == true)
+            if (canMove == true)
             {
                 if (keyboardState.IsKeyDown(keys[4]))
                 {
@@ -124,13 +125,6 @@ namespace WrathOfJohn
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             base.Draw(gameTime, spriteBatch);
-        }
-
-        public override void addAnimations(Texture2D texture)
-        {
-            addAnimation("IDLE", texture, new Point(60, 40), new Point(0, 0), new Point(0, 0), 15000);
-            addAnimation("WALK", texture, new Point(60, 40), new Point(5, 0), new Point(60, 0), 15000);
-            addAnimation("WALK", texture, new Point(60, 40), new Point(5, 0), new Point(60, 0), 15000);
         }
     }
 }

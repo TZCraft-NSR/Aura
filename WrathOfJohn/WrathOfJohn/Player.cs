@@ -13,7 +13,7 @@ using VoidEngine;
 
 namespace WrathOfJohn
 {
-    class Player : Sprite
+    public class Player : Sprite
     {
         Game1 myGame;
         public List<Keys> keys = new List<Keys>(); // 0 = left, 1 = up, 2 = right, 3 = down, 4 = jump, 5 = crouch

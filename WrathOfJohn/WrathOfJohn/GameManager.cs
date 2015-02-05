@@ -38,20 +38,32 @@ namespace WrathOfJohn
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(myGame.GraphicsDevice);
+            spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
-            playerTexture = myGame.Content.Load<Texture2D>(@"Images\");
+            playerTexture = Game.Content.Load<Texture2D>(@"Images\players\player");
+
+            List<Sprite.AnimationSet> tempAnimationSetList = new List<Sprite.AnimationSet>();
+
+            tempAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(60, 50), new Point(0, 0), new Point(0, 0), 17000));
+            tempAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(60, 50), new Point(4, 3), new Point(0, 0), 17000));
+            tempAnimationSetList.Add(new Sprite.AnimationSet("Jump", playerTexture, new Point(60, 50), new Point(5, 1), new Point(0, 150), 17000));
+
+            player = new Player(playerTexture, new Vector2((myGame.windowSize.X - 60) / 2, (myGame.windowSize.Y - 50) / 2), myGame, Keys.A, Keys.D, Keys.Space, tempAnimationSetList);
 
             base.LoadContent();
         }
 
         public override void Update(GameTime gameTime)
         {
+            player.Update(gameTime);
+
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
+            player.Draw(gameTime, spriteBatch);
+
             base.Draw(gameTime);
         }
 	}

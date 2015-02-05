@@ -15,7 +15,7 @@ namespace VoidEngine
     /// <summary>
     /// The Scrollbar class for VoidEngine
     /// </summary>
-    public class Scrollbar
+    public class Scrollbar : Sprite
     {
         Game myGame;
 

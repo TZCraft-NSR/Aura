@@ -20,6 +20,8 @@ namespace WrathOfJohn
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public KeyboardState keyboardState, previousKeyboardState;
+
         public Vector2 windowSize;
 
         public bool debugCheckpointManager = false;

@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WrathOfJohn", "WrathOfJohn\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WrathOfJohnContent", "WrathOfJohn\WrathOfJohnContent\WrathOfJohnContent.contentproj", "{B9E56039-B1BB-4327-88F6-2ACF7EE07641}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidEngine", "..\VoidEngine\VoidEngine\VoidEngine.csproj", "{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidEngine", "WrathOfJohn\VoidEngine\VoidEngine.csproj", "{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

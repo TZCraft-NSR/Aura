@@ -89,6 +89,7 @@ namespace WrathOfJohn
 
             splashScreenManager.Initialize();
             menuManager.Initialize();
+            gameManager.Initialize();
 
             menuManager.Enabled = false;
             menuManager.Visible = false;
@@ -127,6 +128,9 @@ namespace WrathOfJohn
             {
                 this.Exit();
             }
+
+            keyboardState = Keyboard.GetState();
+            previousKeyboardState = keyboardState;
 
             // TODO: Add your update logic here
 

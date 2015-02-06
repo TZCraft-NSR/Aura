@@ -30,21 +30,22 @@ namespace WrathOfJohn
             keys.Add(jump);
             keys.Add(Keys.None);
             canMove = true;
+            speed = 1;
         }
 
         public override void Update(GameTime gameTime)
         {
             if (canMove == true)
             {
-                if (keyboardState.IsKeyDown(keys[4]))
+                if (myGame.keyboardState.IsKeyDown(keys[4]))
                 {
                     // For jumping
                 }
-                if (keyboardState.IsKeyDown(keys[0]))
+                if (myGame.keyboardState.IsKeyDown(keys[0]))
                 {
                     position.X -= speed;
                 }
-                if (keyboardState.IsKeyDown(keys[2]))
+                if (myGame.keyboardState.IsKeyDown(keys[2]))
                 {
                     position.X += speed;
                 }
@@ -61,9 +62,9 @@ namespace WrathOfJohn
                 {
                     position.X = 0;
                 }
-                if (position.X >= 480 - currentAnimation.frameSize.X)
+                if (position.X >= 700 - currentAnimation.frameSize.X)
                 {
-                    position.X = 480 - currentAnimation.frameSize.X;
+                    position.X = 700 - currentAnimation.frameSize.X;
                 }
 
                 /*if (IsJumping == true)
@@ -99,22 +100,34 @@ namespace WrathOfJohn
                 }*/
             }
 
-            if (keyboardState.IsKeyDown(keys[0]))
+            if (myGame.keyboardState.IsKeyDown(keys[0]))
             {
                 SetAnimation("WALK");
+
+                if (isFlipped == false)
+                {
+                    flipped = SpriteEffects.FlipHorizontally;
+                    isFlipped = true;
+                }
             }
 
-            if (keyboardState.IsKeyDown(keys[2]))
+            if (myGame.keyboardState.IsKeyDown(keys[2]))
             {
                 SetAnimation("WALK");
+
+                if (isFlipped == true)
+                {
+                    flipped = SpriteEffects.None;
+                    isFlipped = false;
+                }
             }
 
-            if (keyboardState.IsKeyDown(keys[4]))
+            if (myGame.keyboardState.IsKeyDown(keys[4]))
             {
                 SetAnimation("JUMP");
             }
 
-            if (!keyboardState.IsKeyDown(keys[0]) && !keyboardState.IsKeyDown(keys[2]) && !keyboardState.IsKeyDown(keys[4]))
+            if (!myGame.keyboardState.IsKeyDown(keys[0]) && !myGame.keyboardState.IsKeyDown(keys[2]) && !myGame.keyboardState.IsKeyDown(keys[4]))
             {
                 SetAnimation("IDLE");
             }

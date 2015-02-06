@@ -26,6 +26,7 @@ namespace WrathOfJohn
 
         public Player player;
         public Texture2D playerTexture;
+        public Texture2D debugDotTexture;
 
         public GameManager(Game1 game) : base(game)
 		{
@@ -42,12 +43,13 @@ namespace WrathOfJohn
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
             playerTexture = Game.Content.Load<Texture2D>(@"Images\players\player");
+            debugDotTexture = Game.Content.Load<Texture2D>(@"Images\debug\line");
 
             tempAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(60, 50), new Point(1, 1), new Point(0, 0), 1000));
             tempAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(60, 50), new Point(4, 3), new Point(0, 0), 50));
-            tempAnimationSetList.Add(new Sprite.AnimationSet("Jump", playerTexture, new Point(60, 50), new Point(4, 1), new Point(0, 150), 50));
+            tempAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(60, 50), new Point(4, 1), new Point(0, 150), 100));
 
-            player = new Player(playerTexture, new Vector2((myGame.windowSize.X - 60) / 2, (myGame.windowSize.Y - 50) / 2), myGame, Keys.A, Keys.D, Keys.Space, tempAnimationSetList);
+            player = new Player(playerTexture, new Vector2((myGame.windowSize.X - 60) / 2, (myGame.windowSize.Y - 50) / 2), myGame, Keys.A, Keys.D, Keys.Space, 2f, tempAnimationSetList);
 
             base.LoadContent();
         }
@@ -63,6 +65,8 @@ namespace WrathOfJohn
         {
             spriteBatch.Begin();
                 player.Draw(gameTime, spriteBatch);
+                spriteBatch.Draw(debugDotTexture, new Rectangle(0, ((int)(myGame.windowSize.Y - 50) / 2) + player.currentAnimation.frameSize.Y, (int)myGame.windowSize.X, 1), Color.White);
+                spriteBatch.Draw(debugDotTexture, new Rectangle((int)player.position.X - 10, ((int)player.position.Y - 1) + player.currentAnimation.frameSize.Y, player.currentAnimation.frameSize.X + 10, 1), Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);

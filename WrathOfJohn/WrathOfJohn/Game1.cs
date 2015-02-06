@@ -45,7 +45,7 @@ namespace WrathOfJohn
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferHeight = 500;
             graphics.PreferredBackBufferWidth = 700;
-            windowSize = new Vector2(graphics.PreferredBackBufferHeight, graphics.PreferredBackBufferHeight);
+            windowSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
         }
 
         /// <summary>

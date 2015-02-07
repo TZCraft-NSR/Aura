@@ -115,6 +115,10 @@ namespace VoidEngine
         /// indexes: [0]: Left | [1]: Up | [2]: Right | [3]: Down | [4]: Custom1 | [5]: Custom2 | [6]: Custom3
         /// </summary>
         public List<Keys> MovementKeys = new List<Keys>();
+        /// <summary>
+        /// To flip the sprite
+        /// </summary>
+        public SpriteEffects flipped;
 
         /// <summary>
         /// The keyboard detection
@@ -171,7 +175,7 @@ namespace VoidEngine
         /// <param name="spriteBatch">The main SpriteBatch</param>
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(currentAnimation.texture, this.position, new Rectangle(currentAnimation.startPosition.X + (currentFrame.X * currentAnimation.frameSize.X), currentAnimation.startPosition.Y + (currentFrame.Y * currentAnimation.frameSize.Y), currentAnimation.frameSize.X, currentAnimation.frameSize.Y), Color.White);
+            spriteBatch.Draw(currentAnimation.texture, this.position, new Rectangle(currentAnimation.startPosition.X + (currentFrame.X * currentAnimation.frameSize.X), currentAnimation.startPosition.Y + (currentFrame.Y * currentAnimation.frameSize.Y), currentAnimation.frameSize.X, currentAnimation.frameSize.Y), Color.White, 0f, Vector2.Zero, 1f, flipped, 0);
         }
 
         /// <summary>
@@ -190,6 +194,18 @@ namespace VoidEngine
                         currentFrame = Point.Zero;
                     }
                 }
+            }
+        }
+
+        public void flipSprite(bool toFlip)
+        {
+            if (toFlip)
+            {
+                flipped = SpriteEffects.FlipHorizontally;
+            }
+            else
+            {
+                flipped = SpriteEffects.None;
             }
         }
 

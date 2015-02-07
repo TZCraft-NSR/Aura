@@ -87,10 +87,6 @@ namespace WrathOfJohn
             Components.Add(checkpointManager);
             Components.Add(saveFileManager);
 
-            splashScreenManager.Initialize();
-            menuManager.Initialize();
-            gameManager.Initialize();
-
             menuManager.Enabled = false;
             menuManager.Visible = false;
             gameManager.Enabled = false;
@@ -130,11 +126,13 @@ namespace WrathOfJohn
             }
 
             keyboardState = Keyboard.GetState();
-            previousKeyboardState = keyboardState;
 
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+
+
+			previousKeyboardState = keyboardState;
         }
 
         /// <summary>

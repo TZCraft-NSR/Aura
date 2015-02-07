@@ -77,40 +77,32 @@ namespace WrathOfJohn
                 position.X = 700 - currentAnimation.frameSize.X;
             }
 
-            if (isJumping && !isGrounded)
+            if (isJumping)
             {
                 SetAnimation("JUMP");
             }
             
-            if (myGame.keyboardState.IsKeyDown(keys[0]) && isGrounded && !isJumping)
+            if (myGame.keyboardState.IsKeyDown(keys[0]) && isGrounded)
             {
                 SetAnimation("WALK");
             }
 
             if (myGame.keyboardState.IsKeyDown(keys[0]))
             {
-                if (isFlipped == false)
-                {
-                    flipped = SpriteEffects.FlipHorizontally;
-                    isFlipped = true;
-                }
+                flipSprite(true);
             }
             
-            if (myGame.keyboardState.IsKeyDown(keys[2]) && isGrounded && !isJumping)
+            if (myGame.keyboardState.IsKeyDown(keys[2]) && isGrounded)
             {
                 SetAnimation("WALK");
             }
 
             if (myGame.keyboardState.IsKeyDown(keys[2]))
             {
-                if (isFlipped == true)
-                {
-                    flipped = SpriteEffects.None;
-                    isFlipped = false;
-                }
+                flipSprite(false);
             }
 
-            if (!myGame.keyboardState.IsKeyDown(keys[0]) && !myGame.keyboardState.IsKeyDown(keys[2]) || !isJumping)
+            if (!myGame.keyboardState.IsKeyDown(keys[0]) && !myGame.keyboardState.IsKeyDown(keys[2]) || !isJumping || isGrounded)
             {
                 SetAnimation("IDLE");
             }
@@ -132,6 +124,11 @@ namespace WrathOfJohn
 
                 isGrounded = false;
 
+				if(bleedOff == 0f)
+				{
+
+				}
+
                 if (position.Y >= ground.Y)
                 {
                     isJumping = false;
@@ -139,7 +136,7 @@ namespace WrathOfJohn
                 }
             }
 
-            if (position.Y >= ground.Y && !isGrounded)
+            if (position.Y == ground.Y && !isGrounded)
             {
                 isGrounded = true;
                 isJumping = false;

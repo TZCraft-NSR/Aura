@@ -125,6 +125,10 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\VoidEngine\VoidEngine\VoidEngine.csproj">
+      <Project>{cf9853a6-a986-4fad-a2e6-6fe5307edf2f}</Project>
+      <Name>VoidEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WrathOfJohnContent\WrathOfJohnContent.contentproj">
       <Name>WrathOfJohnContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>

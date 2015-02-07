@@ -31,6 +31,7 @@ namespace WrathOfJohn
         public GameManager(Game1 game) : base(game)
 		{
 			myGame = game;
+			this.Initialize();
 		}
 
         public override void Initialize()
@@ -43,7 +44,7 @@ namespace WrathOfJohn
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
             playerTexture = Game.Content.Load<Texture2D>(@"Images\players\player");
-            debugDotTexture = Game.Content.Load<Texture2D>(@"Images\debug\line");
+            debugDotTexture = Game.Content.Load<Texture2D>(@"Images\debugStuff\line");
 
             tempAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(60, 50), new Point(1, 1), new Point(0, 0), 1000));
             tempAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(60, 50), new Point(4, 3), new Point(0, 0), 50));

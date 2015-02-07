@@ -28,6 +28,8 @@ namespace WrathOfJohn
 		public MenuManager(Game1 game) : base(game)
 		{
 			myGame = game;
+
+			this.Initialize();
 		}
 
         public override void Initialize()

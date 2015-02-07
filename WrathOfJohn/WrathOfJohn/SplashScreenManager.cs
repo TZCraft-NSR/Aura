@@ -17,24 +17,64 @@ namespace WrathOfJohn
     /// </summary>
 	public class SplashScreenManager : Microsoft.Xna.Framework.DrawableGameComponent
 	{
-        int countdownTimerDefault = 5000; // Used for reseting the timer -not really needed-
-        int countdownTimer = 5000; // The countdown timer for between splash screen frames
-        int alphaValue1 = 0; // The Animeme splash alpha value
-        int alphaValue2 = 255; // The Void Inc splash alpha value
-        int fadeIncrement = 3; // The ammount of integers the alpha value's will go up or down.
+		/// <summary>
+		///  Used for reseting the timer -not really needed-
+		/// </summary>
+		int countdownTimerDefault = 5000;
+		/// <summary>
+		/// The countdown timer for between splash screen frames
+		/// </summary>
+        int countdownTimer = 5000;
+		/// <summary>
+		/// The Animeme splash alpha value
+		/// </summary>
+        int alphaValue1 = 0;
+		/// <summary>
+		/// The Void Inc splash alpha value
+		/// </summary>
+        int alphaValue2 = 255; 
+		/// <summary>
+		/// The ammount of integers the alpha value's will go up or down.
+		/// </summary>
+        int fadeIncrement = 3;
+		/// <summary>
+		/// The splash screen frame #1
+		/// </summary>
         Texture2D background1;
+		/// <summary>
+		/// The splash screen frame #2
+		/// </summary>
         Texture2D background2;
+		/// <summary>
+		/// The spriteBatch for drawing
+		/// </summary>
         SpriteBatch spriteBatch;
+		/// <summary>
+		/// The current splash screen frame
+		/// </summary>
         int splashScreenPart = 1;
+		/// <summary>
+		/// The game class
+		/// </summary>
 		Game1 myGame;
+		/// <summary>
+		/// To debug the splash screen
+		/// </summary>
         Label debugLabel;
-        string debugText = "";
 
+		/// <summary>
+		/// Creates the Splash Screen.
+		/// </summary>
+		/// <param name="game">The game that this splash screen runs off of.</param>
 		public SplashScreenManager(Game1 game) : base(game)
 		{
 			myGame = game;
+			this.Initialize();
 		}
 
+		/// <summary>
+		/// Initializes the Splash Screen Manager
+		/// </summary>
         public override void Initialize()
         {
             base.Initialize();
@@ -46,7 +86,7 @@ namespace WrathOfJohn
             background1 = Game.Content.Load<Texture2D>(@"Images\screens\splash1");
             background2 = Game.Content.Load<Texture2D>(@"Images\screens\splash2");
 
-            debugLabel = new Label(Vector2.Zero, myGame.debugFont, 1f, Color.Black, debugText);
+            debugLabel = new Label(Vector2.Zero, myGame.debugFont, 1f, Color.Black, "");
 
             base.LoadContent();
         }
@@ -75,8 +115,7 @@ namespace WrathOfJohn
                 myGame.setCurrentLevel(Game1.GameLevels.MENU);
             }
 
-            debugText = "countdownTimer=" + countdownTimer.ToString() + " alphaValue1=" + alphaValue1.ToString() + " alphaValue2=" + alphaValue2.ToString();
-            debugLabel.Update(gameTime, debugText);
+            debugLabel.Update(gameTime, "countdownTimer=" + countdownTimer.ToString() + " alphaValue1=" + alphaValue1.ToString() + " alphaValue2=" + alphaValue2.ToString());
 
             base.Update(gameTime);
         }

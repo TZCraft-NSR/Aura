@@ -16,15 +16,87 @@ namespace WrathOfJohn
 {
     public class Player : Sprite
     {
+		/// <summary>
+		/// This is the Game class that the Player class is running off of.
+		/// </summary>
         Game1 myGame;
-        public List<Keys> keys = new List<Keys>(); // 0 = left, 1 = up, 2 = right, 3 = down, 4 = jump, 5 = crouch
+		/// <summary>
+		/// This is the keys that the player uses.
+		/// 0 = left | 1 = up | 2 = right | 3 = down | 4 = jump | 5 = crouch | 6 = attack
+		/// </summary>
+        public List<Keys> keys = new List<Keys>();
+		/// <summary>
+		/// This is the animationSet list for the player.
+		/// </summary>
         public List<AnimationSet> animationSetList = new List<AnimationSet>();
-        public bool isJumping = false;
-        public bool isGrounded = true;
+		/// <summary>
+		/// Sets or Gets if the player is jumping.
+		/// </summary>
+		bool jumping = false;
+		/// <summary>
+		/// gets if the player is jumping.
+		/// </summary>
+		public bool isJumping
+		{
+			get
+			{
+				return jumping;
+			}
+		}
+		/// <summary>
+		/// Sets or Gets if the player is grounded.
+		/// </summary>
+        bool grounded = true;
+		/// <summary>
+		/// Gets if the player is grounded
+		/// </summary>
+		public bool isGrounded
+		{
+			get
+			{
+				return grounded;
+			}
+		}
+		bool falling = false;
+		public bool isFalling
+		{
+			get
+			{
+				return falling;
+			}
+		}
+		/// <summary>
+		/// This is to trigger gravity speed.
+		/// </summary>
         float bleedOff = 2.0f;
+		public float BleedOff
+		{
+			get
+			{
+				return bleedOff;
+			}
+		}
+		public int isWalking = 0;
+		/// <summary>
+		/// This is to set the default gravity size.
+		/// </summary>
         float gravity;
+		/// <summary>
+		/// This is to set the default ground position.
+		/// </summary>
         public Vector2 ground;
 
+		/// <summary>
+		/// This is to create the Player class.
+		/// </summary>
+		/// <param name="texture">This is the player's texture</param>
+		/// <param name="position">This sets the player's position</param>
+		/// <param name="game">This is the Game class that the player runs on</param>
+		/// <param name="left"></param>
+		/// <param name="right"></param>
+		/// <param name="jump"></param>
+		/// <param name="gravity"></param>
+		/// <param name="animationSetList"></param>
         public Player(Texture2D texture, Vector2 position, Game1 game, Keys left, Keys right, Keys jump, float gravity, List<AnimationSet> animationSetList) : base(position, animationSetList)
         {
             this.animationSetList = animationSetList;
@@ -42,12 +114,16 @@ namespace WrathOfJohn
             ground = new Vector2(0, position.Y);
         }
 
+		/// <summary>
+		/// Updates the Player class
+		/// </summary>
+		/// <param name="gameTime">To keep track of run time.</param>
         public override void Update(GameTime gameTime)
         {
-            if (myGame.keyboardState.IsKeyDown(keys[4]) && !isJumping)
+            if (myGame.keyboardState.IsKeyDown(keys[4]) && !isJumping && isGrounded && !isFalling)
             {
-                isJumping = true;
-                isGrounded = false;
+                jumping = true;
+                grounded = false;
             }
             if (myGame.keyboardState.IsKeyDown(keys[0]))
             {
@@ -58,89 +134,103 @@ namespace WrathOfJohn
                 position.X += speed;
             }
 
-            UpdateGravity(gameTime);
+            UpdateGravity();
 
+			// The boundry on the left.
             if (position.Y <= 0)
             {
                 position.Y = 0;
             }
+			// Boundry on the right.
             if (position.Y >= 480)
             {
                 position.Y = 480 - currentAnimation.frameSize.Y;
             }
+			// Boundry on the top.
             if (position.X <= 0)
             {
                 position.X = 0;
             }
+			// Boundry on the bottom.
             if (position.X >= 700 - currentAnimation.frameSize.X)
             {
                 position.X = 700 - currentAnimation.frameSize.X;
             }
 
-            if (isJumping)
+			// To play the jumping animation.
+            if (isJumping && !isFalling)
             {
                 SetAnimation("JUMP");
             }
             
-            if (myGame.keyboardState.IsKeyDown(keys[0]) && isGrounded)
+			// To do the walking animation.
+            if ((myGame.keyboardState.IsKeyDown(keys[2]) || myGame.keyboardState.IsKeyDown(keys[0])) && isGrounded)
             {
                 SetAnimation("WALK");
-            }
+				isWalking = 1;
+			}
 
-            if (myGame.keyboardState.IsKeyDown(keys[0]))
-            {
-                flipSprite(true);
-            }
-            
-            if (myGame.keyboardState.IsKeyDown(keys[2]) && isGrounded)
-            {
-                SetAnimation("WALK");
-            }
+			// To flip the player to the left.
+			if (myGame.keyboardState.IsKeyDown(keys[0]))
+			{
+				flipSprite(true);
+			}
 
+			// To flip the player back to the right.
             if (myGame.keyboardState.IsKeyDown(keys[2]))
             {
                 flipSprite(false);
             }
 
-            if (!myGame.keyboardState.IsKeyDown(keys[0]) && !myGame.keyboardState.IsKeyDown(keys[2]) || !isJumping || isGrounded)
+			// To set the animation to idle.
+            if ((!myGame.keyboardState.IsKeyDown(keys[0]) && !myGame.keyboardState.IsKeyDown(keys[2])) || isFalling)
             {
                 SetAnimation("IDLE");
+				isWalking = 2;
             }
 
             base.Update(gameTime);
         }
 
+		/// <summary>
+		/// To draw the Player class.
+		/// </summary>
+		/// <param name="gameTime">To keep track of run time.</param>
+		/// <param name="spriteBatch">The spriteBatch to draw with.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             base.Draw(gameTime, spriteBatch);
         }
 
-        public void UpdateGravity(GameTime gameTime)
+		/// <summary>
+		/// To update the player's gravity
+		/// </summary>
+		/// <param name="gameTime"></param>
+        public void UpdateGravity()
         {
-            if (isJumping)
+            if (jumping)
             {
                 position.Y -= bleedOff;
                 bleedOff -= 0.03f;
 
-                isGrounded = false;
+                grounded = false;
 
-				if(bleedOff == 0f)
+				if(bleedOff <= 0f)
 				{
-
+					falling = true;
 				}
-
-                if (position.Y >= ground.Y)
-                {
-                    isJumping = false;
-                    bleedOff = gravity;
-                }
             }
 
-            if (position.Y == ground.Y && !isGrounded)
-            {
-                isGrounded = true;
-                isJumping = false;
-            }
+			if (isFalling)
+			{
+				if (position.Y >= ground.Y)
+				{
+					grounded = true;
+					jumping = false;
+					falling = false;
+					bleedOff = gravity;
+				}
+			}
 
             bleedOff = MathHelper.Clamp(bleedOff, -gravity - 1f, gravity);
         }

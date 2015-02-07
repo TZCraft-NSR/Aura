@@ -96,7 +96,7 @@ namespace WrathOfJohn
         public override void Update(GameTime gameTime)
         {
             player.Update(gameTime);
-			debugLabel.Update(gameTime, "isGrounded=" + player.isGrounded + " isJumping=" + player.isJumping + " isFalling=" + player.isFalling + " isWalking=" + player.isWalking + " bleedOff=" + player.BleedOff);
+			debugLabel.Update(gameTime, "isGrounded=" + player.isGrounded + " isJumping=" + player.isJumping + " isFalling=" + player.isFalling + " bleedOff=" + player.BleedOff);
 
             base.Update(gameTime);
         }

@@ -69,6 +69,9 @@ namespace WrathOfJohn
 		/// This is to trigger gravity speed.
 		/// </summary>
         float bleedOff = 2.0f;
+		/// <summary>
+		/// 
+		/// </summary>
 		public float BleedOff
 		{
 			get
@@ -76,7 +79,6 @@ namespace WrathOfJohn
 				return bleedOff;
 			}
 		}
-		public int isWalking = 0;
 		/// <summary>
 		/// This is to set the default gravity size.
 		/// </summary>
@@ -167,7 +169,6 @@ namespace WrathOfJohn
             if ((myGame.keyboardState.IsKeyDown(keys[2]) || myGame.keyboardState.IsKeyDown(keys[0])) && isGrounded)
             {
                 SetAnimation("WALK");
-				isWalking = 1;
 			}
 
 			// To flip the player to the left.
@@ -186,7 +187,6 @@ namespace WrathOfJohn
             if ((!myGame.keyboardState.IsKeyDown(keys[0]) && !myGame.keyboardState.IsKeyDown(keys[2])) || isFalling)
             {
                 SetAnimation("IDLE");
-				isWalking = 2;
             }
 
             base.Update(gameTime);

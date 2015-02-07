@@ -114,7 +114,10 @@ namespace WrathOfJohn
             {
                 myGame.setCurrentLevel(Game1.GameLevels.MENU);
             }
-
+			if (myGame.CheckKey(Keys.Enter))
+			{
+                myGame.setCurrentLevel(Game1.GameLevels.MENU);
+			}
             debugLabel.Update(gameTime, "countdownTimer=" + countdownTimer.ToString() + " alphaValue1=" + alphaValue1.ToString() + " alphaValue2=" + alphaValue2.ToString());
 
             base.Update(gameTime);

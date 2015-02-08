@@ -28,32 +28,59 @@ namespace VoidEngine
             {
                 return new Rectangle(Math.Min(point1.X, point2.X), Math.Min(point1.Y, point2.Y), Math.Abs(point1.X - point2.X), Math.Abs(point1.Y - point2.Y));
             }
-        }
+		}
 
-        public static float magnitude(Vector2 vector)
+		public struct Line2D
+		{
+			public Vector2 point;
+			public Vector2 vector;
+
+			public float yInt()
+			{
+				return (-vector.Y * point.X + vector.X * point.Y) / vector.X;
+			}
+			public float Slope()
+			{
+				return vector.Y / vector.X;
+			}
+		}
+
+		public struct Circle
+		{
+			public Vector2 point;
+			public double radius;
+
+			public Circle(Vector2 point, double radius)
+			{
+				this.point = point;
+				this.radius = radius;
+			}
+		}
+
+        public static float Magnitude(Vector2 vector)
         {
             return (float)Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
         }
 
-        public static Vector2 vectorNormal(Vector2 vector)
+        public static Vector2 VectorNormal(Vector2 vector)
         {
             return new Vector2(-vector.Y, vector.X);
         }
 
-        public static Vector2 unitVector(Vector2 vector)
+        public static Vector2 UnitVectorS(Vector2 vector)
         {
-            return new Vector2(vector.X / (float)magnitude(vector), vector.Y / (float)magnitude(vector));
+            return new Vector2(vector.X / (float)Magnitude(vector), vector.Y / (float)Magnitude(vector));
         }
 
-        public static float dotProduct(Vector2 unitVector, Vector2 vector)
+        public static float DotProduct(Vector2 unitVector, Vector2 vector)
         {
             return unitVector.X * vector.X + unitVector.Y * vector.Y;
         }
 
         public static Vector2 reflectedVector(Vector2 vector, Vector2 reflectVector)
         {
-            Vector2 normal = vectorNormal(reflectVector);
-            float coeficient = -2 * (dotProduct(vector, normal) / (magnitude(normal) * magnitude(normal)));
+            Vector2 normal = VectorNormal(reflectVector);
+            float coeficient = -2 * (DotProduct(vector, normal) / (Magnitude(normal) * Magnitude(normal)));
             Vector2 r;
             r.X = vector.X + coeficient * normal.X;
             r.Y = vector.Y + coeficient * normal.Y;
@@ -79,33 +106,6 @@ namespace VoidEngine
             bool cond4 = (Math.Min(segment2.point1.Y, segment2.point2.Y) <= CollisionPoint.Y && CollisionPoint.Y <= Math.Max(segment2.point1.Y, segment2.point2.Y));
 
             return cond1 && cond2 && cond3 && cond4;
-        }
-
-        public struct Line2D
-        {
-            public Vector2 point;
-            public Vector2 vector;
-
-            public float yInt()
-            {
-                return (-vector.Y * point.X + vector.X * point.Y) / vector.X;
-            }
-            public float Slope()
-            {
-                return vector.Y / vector.X;
-            }
-        }
-
-        public struct Circle
-        {
-            public Vector2 point;
-            public double radius;
-
-            public Circle(Vector2 point, double radius)
-            {
-                this.point = point;
-                this.radius = radius;
-            }
         }
 
         public static bool CheckCircleSegmentCollision(Circle Circle, MapSegment Segement)
@@ -153,5 +153,10 @@ namespace VoidEngine
 
             return false;
         }
+
+		public static bool CheckCircleCircleCollision(Circle circle1, Circle circle2)
+		{
+			return (circle1.radius + circle2.radius >= Magnitude(circle2.point - circle1.point));
+		}
     }
 }

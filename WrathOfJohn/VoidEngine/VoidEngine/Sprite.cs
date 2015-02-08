@@ -82,10 +82,18 @@ namespace VoidEngine
         // The current AnimationSet.
         // </summary>
         public AnimationSet currentAnimation;
-        protected List<AnimationSet> animationSets = new List<AnimationSet>(); // The list of animation sets.
-        Point currentFrame; // The current frame's position in sheet cords.
-        int lastFrameTime; // frame time before the update.
-
+		/// <summary>
+		/// The list of animation sets.
+		/// </summary>
+        protected List<AnimationSet> animationSets = new List<AnimationSet>();
+		/// <summary>
+		/// The current frame's position in sheet cords.
+		/// </summary>
+        Point currentFrame;
+		/// <summary>
+		/// Frame time before the update.
+		/// </summary>
+        int lastFrameTime;
         /// <summary>
         /// The current direction that the sprite is moving at.
         /// </summary>
@@ -101,7 +109,21 @@ namespace VoidEngine
         /// <summary>
         /// Weither the sprite can move or not.
         /// </summary>
-        public bool canMove = false;
+        bool move = false;
+		/// <summary>
+		/// Gets or Sets if the sprite can move.
+		/// </summary>
+		public bool canMove
+		{
+			set
+			{
+				move = value;
+			}
+			get
+			{
+				return move;
+			}
+		}
         /// <summary>
         /// The type of AI the sprite has.
         /// </summary>
@@ -119,24 +141,132 @@ namespace VoidEngine
         /// To flip the sprite
         /// </summary>
         public SpriteEffects flipped;
-
         /// <summary>
         /// The keyboard detection
         /// </summary>
-        protected KeyboardState keyboardState, previousKeyboardState;
-
+		protected KeyboardState keyboardState, previousKeyboardState;
+		/// <summary>
+		/// Sets or Gets if the sprite is jumping.
+		/// </summary>
+		bool jumping = false;
+		/// <summary>
+		/// gets if the sprite is jumping.
+		/// </summary>
+		public bool isJumping
+		{
+			set
+			{
+				jumping = value;
+			}
+			get
+			{
+				return jumping;
+			}
+		}
+		/// <summary>
+		/// Sets or Gets if the sprite is grounded.
+		/// </summary>
+		bool grounded = true;
+		/// <summary>
+		/// Gets if the sprite is grounded
+		/// </summary>
+		public bool isGrounded
+		{
+			set
+			{
+				grounded = value;
+			}
+			get
+			{
+				return grounded;
+			}
+		}
+		/// <summary>
+		/// If the sprite is falling
+		/// </summary>
+		bool falling = false;
+		/// <summary>
+		/// Gets or Sets if the sprite is falling.
+		/// </summary>
+		public bool isFalling
+		{
+			set
+			{
+				falling = value;
+			}
+			get
+			{
+				return falling;
+			}
+		}
+		/// <summary>
+		/// This is to trigger gravity speed.
+		/// </summary>
+		float bleedOff = 2.0f;
+		/// <summary>
+		/// Sets or Gets the gravity acceleration.
+		/// </summary>
+		public float BleedOff
+		{
+			set
+			{
+				bleedOff = value;
+			}
+			get
+			{
+				return bleedOff;
+			}
+		}
+		/// <summary>
+		/// This is to set the default gravity size.
+		/// </summary>
+		float gravity;
+		/// <summary>
+		/// Gets or Sets the default Gravity Acceleration
+		/// </summary>
+		public float Gravity
+		{
+			set
+			{
+				gravity = value;
+			}
+			get
+			{
+				return bleedOff;
+			}
+		}
+		/// <summary>
+		/// This is to set the default ground position.
+		/// </summary>
+		public Vector2 ground;
+		Rectangle destinationRectangle;
+		Rectangle sourceRectangle;
+		int typeset = 0;
+		public Color color;
 
         /// <summary>
         /// Creates the sprite with custom properties
         /// </summary>
         /// <param name="postion">The position of the sprite.</param>
         /// <param name="animationSetList">The list of animations.</param>
-        public Sprite(Vector2 position, List<AnimationSet> animationSetList)
+        public Sprite(Vector2 position, Color color, List<AnimationSet> animationSetList)
         {
             animationSets = animationSetList;
             this.position = position;
             lastFrameTime = 0;
+			typeset = 1;
+			this.color = color;
         }
+
+		public Sprite(Rectangle DestinationRectangle, Rectangle SourceRecangle, Color color, Texture2D texture)
+		{
+			animationSets.Add(new AnimationSet("IDLE", texture, new Point(DestinationRectangle.Width - SourceRecangle.Width + 1, DestinationRectangle.Height - SourceRecangle.Height + 1), new Point(1, 1), new Point(0, 0), 0));
+			destinationRectangle = DestinationRectangle;
+			sourceRectangle = SourceRecangle;
+			lastFrameTime = 0;
+			this.color = color;
+			typeset = 2;
+		}
 
         /// <summary>
         /// Put this in the Update function
@@ -166,7 +296,15 @@ namespace VoidEngine
 
                 lastFrameTime = 0;
             }
+
+			UpdateMovement();
         }
+
+		public void UpdateRecangle(Rectangle DestinationRectangle, Rectangle SourceRectangle)
+		{
+			destinationRectangle = DestinationRectangle;
+			sourceRectangle = SourceRectangle;
+		}
 
         /// <summary>
         /// Put inbetween the spriteBatch.Begin and spriteBatch.End
@@ -175,8 +313,15 @@ namespace VoidEngine
         /// <param name="spriteBatch">The main SpriteBatch</param>
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(currentAnimation.texture, this.position, new Rectangle(currentAnimation.startPosition.X + (currentFrame.X * currentAnimation.frameSize.X), currentAnimation.startPosition.Y + (currentFrame.Y * currentAnimation.frameSize.Y), currentAnimation.frameSize.X, currentAnimation.frameSize.Y), Color.White, 0f, Vector2.Zero, 1f, flipped, 0);
-        }
+			if (typeset == 1)
+			{
+				spriteBatch.Draw(currentAnimation.texture, this.position, new Rectangle(currentAnimation.startPosition.X + (currentFrame.X * currentAnimation.frameSize.X), currentAnimation.startPosition.Y + (currentFrame.Y * currentAnimation.frameSize.Y), currentAnimation.frameSize.X, currentAnimation.frameSize.Y), color, 0f, Vector2.Zero, 1f, flipped, 0);
+			}
+			if (typeset == 2)
+			{
+				spriteBatch.Draw(currentAnimation.texture, new Rectangle(destinationRectangle.X, destinationRectangle.Y, sourceRectangle.X, sourceRectangle.Y), color);
+			}
+		}
 
         /// <summary>
         /// Set the currentAnimation.
@@ -197,6 +342,85 @@ namespace VoidEngine
             }
         }
 
+		public virtual void UpdateMovement()
+		{
+			if (movementType == MovementType.HORIZONTAL)
+			{
+				if (aiType == AIType.PLAYER)
+				{
+					if (keyboardState.IsKeyDown(MovementKeys[0]))
+					{
+						position.X -= speed;
+					}
+					if (keyboardState.IsKeyDown(MovementKeys[2]))
+					{
+						position.X += speed;
+					}
+				}
+			}
+			if (movementType == MovementType.VERTICAL)
+			{
+				if (aiType == AIType.PLAYER)
+				{
+					if (keyboardState.IsKeyDown(MovementKeys[1]))
+					{
+						position.Y -= speed;
+					}
+					if (keyboardState.IsKeyDown(MovementKeys[3]))
+					{
+						position.Y += speed;
+					}
+				}
+			}
+			if (movementType == MovementType.TOPDOWN)
+			{
+				if (aiType == AIType.PLAYER)
+				{
+					if (keyboardState.IsKeyDown(MovementKeys[0]))
+					{
+						position.X -= speed;
+					}
+					if (keyboardState.IsKeyDown(MovementKeys[1]))
+					{
+						position.Y -= speed;
+					}
+					if (keyboardState.IsKeyDown(MovementKeys[2]))
+					{
+						position.X += speed;
+					}
+					if (keyboardState.IsKeyDown(MovementKeys[3]))
+					{
+						position.Y += speed;
+					}
+				}
+			}
+			if (movementType == MovementType.PLATFORMER)
+			{
+				if (aiType == AIType.PLAYER)
+				{
+					if (keyboardState.IsKeyDown(MovementKeys[0]))
+					{
+						position.X -= speed;
+					}
+					if (keyboardState.IsKeyDown(MovementKeys[2]))
+					{
+						position.X += speed;
+					}
+					if (keyboardState.IsKeyDown(MovementKeys[4]))
+					{
+						isJumping = true;
+						isGrounded = false;
+					}
+				}
+
+				UpdateGravity();
+			}
+		}
+
+		/// <summary>
+		/// Flips the sprite texture based off a bool
+		/// </summary>
+		/// <param name="toFlip">The bool to flip</param>
         public void flipSprite(bool toFlip)
         {
             if (toFlip)
@@ -208,6 +432,39 @@ namespace VoidEngine
                 flipped = SpriteEffects.None;
             }
         }
+
+		/// <summary>
+		/// To update the player's gravity
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public void UpdateGravity()
+		{
+			if (isJumping)
+			{
+				position.Y -= BleedOff;
+				BleedOff -= 0.03f;
+
+				isGrounded = false;
+
+				if (BleedOff <= 0f)
+				{
+					isFalling = true;
+				}
+			}
+
+			if (isFalling)
+			{
+				if (position.Y >= ground.Y)
+				{
+					isGrounded = true;
+					isJumping = false;
+					isFalling = false;
+					BleedOff = gravity;
+				}
+			}
+
+			BleedOff = MathHelper.Clamp(BleedOff, -gravity - 1f, gravity);
+		}
 
         /// <summary>
         /// The check if the sprite collides rectangulary.

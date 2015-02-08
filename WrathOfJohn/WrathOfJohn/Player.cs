@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using VoidEngine;
-using System.Diagnostics;
 
 namespace WrathOfJohn
 {
@@ -21,72 +20,11 @@ namespace WrathOfJohn
 		/// </summary>
         Game1 myGame;
 		/// <summary>
-		/// This is the keys that the player uses.
-		/// 0 = left | 1 = up | 2 = right | 3 = down | 4 = jump | 5 = crouch | 6 = attack
-		/// </summary>
-        public List<Keys> keys = new List<Keys>();
-		/// <summary>
 		/// This is the animationSet list for the player.
 		/// </summary>
-        public List<AnimationSet> animationSetList = new List<AnimationSet>();
-		/// <summary>
-		/// Sets or Gets if the player is jumping.
-		/// </summary>
-		bool jumping = false;
-		/// <summary>
-		/// gets if the player is jumping.
-		/// </summary>
-		public bool isJumping
-		{
-			get
-			{
-				return jumping;
-			}
-		}
-		/// <summary>
-		/// Sets or Gets if the player is grounded.
-		/// </summary>
-        bool grounded = true;
-		/// <summary>
-		/// Gets if the player is grounded
-		/// </summary>
-		public bool isGrounded
-		{
-			get
-			{
-				return grounded;
-			}
-		}
-		bool falling = false;
-		public bool isFalling
-		{
-			get
-			{
-				return falling;
-			}
-		}
-		/// <summary>
-		/// This is to trigger gravity speed.
-		/// </summary>
-        float bleedOff = 2.0f;
-		/// <summary>
-		/// 
-		/// </summary>
-		public float BleedOff
-		{
-			get
-			{
-				return bleedOff;
-			}
-		}
-		/// <summary>
-		/// This is to set the default gravity size.
-		/// </summary>
-        float gravity;
-		/// <summary>
-		/// This is to set the default ground position.
-		/// </summary>
-        public Vector2 ground;
+		public List<AnimationSet> animationSetList = new List<AnimationSet>();
+		public List<Collision.MapSegment> playerSegments = new List<Collision.MapSegment>();
+		public string collided = "";
 
 		/// <summary>
 		/// This is to create the Player class.
@@ -94,26 +32,34 @@ namespace WrathOfJohn
 		/// <param name="texture">This is the player's texture</param>
 		/// <param name="position">This sets the player's position</param>
 		/// <param name="game">This is the Game class that the player runs on</param>
-		/// <param name="left"></param>
-		/// <param name="right"></param>
-		/// <param name="jump"></param>
-		/// <param name="gravity"></param>
-		/// <param name="animationSetList"></param>
-        public Player(Texture2D texture, Vector2 position, Game1 game, Keys left, Keys right, Keys jump, float gravity, List<AnimationSet> animationSetList) : base(position, animationSetList)
+		/// <param name="left">The left key</param>
+		/// <param name="right">The right key</param>
+		/// <param name="jump">The jump key</param>
+		/// <param name="gravity2">The force of gravity</param>
+		/// <param name="animationSetList">The set of animations</param>
+        public Player(Texture2D texture, Vector2 position, Game1 game, Keys left, Keys right, Keys jump, float gravity2, Color color, List<AnimationSet> animationSetList) : base(position, color, animationSetList)
         {
             this.animationSetList = animationSetList;
-            bleedOff = gravity;
-            this.gravity = gravity;
+			this.color = color;
+			movementType = MovementType.PLATFORMER;
+			aiType = AIType.PLAYER;
+            BleedOff = gravity2;
+            Gravity = gravity2;
             myGame = game;
-            keys.Add(left);
-            keys.Add(Keys.None);
-            keys.Add(right);
-            keys.Add(Keys.None);
-            keys.Add(jump);
-            keys.Add(Keys.None);
+            MovementKeys.Add(left);
+			MovementKeys.Add(Keys.None);
+			MovementKeys.Add(right);
+			MovementKeys.Add(Keys.None);
+			MovementKeys.Add(jump);
+			MovementKeys.Add(Keys.None);
             canMove = true;
             speed = 1;
-            ground = new Vector2(0, position.Y);
+			ground = new Vector2(0, position.Y);
+
+			playerSegments.Add(new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 5), new Point((int)position.X + 20, (int)position.Y + 49)));
+			playerSegments.Add(new Collision.MapSegment(new Point((int)position.X + 40, (int)position.Y + 49), new Point((int)position.X + 40, (int)position.Y + 5)));
+			playerSegments.Add(new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 49), new Point((int)position.X + 40, (int)position.Y + 49)));
+			playerSegments.Add(new Collision.MapSegment(new Point((int)position.X + 40, (int)position.Y + 5), new Point((int)position.X + 20, (int)position.Y + 5)));
         }
 
 		/// <summary>
@@ -121,73 +67,11 @@ namespace WrathOfJohn
 		/// </summary>
 		/// <param name="gameTime">To keep track of run time.</param>
         public override void Update(GameTime gameTime)
-        {
-            if (myGame.keyboardState.IsKeyDown(keys[4]) && !isJumping && isGrounded && !isFalling)
-            {
-                jumping = true;
-                grounded = false;
-            }
-            if (myGame.keyboardState.IsKeyDown(keys[0]))
-            {
-                position.X -= speed;
-            }
-            if (myGame.keyboardState.IsKeyDown(keys[2]))
-            {
-                position.X += speed;
-            }
-
-            UpdateGravity();
-
-			// The boundry on the left.
-            if (position.Y <= 0)
-            {
-                position.Y = 0;
-            }
-			// Boundry on the right.
-            if (position.Y >= 480)
-            {
-                position.Y = 480 - currentAnimation.frameSize.Y;
-            }
-			// Boundry on the top.
-            if (position.X <= 0)
-            {
-                position.X = 0;
-            }
-			// Boundry on the bottom.
-            if (position.X >= 700 - currentAnimation.frameSize.X)
-            {
-                position.X = 700 - currentAnimation.frameSize.X;
-            }
-
-			// To play the jumping animation.
-            if (isJumping && !isFalling)
-            {
-                SetAnimation("JUMP");
-            }
-            
-			// To do the walking animation.
-            if ((myGame.keyboardState.IsKeyDown(keys[2]) || myGame.keyboardState.IsKeyDown(keys[0])) && isGrounded)
-            {
-                SetAnimation("WALK");
-			}
-
-			// To flip the player to the left.
-			if (myGame.keyboardState.IsKeyDown(keys[0]))
-			{
-				flipSprite(true);
-			}
-
-			// To flip the player back to the right.
-            if (myGame.keyboardState.IsKeyDown(keys[2]))
-            {
-                flipSprite(false);
-            }
-
-			// To set the animation to idle.
-            if ((!myGame.keyboardState.IsKeyDown(keys[0]) && !myGame.keyboardState.IsKeyDown(keys[2])) || isFalling)
-            {
-                SetAnimation("IDLE");
-            }
+		{
+			playerSegments[0] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 5), new Point((int)position.X + 20, (int)position.Y + 49));
+			playerSegments[1] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 5), new Point((int)position.X + 40, (int)position.Y + 5));
+			playerSegments[2] = new Collision.MapSegment(new Point((int)position.X + 40, (int)position.Y + 5), new Point((int)position.X + 40, (int)position.Y + 49));
+			playerSegments[3] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 49), new Point((int)position.X + 40, (int)position.Y + 49));
 
             base.Update(gameTime);
         }
@@ -202,37 +86,65 @@ namespace WrathOfJohn
             base.Draw(gameTime, spriteBatch);
         }
 
-		/// <summary>
-		/// To update the player's gravity
-		/// </summary>
-		/// <param name="gameTime"></param>
-        public void UpdateGravity()
-        {
-            if (jumping)
-            {
-                position.Y -= bleedOff;
-                bleedOff -= 0.03f;
-
-                grounded = false;
-
-				if(bleedOff <= 0f)
-				{
-					falling = true;
-				}
-            }
-
-			if (isFalling)
+		public override void UpdateMovement()
+		{
+			if (myGame.gameManager.mapSegments[0].point1.X >= playerSegments[0].point1.X)
 			{
-				if (position.Y >= ground.Y)
-				{
-					grounded = true;
-					jumping = false;
-					falling = false;
-					bleedOff = gravity;
-				}
+				position.X = myGame.gameManager.mapSegments[0].point1.X - ((currentAnimation.frameSize.X - 20) / 2);
+				collided = "Collide=True";
+			}
+			if (myGame.gameManager.mapSegments[1].point1.Y >= playerSegments[1].point1.Y)
+			{
+				position.Y = myGame.gameManager.mapSegments[1].point1.Y + 49;
+				collided = "Collide=True";
+			}
+			if (myGame.gameManager.mapSegments[2].point1.X <= playerSegments[2].point1.X)
+			{
+				position.X = myGame.gameManager.mapSegments[2].point1.X - ((currentAnimation.frameSize.X - 20));
+				collided = "Collide=True";
+			}
+			if (myGame.gameManager.mapSegments[3].point1.Y <= playerSegments[3].point1.Y)
+			{
+				position.Y = myGame.gameManager.mapSegments[3].point1.Y - 49;
+				collided = "Collide=True";
 			}
 
-            bleedOff = MathHelper.Clamp(bleedOff, -gravity - 1f, gravity);
-        }
+			base.UpdateMovement();
+
+			// To play the jumping animation.
+			if (isJumping && !isFalling)
+			{
+				SetAnimation("JUMP");
+			}
+
+			// To do the walking animation.
+			if ((myGame.keyboardState.IsKeyDown(MovementKeys[2]) || myGame.keyboardState.IsKeyDown(MovementKeys[0])) && isGrounded)
+			{
+				SetAnimation("WALK");
+			}
+
+			// To flip the player to the left.
+			if (myGame.keyboardState.IsKeyDown(MovementKeys[0]))
+			{
+				flipSprite(true);
+			}
+
+			// To flip the player back to the right.
+			if (myGame.keyboardState.IsKeyDown(MovementKeys[2]))
+			{
+				flipSprite(false);
+			}
+
+			// To set the animation to idle.
+			if ((!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2])) || isFalling)
+			{
+				SetAnimation("IDLE");
+			}
+		}
+
+		public List<Collision.MapSegment> getPlayerSgements()
+		{
+			return playerSegments;
+		}
     }
 }

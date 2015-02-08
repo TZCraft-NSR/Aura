@@ -25,8 +25,9 @@ namespace VoidEngine
         /// <param name="position">The position of the sprite</param>
         /// <param name="animationSetList">The list of animation sets</param>
         /// <param name="myGame">The class of the game that this is created in</param>
-        public Textbox(Vector2 position, List<AnimationSet> animationSetList, Game myGame) : base(position, animationSetList)
+        public Textbox(Vector2 position, Color color, List<AnimationSet> animationSetList, Game myGame) : base(position, color, animationSetList)
         {
+			this.color = color;
             this.myGame = myGame;
             animationSets = animationSetList;
             this.position = position;

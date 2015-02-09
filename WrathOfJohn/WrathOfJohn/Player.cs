@@ -22,9 +22,35 @@ namespace WrathOfJohn
 		/// <summary>
 		/// This is the animationSet list for the player.
 		/// </summary>
-		public List<AnimationSet> animationSetList = new List<AnimationSet>();
 		public List<Collision.MapSegment> playerSegments = new List<Collision.MapSegment>();
-		public string collided = "";
+		bool shot = false;
+		public bool HasShot
+		{
+			get
+			{
+				return shot;
+			}
+		}
+		float fireTime = 100;
+		public float FireTime
+		{
+			get
+			{
+				return fireTime;
+			}
+		}
+		bool canShoot = true;
+		public bool CanShoot
+		{
+			get
+			{
+				return canShoot;
+			}
+		}
+		List<Sprite.AnimationSet> projectileAnimationSet = new List<Sprite.AnimationSet>();
+		List<Projectile> projectileList = new List<Projectile>();
+		bool projectileListCreated = false;
+		bool createNew = true;
 
 		/// <summary>
 		/// This is to create the Player class.
@@ -35,11 +61,13 @@ namespace WrathOfJohn
 		/// <param name="left">The left key</param>
 		/// <param name="right">The right key</param>
 		/// <param name="jump">The jump key</param>
+		/// <param name="attack"></param>
 		/// <param name="gravity2">The force of gravity</param>
+		/// <param name="color"></param>
 		/// <param name="animationSetList">The set of animations</param>
-        public Player(Texture2D texture, Vector2 position, Game1 game, Keys left, Keys right, Keys jump, float gravity2, Color color, List<AnimationSet> animationSetList) : base(position, color, animationSetList)
+        public Player(Texture2D texture, Vector2 position, Game1 game, Keys left, Keys right, Keys jump, Keys attack, float gravity2, Color color, List<AnimationSet> animationSetList) : base(position, color, animationSetList)
         {
-            this.animationSetList = animationSetList;
+            animationSets = animationSetList;
 			this.color = color;
 			movementType = MovementType.PLATFORMER;
 			aiType = AIType.PLAYER;
@@ -51,7 +79,7 @@ namespace WrathOfJohn
 			MovementKeys.Add(right);
 			MovementKeys.Add(Keys.None);
 			MovementKeys.Add(jump);
-			MovementKeys.Add(Keys.None);
+			MovementKeys.Add(attack);
             canMove = true;
             speed = 1;
 			ground = new Vector2(0, position.Y);
@@ -73,6 +101,17 @@ namespace WrathOfJohn
 			playerSegments[2] = new Collision.MapSegment(new Point((int)position.X + 40, (int)position.Y + 5), new Point((int)position.X + 40, (int)position.Y + 49));
 			playerSegments[3] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 49), new Point((int)position.X + 40, (int)position.Y + 49));
 
+			if (projectileListCreated == false)
+			{
+				projectileAnimationSet.Add(new AnimationSet("IDLE", myGame.gameManager.projectileTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
+				projectileListCreated = true;
+			}
+
+			foreach (Projectile p in projectileList)
+			{
+				p.Update(gameTime);
+			}
+
             base.Update(gameTime);
         }
 
@@ -83,6 +122,11 @@ namespace WrathOfJohn
 		/// <param name="spriteBatch">The spriteBatch to draw with.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+			foreach (Projectile p in projectileList)
+			{
+				p.Draw(gameTime, spriteBatch);
+			}
+
             base.Draw(gameTime, spriteBatch);
         }
 
@@ -91,22 +135,18 @@ namespace WrathOfJohn
 			if (myGame.gameManager.mapSegments[0].point1.X >= playerSegments[0].point1.X)
 			{
 				position.X = myGame.gameManager.mapSegments[0].point1.X - ((currentAnimation.frameSize.X - 20) / 2);
-				collided = "Collide=True";
 			}
 			if (myGame.gameManager.mapSegments[1].point1.Y >= playerSegments[1].point1.Y)
 			{
 				position.Y = myGame.gameManager.mapSegments[1].point1.Y + 49;
-				collided = "Collide=True";
 			}
 			if (myGame.gameManager.mapSegments[2].point1.X <= playerSegments[2].point1.X)
 			{
 				position.X = myGame.gameManager.mapSegments[2].point1.X - ((currentAnimation.frameSize.X - 20));
-				collided = "Collide=True";
 			}
 			if (myGame.gameManager.mapSegments[3].point1.Y <= playerSegments[3].point1.Y)
 			{
 				position.Y = myGame.gameManager.mapSegments[3].point1.Y - 49;
-				collided = "Collide=True";
 			}
 
 			base.UpdateMovement();
@@ -135,8 +175,14 @@ namespace WrathOfJohn
 				flipSprite(false);
 			}
 
+			if ((myGame.keyboardState.IsKeyDown(MovementKeys[5]) && !myGame.previousKeyboardState.IsKeyDown(MovementKeys[5])) && (!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2])))
+			{
+				SetAnimation("SHOOT");
+				ShootBeam();
+			}
+
 			// To set the animation to idle.
-			if ((!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2])) || isFalling)
+			if ((!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2]) && !myGame.keyboardState.IsKeyDown(MovementKeys[5])) || isFalling)
 			{
 				SetAnimation("IDLE");
 			}
@@ -145,6 +191,26 @@ namespace WrathOfJohn
 		public List<Collision.MapSegment> getPlayerSgements()
 		{
 			return playerSegments;
+		}
+
+		public void ShootBeam()
+		{
+			foreach (Projectile p in projectileList)
+			{
+				if (!p.isVisible)
+				{
+					createNew = true;
+					projectileList.RemoveAt(0);
+					break;
+				}
+			}
+
+			if (createNew == true)
+			{
+				Projectile projectile = new Projectile(new Vector2(position.X + 35, position.Y + ((projectileAnimationSet[0].frameSize.Y - 4) / 2) + 8), Color.White, projectileAnimationSet, this, myGame);
+				projectile.Fire();
+				projectileList.Add(projectile);
+			}
 		}
     }
 }

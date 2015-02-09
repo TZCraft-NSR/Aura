@@ -49,6 +49,7 @@ namespace WrathOfJohn
 		Label debugLabel2;
 		Label debugLabel3;
 		Label debugLabel4;
+		Label debugLabel5;
 		public List<Collision.MapSegment> mapSegments = new List<Collision.MapSegment>();
 		List<Collision.MapSegment> playerSegments = new List<Collision.MapSegment>();
 		string firstLine1;
@@ -60,6 +61,8 @@ namespace WrathOfJohn
 		string firstLine7;
 		string firstLine8;
 		string firstLine9;
+		public string firstLine10 = "()";
+		public Texture2D projectileTexture;
 
 		/// <summary>
 		/// This is to create the Game Manager.
@@ -95,18 +98,21 @@ namespace WrathOfJohn
 
             playerTexture = Game.Content.Load<Texture2D>(@"Images\players\player");
             debugDotTexture = Game.Content.Load<Texture2D>(@"Images\debugStuff\line");
+			projectileTexture = Game.Content.Load<Texture2D>(@"Images\projectiles\beam1");
 
             tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(60, 50), new Point(1, 1), new Point(0, 0), 1000));
             tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(60, 50), new Point(4, 3), new Point(0, 0), 50));
-            tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(60, 50), new Point(4, 1), new Point(0, 150), 100));
+			tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(60, 50), new Point(4, 1), new Point(0, 150), 100));
+			tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("SHOOT", playerTexture, new Point(60, 50), new Point(1, 3), new Point(240, 0), 250));
 
-            player = new Player(playerTexture, new Vector2((myGame.windowSize.X - 60) / 2, (myGame.windowSize.Y - 50) / 2), myGame, Keys.A, Keys.D, Keys.Space, 2f, Color.White, tempPlayerAnimationSetList);
+            player = new Player(playerTexture, new Vector2((myGame.windowSize.X - 60) / 2, (myGame.windowSize.Y - 50) / 2), myGame, Keys.A, Keys.D, Keys.Space, Keys.E, 2f, Color.White, tempPlayerAnimationSetList);
 
 			debugLabel = new Label(Vector2.Zero, myGame.debugFont, 1f, Color.Black, "");
 			debugLabel1 = new Label(new Vector2(0, 10), myGame.debugFont, 1f, Color.Black, "");
 			debugLabel2 = new Label(new Vector2(0, 20), myGame.debugFont, 1f, Color.Black, "");
 			debugLabel3 = new Label(new Vector2(0, 30), myGame.debugFont, 1f, Color.Black, "");
 			debugLabel4 = new Label(new Vector2(0, 40), myGame.debugFont, 1f, Color.Black, "");
+			debugLabel5 = new Label(new Vector2(0, 50), myGame.debugFont, 1f, Color.Black, "");
 
             base.LoadContent();
         }
@@ -136,6 +142,7 @@ namespace WrathOfJohn
 			debugLabel2.Update(gameTime, firstLine4 + "   " + firstLine5);
 			debugLabel3.Update(gameTime, firstLine6 + "   " + firstLine7);
 			debugLabel4.Update(gameTime, firstLine8 + "   " + firstLine9);
+			debugLabel5.Update(gameTime, firstLine10);
 
             base.Update(gameTime);
         }
@@ -166,6 +173,7 @@ namespace WrathOfJohn
 				debugLabel2.Draw(gameTime, spriteBatch);
 				debugLabel3.Draw(gameTime, spriteBatch);
 				debugLabel4.Draw(gameTime, spriteBatch);
+				debugLabel5.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

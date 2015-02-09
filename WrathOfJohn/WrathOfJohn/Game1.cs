@@ -30,6 +30,7 @@ namespace WrathOfJohn
         public enum GameLevels { SPLASH, MENU, GAME }
 
         public SplashScreenManager splashScreenManager;
+		public float elapsedTime, previousElapsedTime;
         public GameManager gameManager;
         public MenuManager menuManager;
         public CheckpointManager checkpointManager;
@@ -127,11 +128,13 @@ namespace WrathOfJohn
 
             keyboardState = Keyboard.GetState();
 
+			elapsedTime = gameTime.ElapsedGameTime.Milliseconds;
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
 
-
+			previousElapsedTime = elapsedTime;
 			previousKeyboardState = keyboardState;
         }
 

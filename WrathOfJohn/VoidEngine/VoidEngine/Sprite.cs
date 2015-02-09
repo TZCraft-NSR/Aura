@@ -241,7 +241,6 @@ namespace VoidEngine
 		public Vector2 ground;
 		Rectangle destinationRectangle;
 		Rectangle sourceRectangle;
-		int typeset = 0;
 		public Color color;
 
         /// <summary>
@@ -254,19 +253,8 @@ namespace VoidEngine
             animationSets = animationSetList;
             this.position = position;
             lastFrameTime = 0;
-			typeset = 1;
 			this.color = color;
         }
-
-		public Sprite(Rectangle DestinationRectangle, Rectangle SourceRecangle, Color color, Texture2D texture)
-		{
-			animationSets.Add(new AnimationSet("IDLE", texture, new Point(DestinationRectangle.Width - SourceRecangle.Width + 1, DestinationRectangle.Height - SourceRecangle.Height + 1), new Point(1, 1), new Point(0, 0), 0));
-			destinationRectangle = DestinationRectangle;
-			sourceRectangle = SourceRecangle;
-			lastFrameTime = 0;
-			this.color = color;
-			typeset = 2;
-		}
 
         /// <summary>
         /// Put this in the Update function
@@ -313,14 +301,7 @@ namespace VoidEngine
         /// <param name="spriteBatch">The main SpriteBatch</param>
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-			if (typeset == 1)
-			{
-				spriteBatch.Draw(currentAnimation.texture, this.position, new Rectangle(currentAnimation.startPosition.X + (currentFrame.X * currentAnimation.frameSize.X), currentAnimation.startPosition.Y + (currentFrame.Y * currentAnimation.frameSize.Y), currentAnimation.frameSize.X, currentAnimation.frameSize.Y), color, 0f, Vector2.Zero, 1f, flipped, 0);
-			}
-			if (typeset == 2)
-			{
-				spriteBatch.Draw(currentAnimation.texture, new Rectangle(destinationRectangle.X, destinationRectangle.Y, sourceRectangle.X, sourceRectangle.Y), color);
-			}
+			spriteBatch.Draw(currentAnimation.texture, this.position, new Rectangle(currentAnimation.startPosition.X + (currentFrame.X * currentAnimation.frameSize.X), currentAnimation.startPosition.Y + (currentFrame.Y * currentAnimation.frameSize.Y), currentAnimation.frameSize.X, currentAnimation.frameSize.Y), color, 0f, Vector2.Zero, 1f, flipped, 0);
 		}
 
         /// <summary>

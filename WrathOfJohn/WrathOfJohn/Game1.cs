@@ -29,6 +29,9 @@ namespace WrathOfJohn
 
         public enum GameLevels { SPLASH, MENU, GAME }
 
+        public Vector2 resolution = new Vector2(1920, 1080);
+        public Point ratio = new Point(6, 9);
+
         public SplashScreenManager splashScreenManager;
 		public float elapsedTime, previousElapsedTime;
         public GameManager gameManager;
@@ -45,9 +48,9 @@ namespace WrathOfJohn
             graphics = new GraphicsDeviceManager(this);
             Window.Title = "Wrath Of John: We are here!!!";
             Content.RootDirectory = "Content";
-            windowSize = new Vector2(700, 500);
             graphics.PreferredBackBufferWidth = 700;
             graphics.PreferredBackBufferHeight = 500;
+            windowSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
         }
 
         /// <summary>
@@ -126,6 +129,8 @@ namespace WrathOfJohn
             {
                 this.Exit();
             }
+
+            windowSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
             keyboardState = Keyboard.GetState();
 

@@ -43,8 +43,11 @@ namespace WrathOfJohn
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            Window.Title = "Wrath Of John: We are here!!!";
             Content.RootDirectory = "Content";
             windowSize = new Vector2(700, 500);
+            graphics.PreferredBackBufferWidth = 700;
+            graphics.PreferredBackBufferHeight = 500;
         }
 
         /// <summary>

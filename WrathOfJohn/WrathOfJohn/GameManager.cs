@@ -25,6 +25,7 @@ namespace WrathOfJohn
 		/// The game that the GameManager runs off of.
 		/// </summary>
 		Game1 myGame;
+        Camera camera;
 		/// <summary>
 		/// The animation list for the player.
 		/// </summary>
@@ -73,8 +74,6 @@ namespace WrathOfJohn
         public GameManager(Game1 game) : base(game)
 		{
 			myGame = game;
-            myGame.graphics.PreferredBackBufferWidth = 700;
-            myGame.graphics.PreferredBackBufferHeight = 500;
 			// This is to fix the Initalize() function.
 			this.Initialize();
 		}
@@ -84,12 +83,6 @@ namespace WrathOfJohn
 		/// </summary>
         public override void Initialize()
         {
-            
-			mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point(0, 470)));
-			mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point((int)myGame.windowSize.X - 1, 0)));
-			mapSegments.Add(new Collision.MapSegment(new Point((int)myGame.windowSize.X - 1, 0), new Point((int)myGame.windowSize.X - 1, 470)));
-			mapSegments.Add(new Collision.MapSegment(new Point(0, 470), new Point((int)myGame.windowSize.X - 1, 470)));
-
             base.Initialize();
         }
 
@@ -99,6 +92,14 @@ namespace WrathOfJohn
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+
+            camera = new Camera(GraphicsDevice.Viewport, 1500, 500, 1f);
+            camera.Position = new Vector2(0, 0);
+
+            mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point(0, 470)));
+            mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point((int)camera.Size.X - 1, 0)));
+            mapSegments.Add(new Collision.MapSegment(new Point((int)camera.Size.X - 1, 0), new Point((int)camera.Size.X - 1, 470)));
+            mapSegments.Add(new Collision.MapSegment(new Point(0, 470), new Point((int)camera.Size.X - 1, 470)));
 
             playerTexture = Game.Content.Load<Texture2D>(@"Images\players\player");
             debugDotTexture = Game.Content.Load<Texture2D>(@"Images\debugStuff\line");
@@ -136,6 +137,11 @@ namespace WrathOfJohn
 		/// <param name="gameTime">This is to check the run time.</param>
         public override void Update(GameTime gameTime)
 		{
+            if (camera.IsInView(player.position, new Vector2(20, 49)))
+            {
+                camera.Position = new Vector2(player.position.X + 200f, 0);
+            }
+
 			playerSegments = player.getPlayerSgements();
 
             player.Update(gameTime);
@@ -166,7 +172,7 @@ namespace WrathOfJohn
 		/// <param name="gameTime"><This is to check the run time./param>
         public override void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, camera.GetTransformation());
 				background.Draw(gameTime, spriteBatch);
                 player.Draw(gameTime, spriteBatch);
 				// Debug bounding map boxes.

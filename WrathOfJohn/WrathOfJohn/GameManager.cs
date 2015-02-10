@@ -63,6 +63,8 @@ namespace WrathOfJohn
 		string firstLine9;
 		public string firstLine10 = "()";
 		public Texture2D projectileTexture;
+		Texture2D backgroundTexture;
+		Sprite background;
 
 		/// <summary>
 		/// This is to create the Game Manager.
@@ -71,7 +73,8 @@ namespace WrathOfJohn
         public GameManager(Game1 game) : base(game)
 		{
 			myGame = game;
-
+            myGame.graphics.PreferredBackBufferWidth = 700;
+            myGame.graphics.PreferredBackBufferHeight = 500;
 			// This is to fix the Initalize() function.
 			this.Initialize();
 		}
@@ -81,10 +84,11 @@ namespace WrathOfJohn
 		/// </summary>
         public override void Initialize()
         {
-			mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point(0, ((int)(myGame.windowSize.Y + 50) / 2))));
+            
+			mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point(0, 470)));
 			mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point((int)myGame.windowSize.X - 1, 0)));
-			mapSegments.Add(new Collision.MapSegment(new Point((int)myGame.windowSize.X - 1, 0), new Point((int)myGame.windowSize.X - 1, ((int)(myGame.windowSize.Y + 50) / 2))));
-			mapSegments.Add(new Collision.MapSegment(new Point(0, ((int)(myGame.windowSize.Y + 50) / 2)), new Point((int)myGame.windowSize.X - 1, ((int)(myGame.windowSize.Y + 50) / 2))));
+			mapSegments.Add(new Collision.MapSegment(new Point((int)myGame.windowSize.X - 1, 0), new Point((int)myGame.windowSize.X - 1, 470)));
+			mapSegments.Add(new Collision.MapSegment(new Point(0, 470), new Point((int)myGame.windowSize.X - 1, 470)));
 
             base.Initialize();
         }
@@ -99,13 +103,22 @@ namespace WrathOfJohn
             playerTexture = Game.Content.Load<Texture2D>(@"Images\players\player");
             debugDotTexture = Game.Content.Load<Texture2D>(@"Images\debugStuff\line");
 			projectileTexture = Game.Content.Load<Texture2D>(@"Images\projectiles\beam1");
+			backgroundTexture = Game.Content.Load<Texture2D>(@"Images\screens\game");
 
             tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(60, 50), new Point(1, 1), new Point(0, 0), 1000));
             tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(60, 50), new Point(4, 3), new Point(0, 0), 50));
 			tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(60, 50), new Point(4, 1), new Point(0, 150), 100));
 			tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("SHOOT", playerTexture, new Point(60, 50), new Point(1, 3), new Point(240, 0), 250));
 
-            player = new Player(playerTexture, new Vector2((myGame.windowSize.X - 60) / 2, (myGame.windowSize.Y - 50) / 2), myGame, Keys.A, Keys.D, Keys.Space, Keys.E, 2f, Color.White, tempPlayerAnimationSetList);
+			List<Sprite.AnimationSet> tempBackgroundAnimationSetList = new List<Sprite.AnimationSet>();
+			tempBackgroundAnimationSetList.Add(new Sprite.AnimationSet("IDLE", backgroundTexture, new Point(3770, 500), new Point(1, 1), new Point(0, 0), 0));
+
+			background = new Sprite(Vector2.Zero, Color.White, tempBackgroundAnimationSetList);
+			background.SetAnimation("IDLE");
+			background.speed = 3;
+			background.direction = new Vector2(-1, 0);
+
+            player = new Player(playerTexture, new Vector2((myGame.windowSize.X - 60) / 2, mapSegments[3].point1.Y - 50), myGame, Keys.A, Keys.D, Keys.Space, Keys.E, 2f, Color.White, tempPlayerAnimationSetList);
 
 			debugLabel = new Label(Vector2.Zero, myGame.debugFont, 1f, Color.Black, "");
 			debugLabel1 = new Label(new Vector2(0, 10), myGame.debugFont, 1f, Color.Black, "");
@@ -154,6 +167,7 @@ namespace WrathOfJohn
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
+				background.Draw(gameTime, spriteBatch);
                 player.Draw(gameTime, spriteBatch);
 				// Debug bounding map boxes.
 				spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[0].point1.X, mapSegments[0].point1.Y, mapSegments[0].point2.X + 1, mapSegments[0].point2.Y), Color.Blue);
@@ -173,7 +187,7 @@ namespace WrathOfJohn
 				debugLabel2.Draw(gameTime, spriteBatch);
 				debugLabel3.Draw(gameTime, spriteBatch);
 				debugLabel4.Draw(gameTime, spriteBatch);
-				debugLabel5.Draw(gameTime, spriteBatch);
+                debugLabel5.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

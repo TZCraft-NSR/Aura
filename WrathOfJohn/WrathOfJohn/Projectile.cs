@@ -79,7 +79,7 @@ namespace WrathOfJohn
 		public void Fire()
 		{
 			speed = 1;
-			maxDistance = Vector2.Distance(startPosition, new Vector2(myGame.windowSize.X + 50, startPosition.Y));
+			maxDistance = 50;
 
 			visible = true;
 

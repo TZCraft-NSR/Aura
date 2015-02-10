@@ -23,14 +23,6 @@ namespace WrathOfJohn
 		/// This is the animationSet list for the player.
 		/// </summary>
 		public List<Collision.MapSegment> playerSegments = new List<Collision.MapSegment>();
-		bool shot = false;
-		public bool HasShot
-		{
-			get
-			{
-				return shot;
-			}
-		}
 		float fireTime = 100;
 		public float FireTime
 		{
@@ -39,14 +31,26 @@ namespace WrathOfJohn
 				return fireTime;
 			}
 		}
-		bool canShoot = true;
-		public bool CanShoot
+		bool hasShot = false;
+		public bool HasShot
 		{
 			get
 			{
-				return canShoot;
+				return hasShot;
 			}
-		}
+        }
+        bool canShoot = true;
+        public bool CanShoot
+        {
+            get
+            {
+                return canShoot;
+            }
+        }
+        float mana = 100;
+        float maxMana = 100;
+        float manaRechargeTime = 5000;
+        float manaInterval = 1000;
 		List<Sprite.AnimationSet> projectileAnimationSet = new List<Sprite.AnimationSet>();
 		List<Projectile> projectileList = new List<Projectile>();
 		bool projectileListCreated = false;
@@ -96,10 +100,10 @@ namespace WrathOfJohn
 		/// <param name="gameTime">To keep track of run time.</param>
         public override void Update(GameTime gameTime)
 		{
-			playerSegments[0] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 5), new Point((int)position.X + 20, (int)position.Y + 49));
+			playerSegments[0] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 5), new Point((int)position.X + 20, (int)position.Y + 48));
 			playerSegments[1] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 5), new Point((int)position.X + 40, (int)position.Y + 5));
-			playerSegments[2] = new Collision.MapSegment(new Point((int)position.X + 40, (int)position.Y + 5), new Point((int)position.X + 40, (int)position.Y + 49));
-			playerSegments[3] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 49), new Point((int)position.X + 40, (int)position.Y + 49));
+			playerSegments[2] = new Collision.MapSegment(new Point((int)position.X + 40, (int)position.Y + 5), new Point((int)position.X + 40, (int)position.Y + 48));
+			playerSegments[3] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 48), new Point((int)position.X + 40, (int)position.Y + 48));
 
 			if (projectileListCreated == false)
 			{
@@ -134,11 +138,11 @@ namespace WrathOfJohn
 		{
 			if (myGame.gameManager.mapSegments[0].point1.X >= playerSegments[0].point1.X)
 			{
-				position.X = myGame.gameManager.mapSegments[0].point1.X - ((currentAnimation.frameSize.X - 20) / 2);
+				position.X = myGame.gameManager.mapSegments[0].point1.X + ((currentAnimation.frameSize.X - 20) / 2);
 			}
 			if (myGame.gameManager.mapSegments[1].point1.Y >= playerSegments[1].point1.Y)
 			{
-				position.Y = myGame.gameManager.mapSegments[1].point1.Y + 49;
+				position.Y = myGame.gameManager.mapSegments[1].point1.Y - 48;
 			}
 			if (myGame.gameManager.mapSegments[2].point1.X <= playerSegments[2].point1.X)
 			{
@@ -146,7 +150,7 @@ namespace WrathOfJohn
 			}
 			if (myGame.gameManager.mapSegments[3].point1.Y <= playerSegments[3].point1.Y)
 			{
-				position.Y = myGame.gameManager.mapSegments[3].point1.Y - 49;
+				position.Y = myGame.gameManager.mapSegments[3].point1.Y - 48;
 			}
 
 			base.UpdateMovement();
@@ -175,17 +179,66 @@ namespace WrathOfJohn
 				flipSprite(false);
 			}
 
-			if ((myGame.keyboardState.IsKeyDown(MovementKeys[5]) && !myGame.previousKeyboardState.IsKeyDown(MovementKeys[5])) && (!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2])))
-			{
-				SetAnimation("SHOOT");
-				ShootBeam();
-			}
+            if ((myGame.keyboardState.IsKeyDown(MovementKeys[5]) && !myGame.previousKeyboardState.IsKeyDown(MovementKeys[5])) && (!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2])))
+            {
+                if (CanShoot)
+                {
+                    SetAnimation("SHOOT");
+                    ShootBeam();
+                }
+            }
+            
+            if ((myGame.keyboardState.IsKeyUp(MovementKeys[5]) && !myGame.previousKeyboardState.IsKeyUp(MovementKeys[5])))
+            {
+
+                hasShot = false;
+            }
 
 			// To set the animation to idle.
 			if ((!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2]) && !myGame.keyboardState.IsKeyDown(MovementKeys[5])) || isFalling)
 			{
 				SetAnimation("IDLE");
 			}
+
+            if (mana < maxMana)
+            {
+                if (!HasShot)
+                {
+                    manaRechargeTime -= myGame.elapsedTime;
+                }
+
+                if (mana <= 0)
+                {
+                    canShoot = false;
+                }
+                else if (mana >= 0)
+                {
+                    canShoot = true;
+                }
+
+                if (manaRechargeTime <= 0 && mana < maxMana && !HasShot)
+                {
+                    manaInterval -= myGame.elapsedTime;
+
+                    if (manaInterval <= 0)
+                    {
+                        mana += 9.5f;
+                        manaInterval = 500;
+                    }
+                }
+
+                if (mana >= maxMana || (HasShot && CanShoot))
+                {
+                    manaRechargeTime = 5000;
+                }
+
+                if (mana > maxMana)
+                {
+                    mana = maxMana;
+                }
+            }
+
+            myGame.gameManager.firstLine10 = "mana=" + mana + " manaRechargeTime=" + manaRechargeTime + " HasShot=" + HasShot;
 		}
 
 		public List<Collision.MapSegment> getPlayerSgements()
@@ -205,12 +258,23 @@ namespace WrathOfJohn
 				}
 			}
 
-			if (createNew == true)
+			if (createNew == true && canShoot && mana >= maxMana / 3)
 			{
+                if (canShoot)
+                {
+                    hasShot = true;
+                }
+
+                mana -= maxMana / 3;
 				Projectile projectile = new Projectile(new Vector2(position.X + 35, position.Y + ((projectileAnimationSet[0].frameSize.Y - 4) / 2) + 8), Color.White, projectileAnimationSet, this, myGame);
 				projectile.Fire();
 				projectileList.Add(projectile);
 			}
+
+            if (mana < 0)
+            {
+                mana = 0;
+            }
 		}
     }
 }

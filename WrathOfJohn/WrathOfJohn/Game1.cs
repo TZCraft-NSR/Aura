@@ -17,7 +17,7 @@ namespace WrathOfJohn
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         public KeyboardState keyboardState, previousKeyboardState;
@@ -44,9 +44,7 @@ namespace WrathOfJohn
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferHeight = 500;
-            graphics.PreferredBackBufferWidth = 700;
-            windowSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            windowSize = new Vector2(700, 500);
         }
 
         /// <summary>

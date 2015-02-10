@@ -19,12 +19,12 @@ namespace VoidEngine
                 point2 = b;
             }
 
-            public Vector2 getVector()
+            public Vector2 GetVector()
             {
                 return new Vector2(point2.X - point1.X, point2.Y - point1.Y);
             }
 
-            public Rectangle collisionRect()
+            public Rectangle CollisionRect()
             {
                 return new Rectangle(Math.Min(point1.X, point2.X), Math.Min(point1.Y, point2.Y), Math.Abs(point1.X - point2.X), Math.Abs(point1.Y - point2.Y));
             }
@@ -35,7 +35,7 @@ namespace VoidEngine
 			public Vector2 point;
 			public Vector2 vector;
 
-			public float yInt()
+			public float YInt()
 			{
 				return (-vector.Y * point.X + vector.X * point.Y) / vector.X;
 			}
@@ -67,7 +67,7 @@ namespace VoidEngine
             return new Vector2(-vector.Y, vector.X);
         }
 
-        public static Vector2 UnitVectorS(Vector2 vector)
+        public static Vector2 UnitVector(Vector2 vector)
         {
             return new Vector2(vector.X / (float)Magnitude(vector), vector.Y / (float)Magnitude(vector));
         }
@@ -77,7 +77,7 @@ namespace VoidEngine
             return unitVector.X * vector.X + unitVector.Y * vector.Y;
         }
 
-        public static Vector2 reflectedVector(Vector2 vector, Vector2 reflectVector)
+        public static Vector2 ReflectedVector(Vector2 vector, Vector2 reflectVector)
         {
             Vector2 normal = VectorNormal(reflectVector);
             float coeficient = -2 * (DotProduct(vector, normal) / (Magnitude(normal) * Magnitude(normal)));
@@ -97,8 +97,8 @@ namespace VoidEngine
             L2.vector.X = segment2.point2.X - segment2.point1.X;
             L2.vector.Y = segment2.point2.Y - segment2.point1.Y;
             Vector2 CollisionPoint;
-            CollisionPoint.X = (L2.yInt() - L1.yInt()) / (L1.Slope() - L2.Slope());
-            CollisionPoint.Y = L1.Slope() * CollisionPoint.X + L1.yInt();
+            CollisionPoint.X = (L2.YInt() - L1.YInt()) / (L1.Slope() - L2.Slope());
+            CollisionPoint.Y = L1.Slope() * CollisionPoint.X + L1.YInt();
 
             bool cond1 = (Math.Min(segemnt1.point1.X, segemnt1.point1.X) <= CollisionPoint.X && CollisionPoint.X <= Math.Max(segment2.point1.X, segemnt1.point2.X));
             bool cond2 = (Math.Min(segment2.point1.X, segment2.point2.X) <= CollisionPoint.X && CollisionPoint.X <= Math.Max(segment2.point1.X, segment2.point2.X));
@@ -136,8 +136,8 @@ namespace VoidEngine
                     CollisionPoint1.X = (float)((-b + Math.Sqrt(b * b - 4 * a * c)) / (2 * a));
                     CollisionPoint2.X = (float)((-b - Math.Sqrt(b * b - 4 * a * c)) / (2 * a));
 
-                    CollisionPoint1.Y = Line.Slope() * CollisionPoint1.X + Line.yInt();
-                    CollisionPoint2.Y = Line.Slope() * CollisionPoint1.X + Line.yInt();
+                    CollisionPoint1.Y = Line.Slope() * CollisionPoint1.X + Line.YInt();
+                    CollisionPoint2.Y = Line.Slope() * CollisionPoint1.X + Line.YInt();
 
                     bool cond1 = (Math.Min(Segement.point1.X, Segement.point2.X) <= CollisionPoint1.X && CollisionPoint1.X <= Math.Max(Segement.point1.X, Segement.point2.X));
 

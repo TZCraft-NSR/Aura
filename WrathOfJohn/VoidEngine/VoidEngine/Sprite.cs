@@ -454,5 +454,18 @@ namespace VoidEngine
         {
             return new Rectangle((int)position.X, (int)position.Y, currentAnimation.frameSize.X, currentAnimation.frameSize.Y);
         }
+
+        public void SetPosition(Vector2 newPosition)
+        {
+            position = newPosition;
+        }
+
+        public Vector2 GetPosition
+        {
+            get
+            {
+                return position;
+            }
+        }
     }
 }

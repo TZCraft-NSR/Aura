@@ -17,40 +17,91 @@ namespace WrathOfJohn
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        public enum GameLevels { SPLASH, MENU, OPTIONS, GAME, BOSS }
+		public enum Ratio { WIDESCREEN, NORMAL }
+
         public GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         public KeyboardState keyboardState, previousKeyboardState;
 
-        public Vector2 windowSize;
+		#region Screen Properties
+		Vector2 windowSize;
+		public Vector2 WindowSize
+		{
+			get
+			{
+				return windowSize;
+			}
+		}
 
-        public bool debugCheckpointManager = false;
-        public bool debugSaveFileManager = false;
+		Vector2 resolution = new Vector2(1600, 900);
+		public Vector2 Resolution
+		{
+			get
+			{
+				return resolution;
+			}
+			set
+			{
+				Vector2 tempResolution = value;
+				resolution = tempResolution;
+			}
+		}
 
-        public enum GameLevels { SPLASH, MENU, GAME }
+		Ratio ratio = Ratio.WIDESCREEN;
+		public Ratio SetRatio
+		{
+			get
+			{
+				return ratio;
+			}
+			set
+			{
+				ratio = value;
+			}
+		}
 
-        public Vector2 resolution = new Vector2(1920, 1080);
-        public Point ratio = new Point(6, 9);
+		bool fullscreen = false;
+		public bool Fullscreen
+		{
+			get
+			{
+				return fullscreen;
+			}
+			set
+			{
+				fullscreen = value;
+			}
+		}
+		#endregion
 
-        public SplashScreenManager splashScreenManager;
-		public float elapsedTime, previousElapsedTime;
+		#region Game Levels
+		public SplashScreenManager splashScreenManager;
         public GameManager gameManager;
         public MenuManager menuManager;
-        public CheckpointManager checkpointManager;
-        public SaveFileManager saveFileManager;
+		public OptionsManager optionsManager;
         public GameLevels currentGameLevel;
+		#endregion
 
-        public SpriteFont debugFont;
-        public SpriteFont segoeUI;
+		public float elapsedTime, previousElapsedTime;
 
-        public Game1()
+		#region Fonts
+		public SpriteFont segoeUIMono;
+        public SpriteFont segoeUIRegular;
+		public SpriteFont segoeUIBold;
+		public SpriteFont segoeUIItalic;
+		#endregion
+
+		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Window.Title = "Wrath Of John: We are here!!!";
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferWidth = 700;
-            graphics.PreferredBackBufferHeight = 500;
+            graphics.PreferredBackBufferWidth = (int)resolution.X;
+            graphics.PreferredBackBufferHeight = (int)resolution.Y;
             windowSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+			graphics.IsFullScreen = fullscreen;
         }
 
         /// <summary>
@@ -77,31 +128,29 @@ namespace WrathOfJohn
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            debugFont = Content.Load<SpriteFont>(@"Fonts\debug\Segoe UI Mono");
-            segoeUI = Content.Load<SpriteFont>(@"Fonts\Segoe UI");
+            segoeUIMono = Content.Load<SpriteFont>(@"Fonts\Segoe UI Mono");
+            segoeUIRegular = Content.Load<SpriteFont>(@"Fonts\Segoe UI Regular");
+			segoeUIBold = Content.Load<SpriteFont>(@"Fonts\Segoe UI Bold");
+			segoeUIItalic = Content.Load<SpriteFont>(@"Fonts\Segoe UI Italic");
 
             splashScreenManager = new SplashScreenManager(this);
             menuManager = new MenuManager(this);
+			optionsManager = new OptionsManager(this);
             gameManager = new GameManager(this);
-            checkpointManager = new CheckpointManager(this);
-            saveFileManager = new SaveFileManager(this);
 
             Components.Add(splashScreenManager);
             Components.Add(menuManager);
+			Components.Add(optionsManager);
             Components.Add(gameManager);
-            Components.Add(checkpointManager);
-            Components.Add(saveFileManager);
 
+			splashScreenManager.Enabled = true;
+			splashScreenManager.Visible = true;
             menuManager.Enabled = false;
             menuManager.Visible = false;
-            gameManager.Enabled = false;
-            gameManager.Visible = false;
-            splashScreenManager.Enabled = true;
-            splashScreenManager.Visible = true;
-            checkpointManager.Enabled = true;
-            checkpointManager.Visible = debugCheckpointManager;
-            saveFileManager.Enabled = true;
-            saveFileManager.Visible = debugSaveFileManager;
+			optionsManager.Enabled = false;
+			optionsManager.Visible = false;
+			gameManager.Enabled = false;
+			gameManager.Visible = false;
 
             currentGameLevel = GameLevels.SPLASH;
 
@@ -198,6 +247,10 @@ namespace WrathOfJohn
                     menuManager.Enabled = true;
                     menuManager.Visible = true;
                     break;
+				case GameLevels.OPTIONS:
+					optionsManager.Enabled = true;
+					optionsManager.Visible = true;
+					break;
                 case GameLevels.GAME:
                     gameManager.Enabled = true;
                     gameManager.Visible = true;

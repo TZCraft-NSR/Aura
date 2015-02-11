@@ -86,7 +86,7 @@ namespace WrathOfJohn
             background1 = Game.Content.Load<Texture2D>(@"Images\screens\splash1");
             background2 = Game.Content.Load<Texture2D>(@"Images\screens\splash2");
 
-            debugLabel = new Label(Vector2.Zero, myGame.debugFont, 1f, Color.Black, "");
+            debugLabel = new Label(Vector2.Zero, myGame.segoeUIMono, 1f, Color.Black, "");
 
             base.LoadContent();
         }

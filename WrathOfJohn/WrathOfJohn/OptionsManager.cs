@@ -12,7 +12,14 @@ using VoidEngine;
 
 namespace WrathOfJohn
 {
-    class OptionsManager
-    {
-    }
+	/// <summary>
+	/// This is a game component that implements IUpdateable.
+	/// </summary>
+	public class OptionsManager : Microsoft.Xna.Framework.DrawableGameComponent
+	{
+		public OptionsManager(Game1 myGame) : base(myGame)
+		{
+
+		}
+	}
 }

@@ -111,7 +111,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
-    <Compile Include="CheckpointManager.cs" />
     <Compile Include="OptionsManager.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Projectile.cs" />
@@ -119,7 +118,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameManager.cs" />
-    <Compile Include="SaveFileManager.cs" />
     <Compile Include="SplashScreenManager.cs" />
     <Compile Include="MenuManager.cs" />
   </ItemGroup>

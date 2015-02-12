@@ -77,15 +77,22 @@ namespace WrathOfJohn
 		}
 
 		public override void Draw(GameTime gameTime)
-		{
-			spriteBatch.Begin();
-			spriteBatch.Draw(background, Vector2.Zero, Color.White);
-			exitButton.Draw(gameTime, spriteBatch);
-			playButton.Draw(gameTime, spriteBatch);
-			optionsButton.Draw(gameTime, spriteBatch);
-			spriteBatch.End();
+        {
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointWrap, null, null);
+            {
+                spriteBatch.Draw(background, new Rectangle(0, 0, (int)myGame.WindowSize.X, (int)myGame.WindowSize.Y), Color.White);
+            }
+            spriteBatch.End();
 
-			base.Draw(gameTime);
-		}
+            spriteBatch.Begin();
+            {
+                exitButton.Draw(gameTime, spriteBatch);
+                playButton.Draw(gameTime, spriteBatch);
+                optionsButton.Draw(gameTime, spriteBatch);
+            }
+            spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
 	}
 }

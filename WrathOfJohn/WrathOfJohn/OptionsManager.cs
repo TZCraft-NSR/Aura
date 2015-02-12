@@ -17,9 +17,39 @@ namespace WrathOfJohn
 	/// </summary>
 	public class OptionsManager : Microsoft.Xna.Framework.DrawableGameComponent
 	{
-		public OptionsManager(Game1 myGame) : base(myGame)
-		{
+        SpriteBatch spriteBatch;
+        Game1 myGame;
 
+        Texture2D backgroundTexture;
+        Texture2D buttonTexture;
+        Button applyButton;
+        Button cancelButton;
+
+		public OptionsManager(Game1 game) : base(game)
+		{
+            myGame = game;
+
+            Initialize();
 		}
+
+        public override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+        }
 	}
 }

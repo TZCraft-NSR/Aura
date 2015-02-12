@@ -86,7 +86,7 @@ namespace WrathOfJohn
             background1 = Game.Content.Load<Texture2D>(@"Images\screens\splash1");
             background2 = Game.Content.Load<Texture2D>(@"Images\screens\splash2");
 
-            debugLabel = new Label(Vector2.Zero, myGame.segoeUIMono, 1f, Color.Black, "");
+            debugLabel = new Label(Vector2.Zero, myGame.segoeUIMono, 0.75f, Color.Black, "");
 
             base.LoadContent();
         }
@@ -128,10 +128,17 @@ namespace WrathOfJohn
             int alphaValue3 = (int)MathHelper.Clamp(alphaValue1, 0, 255);
             int alphaValue4 = (int)MathHelper.Clamp(alphaValue2, 0, 255);
 
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointWrap, null, null);
+            {
+                spriteBatch.Draw(background1, new Rectangle(((int)myGame.WindowSize.X - background1.Width) / 2, ((int)myGame.WindowSize.Y - background1.Height) / 2, background1.Width, background1.Height), new Color(255, 255, 255, alphaValue3));
+                spriteBatch.Draw(background2, new Rectangle(((int)myGame.WindowSize.X - background2.Width) / 2, ((int)myGame.WindowSize.Y - background2.Height) / 2, background2.Width, background2.Height), new Color(255, 255, 255, alphaValue4));
+            }
+            spriteBatch.End();
+
             spriteBatch.Begin();
-                spriteBatch.Draw(background1, Vector2.Zero, new Color(255, 255, 255, alphaValue3));
-                spriteBatch.Draw(background2, Vector2.Zero, new Color(alphaValue4, alphaValue4, alphaValue4, alphaValue4));
+            {
                 debugLabel.Draw(gameTime, spriteBatch);
+            }
             spriteBatch.End();
 
             base.Draw(gameTime);

@@ -26,7 +26,8 @@ namespace WrathOfJohn
 		Game1 myGame;
 		List<Sprite.AnimationSet> animationSpriteList;
 
-		public MenuManager(Game1 game) : base(game)
+		public MenuManager(Game1 game)
+			: base(game)
 		{
 			myGame = game;
 
@@ -51,9 +52,9 @@ namespace WrathOfJohn
 			animationSpriteList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 0), new Point(170, 0), 0));
 			animationSpriteList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(2, 0), new Point(340, 0), 0));
 
-			exitButton = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 366), myGame.segoeUIRegular, 1f, Color.Black, "EXIT", Color.White, animationSpriteList);
-			playButton = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 190), myGame.segoeUIRegular, 1f, Color.Black, "PLAY", Color.White, animationSpriteList);
-			optionsButton = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 275), myGame.segoeUIRegular, 1f, Color.Black, "OPTIONS", Color.White, animationSpriteList);
+			exitButton = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 366), myGame.ubuntuRegular, 1f, Color.Black, "EXIT", Color.White, animationSpriteList);
+			playButton = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 190), myGame.ubuntuRegular, 1f, Color.Black, "PLAY", Color.White, animationSpriteList);
+			optionsButton = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 275), myGame.ubuntuRegular, 1f, Color.Black, "OPTIONS", Color.White, animationSpriteList);
 
 			base.LoadContent();
 		}
@@ -70,29 +71,33 @@ namespace WrathOfJohn
 			}
 			if (playButton.Clicked())
 			{
-				myGame.setCurrentLevel(Game1.GameLevels.GAME);
+				myGame.SetCurrentLevel(Game1.GameLevels.GAME);
+			}
+			if (optionsButton.Clicked())
+			{
+				myGame.SetCurrentLevel(Game1.GameLevels.OPTIONS);
 			}
 
 			base.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime)
-        {
-            spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointWrap, null, null);
-            {
-                spriteBatch.Draw(background, new Rectangle(0, 0, (int)myGame.WindowSize.X, (int)myGame.WindowSize.Y), Color.White);
-            }
-            spriteBatch.End();
+		{
+			spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointWrap, null, null);
+			{
+				spriteBatch.Draw(background, new Rectangle(0, 0, (int)myGame.WindowSize.X, (int)myGame.WindowSize.Y), Color.White);
+			}
+			spriteBatch.End();
 
-            spriteBatch.Begin();
-            {
-                exitButton.Draw(gameTime, spriteBatch);
-                playButton.Draw(gameTime, spriteBatch);
-                optionsButton.Draw(gameTime, spriteBatch);
-            }
-            spriteBatch.End();
+			spriteBatch.Begin();
+			{
+				exitButton.Draw(gameTime, spriteBatch);
+				playButton.Draw(gameTime, spriteBatch);
+				optionsButton.Draw(gameTime, spriteBatch);
+			}
+			spriteBatch.End();
 
-            base.Draw(gameTime);
-        }
+			base.Draw(gameTime);
+		}
 	}
 }

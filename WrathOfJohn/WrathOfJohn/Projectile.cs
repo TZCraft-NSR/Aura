@@ -57,7 +57,8 @@ namespace WrathOfJohn
 			}
 		}
 
-		public Projectile(Vector2 startPosition, Color color, List<AnimationSet> animationSetList, Player player, Game1 game) : base(startPosition, color, animationSetList)
+		public Projectile(Vector2 startPosition, Color color, List<AnimationSet> animationSetList, Player player, Game1 game)
+			: base(startPosition, color, animationSetList)
 		{
 			myGame = game;
 			this.startPosition = startPosition;
@@ -67,7 +68,7 @@ namespace WrathOfJohn
 
 			if (player.flipped == SpriteEffects.FlipHorizontally)
 			{
-				position.X = position.X - 25; 
+				position.X = position.X - 25;
 				direction = new Vector2(-1, 0);
 			}
 			else
@@ -99,7 +100,7 @@ namespace WrathOfJohn
 			{
 				visible = false;
 			}
-			
+
 			if (visible == true)
 			{
 				position += direction * speed;

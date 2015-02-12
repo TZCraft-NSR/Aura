@@ -64,14 +64,24 @@ namespace WrathOfJohn
 		string firstLine9;
 		public string firstLine10 = "()";
 		public Texture2D projectileTexture;
-		Texture2D backgroundTexture;
-		Point backgroundPosition;
+		Texture2D parallax1;
+		Texture2D parallax2;
+		Texture2D parallax3;
+		Texture2D parallax4;
+		ParallaxBackground parallax1Background;
+		ParallaxBackground parallax2Background;
+		ParallaxBackground parallax3Background;
+		ParallaxBackground parallax4Background;
+		List<PlatformManager> platformList;
+		Texture2D platformTexture;
+		List<Sprite.AnimationSet> platformAnimationSetList;
 
 		/// <summary>
 		/// This is to create the Game Manager.
 		/// </summary>
 		/// <param name="game">This is for the Game stuff</param>
-		public GameManager(Game1 game) : base(game)
+		public GameManager(Game1 game)
+			: base(game)
 		{
 			myGame = game;
 			// This is to fix the Initalize() function.
@@ -83,6 +93,8 @@ namespace WrathOfJohn
 		/// </summary>
 		public override void Initialize()
 		{
+			platformAnimationSetList = new List<Sprite.AnimationSet>();
+			platformList = new List<PlatformManager>();
 			base.Initialize();
 		}
 
@@ -104,23 +116,35 @@ namespace WrathOfJohn
 			playerTexture = Game.Content.Load<Texture2D>(@"Images\players\player");
 			debugDotTexture = Game.Content.Load<Texture2D>(@"Images\debugStuff\line");
 			projectileTexture = Game.Content.Load<Texture2D>(@"Images\projectiles\beam1");
-			backgroundTexture = Game.Content.Load<Texture2D>(@"Images\screens\game");
+			parallax1 = Game.Content.Load<Texture2D>(@"Images\screens\game\paralax\parallax1");
+			parallax2 = Game.Content.Load<Texture2D>(@"Images\screens\game\paralax\parallax2");
+			parallax3 = Game.Content.Load<Texture2D>(@"Images\screens\game\paralax\parallax3");
+			parallax4 = Game.Content.Load<Texture2D>(@"Images\screens\game\paralax\parallax4");
+			platformTexture = Game.Content.Load<Texture2D>(@"Images\tiles\tile");
+
+			parallax1Background = new ParallaxBackground(parallax1, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
+			parallax2Background = new ParallaxBackground(parallax2, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 28), Color.White, 1.125f, camera);
+			parallax3Background = new ParallaxBackground(parallax3, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 302), Color.White, 1.250f, camera);
+			parallax4Background = new ParallaxBackground(parallax4, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 272), Color.White, 1.500f, camera);
 
 			tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(60, 50), new Point(1, 1), new Point(0, 0), 1000));
 			tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(60, 50), new Point(4, 3), new Point(0, 0), 50));
 			tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(60, 50), new Point(4, 1), new Point(0, 150), 100));
 			tempPlayerAnimationSetList.Add(new Sprite.AnimationSet("SHOOT", playerTexture, new Point(60, 50), new Point(1, 3), new Point(240, 0), 250));
 
+			platformAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("IDLE2", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
+
 			List<Sprite.AnimationSet> tempBackgroundAnimationSetList = new List<Sprite.AnimationSet>();
 
-			player = new Player(playerTexture, new Vector2((myGame.WindowSize.X - 60) / 2, mapSegments[3].point1.Y - 50), myGame, Keys.A, Keys.D, Keys.Space, Keys.E, 2f, Color.White, tempPlayerAnimationSetList);
+			player = new Player(playerTexture, new Vector2((myGame.WindowSize.X - 60) / 2, mapSegments[3].point1.Y - 50), myGame, Keys.A, Keys.D, Keys.Space, Keys.E, 4f, Color.White, tempPlayerAnimationSetList);
 
-			debugLabel0 = new Label(new Vector2(0, 00), myGame.segoeUIMono, 0.50f, Color.Black, "");
-			debugLabel1 = new Label(new Vector2(0, 10), myGame.segoeUIMono, 0.50f, Color.Black, "");
-			debugLabel2 = new Label(new Vector2(0, 20), myGame.segoeUIMono, 0.50f, Color.Black, "");
-			debugLabel3 = new Label(new Vector2(0, 30), myGame.segoeUIMono, 0.50f, Color.Black, "");
-			debugLabel4 = new Label(new Vector2(0, 40), myGame.segoeUIMono, 0.50f, Color.Black, "");
-			debugLabel5 = new Label(new Vector2(0, 50), myGame.segoeUIMono, 0.50f, Color.Black, "");
+			debugLabel0 = new Label(new Vector2(0, 00), myGame.ubuntuMono, 0.50f, Color.Black, "");
+			debugLabel1 = new Label(new Vector2(0, 10), myGame.ubuntuMono, 0.50f, Color.Black, "");
+			debugLabel2 = new Label(new Vector2(0, 20), myGame.ubuntuMono, 0.50f, Color.Black, "");
+			debugLabel3 = new Label(new Vector2(0, 30), myGame.ubuntuMono, 0.50f, Color.Black, "");
+			debugLabel4 = new Label(new Vector2(0, 40), myGame.ubuntuMono, 0.50f, Color.Black, "");
+			debugLabel5 = new Label(new Vector2(0, 50), myGame.ubuntuMono, 0.50f, Color.Black, "");
 
 			base.LoadContent();
 		}
@@ -135,10 +159,18 @@ namespace WrathOfJohn
 			{
 				camera.Position = new Vector2(player.position.X + 200f, 0);
 			}
+			camera.OverallPlayerPosition = new Vector2(player.position.X + 200f, 0);
+
+			parallax1Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			parallax1Background.Update(gameTime);
+			parallax2Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 28);
+			parallax2Background.Update(gameTime);
+			parallax3Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 302);
+			parallax3Background.Update(gameTime);
+			parallax4Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 272);
+			parallax4Background.Update(gameTime);
 
 			playerSegments = player.getPlayerSgements();
-
-			backgroundPosition = new Point((int)camera.Position.X, (int)camera.Position.Y);
 
 			player.Update(gameTime);
 
@@ -151,7 +183,7 @@ namespace WrathOfJohn
 			firstLine7 = "mapSegement" + 2 + "=(" + (int)mapSegments[1].point1.X + "," + (int)mapSegments[1].point1.Y + "," + (int)mapSegments[1].point2.X + "," + (int)mapSegments[1].point2.Y + ")";
 			firstLine8 = "mapSegement" + 3 + "=(" + (int)mapSegments[2].point1.X + "," + (int)mapSegments[2].point1.Y + "," + (int)mapSegments[2].point2.X + "," + (int)mapSegments[2].point2.Y + ")";
 			firstLine9 = "mapSegement" + 4 + "=(" + (int)mapSegments[3].point1.X + "," + (int)mapSegments[3].point1.Y + "," + (int)mapSegments[3].point2.X + "," + (int)mapSegments[3].point2.Y + ")";
-            firstLine10 = "resolution=(" + (int)myGame.Resolution.X + "," + (int)myGame.Resolution.Y + ")";
+			firstLine10 = "resolution=(" + (int)camera.OverallPlayerPosition.X + "," + (int)camera.OverallPlayerPosition.Y + ")";
 
 			debugLabel0.Update(gameTime, firstLine1);
 			debugLabel1.Update(gameTime, firstLine2 + "   " + firstLine3);
@@ -168,46 +200,70 @@ namespace WrathOfJohn
 		/// </summary>
 		/// <param name="gameTime"><This is to check the run time./param>
 		public override void Draw(GameTime gameTime)
-        {
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
-            {
-                // Draw the background.
-                spriteBatch.Draw(backgroundTexture, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), camera.Position.Y - (myGame.WindowSize.Y / 2)), new Rectangle((int)backgroundPosition.X, 0, (int)myGame.WindowSize.X, (int)myGame.WindowSize.Y), Color.White);
-                if (camera.Position.X > -backgroundPosition.X)
-                {
-                    spriteBatch.Draw(backgroundTexture, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), camera.Position.Y - (myGame.WindowSize.Y / 2)), new Rectangle((int)backgroundPosition.X, 0, (int)myGame.WindowSize.X, (int)myGame.WindowSize.Y), Color.White);
-                }
+		{
+			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
+			{
+				parallax1Background.Draw(gameTime, spriteBatch);
+				parallax2Background.Draw(gameTime, spriteBatch);
+				parallax3Background.Draw(gameTime, spriteBatch);
+				parallax4Background.Draw(gameTime, spriteBatch);
 
-                // Draw the player.
-                player.Draw(gameTime, spriteBatch);
+				SpawnBricks();
+				foreach (PlatformManager pm in platformList)
+				{
+					pm.Draw(gameTime, spriteBatch);
+				}
 
-                // Debug bounding map boxes.
-                spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[0].point1.X, mapSegments[0].point1.Y, mapSegments[0].point2.X + 1, mapSegments[0].point2.Y), Color.Blue);
-                spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[1].point1.X, mapSegments[1].point1.Y, mapSegments[1].point2.X + 1, 1), Color.Green);
-                spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[2].point1.X, mapSegments[2].point1.Y, mapSegments[2].point2.X + 1, mapSegments[2].point2.Y + 1), Color.Red);
-                spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[3].point1.X, mapSegments[3].point1.Y, mapSegments[3].point2.X + 1, 1), Color.Gray);
+				// Draw the player.
+				player.Draw(gameTime, spriteBatch);
 
-                // Debug bounding player boxes.
-                spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[0].point1.X, playerSegments[0].point1.Y, 1, 44), Color.Blue);
-                spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[1].point1.X, playerSegments[1].point1.Y, 20, 1), Color.Blue);
-                spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[2].point1.X, playerSegments[2].point1.Y, 1, 44), Color.Blue);
-                spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[3].point1.X, playerSegments[3].point1.Y, 20, 1), Color.Blue);
-            }
-            spriteBatch.End();
+				// Debug bounding map boxes.
+				spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[0].point1.X, mapSegments[0].point1.Y, mapSegments[0].point2.X + 1, mapSegments[0].point2.Y), Color.Blue);
+				spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[1].point1.X, mapSegments[1].point1.Y, mapSegments[1].point2.X + 1, 1), Color.Green);
+				spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[2].point1.X, mapSegments[2].point1.Y, mapSegments[2].point2.X + 1, mapSegments[2].point2.Y + 1), Color.Red);
+				spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[3].point1.X, mapSegments[3].point1.Y, mapSegments[3].point2.X + 1, 1), Color.Gray);
 
-            spriteBatch.Begin();
-            {
-                // To debug variables.
-                debugLabel0.Draw(gameTime, spriteBatch);
-                debugLabel1.Draw(gameTime, spriteBatch);
-                debugLabel2.Draw(gameTime, spriteBatch);
-                debugLabel3.Draw(gameTime, spriteBatch);
-                debugLabel4.Draw(gameTime, spriteBatch);
-                debugLabel5.Draw(gameTime, spriteBatch);
-            }
-            spriteBatch.End();
+				// Debug bounding player boxes.
+				spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[0].point1.X, playerSegments[0].point1.Y, 1, 44), Color.Blue);
+				spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[1].point1.X, playerSegments[1].point1.Y, 20, 1), Color.Blue);
+				spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[2].point1.X, playerSegments[2].point1.Y, 1, 44), Color.Blue);
+				spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[3].point1.X, playerSegments[3].point1.Y, 20, 1), Color.Blue);
+			}
+			spriteBatch.End();
 
-            base.Draw(gameTime);
-        }
+			spriteBatch.Begin();
+			{
+				// To debug variables.
+				debugLabel0.Draw(gameTime, spriteBatch);
+				debugLabel1.Draw(gameTime, spriteBatch);
+				debugLabel2.Draw(gameTime, spriteBatch);
+				debugLabel3.Draw(gameTime, spriteBatch);
+				debugLabel4.Draw(gameTime, spriteBatch);
+				debugLabel5.Draw(gameTime, spriteBatch);
+			}
+			spriteBatch.End();
+
+			base.Draw(gameTime);
+		}
+
+		public void SpawnBricks()
+		{
+			int width = 16;
+			int height = 25;
+			uint[,] brickspawn;
+
+			brickspawn = Maps.GetBrickArray(Maps.HappyFace());
+
+			for (int x = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					if (brickspawn[y, x] > 0)
+					{
+						platformList.Add(new PlatformManager(new Vector2(y * 20 + 20, x * 20 + 20), myGame, (int)brickspawn[y, x], platformAnimationSetList));
+					}
+				}
+			}
+		}
 	}
 }

@@ -110,7 +110,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs" />
     <Compile Include="OptionsManager.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Projectile.cs" />

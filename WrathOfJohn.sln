@@ -20,8 +20,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|x64.ActiveCfg = Debug|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|x64.Build.0 = Debug|x86
+		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|x64.ActiveCfg = Release|x86
+		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|x64.Build.0 = Release|x86
 		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|x86.ActiveCfg = Debug|x86
 		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|x86.Build.0 = Debug|x86
 		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Release|Mixed Platforms.ActiveCfg = Release|x86
@@ -31,19 +31,21 @@ Global
 		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Release|x86.ActiveCfg = Release|x86
 		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Release|x86.Build.0 = Release|x86
 		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Debug|x64.ActiveCfg = Debug|x86
+		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Debug|x64.ActiveCfg = Release|x86
 		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Debug|x86.ActiveCfg = Debug|x86
 		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Release|x64.ActiveCfg = Release|x86
 		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Release|x86.ActiveCfg = Release|x86
 		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Debug|x64.ActiveCfg = Debug|x86
+		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Debug|x64.ActiveCfg = Release|x86
+		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Debug|x64.Build.0 = Release|x86
 		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Debug|x86.ActiveCfg = Debug|x86
 		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Debug|x86.Build.0 = Debug|x86
 		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Release|Mixed Platforms.Build.0 = Release|x86
 		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Release|x64.ActiveCfg = Release|x86
+		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Release|x64.Build.0 = Release|x86
 		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Release|x86.ActiveCfg = Release|x86
 		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection

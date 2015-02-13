@@ -13,14 +13,14 @@ namespace VoidEngine
 	{
 		Game myGame;
 
-		public float brickRadius = 10f;
 		public int type;
 		List<Collision.MapSegment> brickSegments;
 
 		public PlatformManager(Vector2 pos, Game mygame, int type, List<AnimationSet> animationSetLists)
 			: base(pos, Color.White, animationSetLists)
 		{
-			this.animationSets = animationSetLists;
+			AnimationSets = animationSetLists;
+			brickSegments = new List<Collision.MapSegment>();
 			myGame = mygame;
 			this.type = type;
 			SetAnimation("IDLE1");
@@ -28,10 +28,10 @@ namespace VoidEngine
 
 		public override void Update(GameTime gameTime)
 		{
-			brickSegments.Add(new Collision.MapSegment(new Point((int)position.X, (int)position.Y), new Point((int)position.X + 25, (int)position.Y)));
-			brickSegments.Add(new Collision.MapSegment(new Point((int)position.X + 25, (int)position.Y), new Point((int)position.X + 25, (int)position.Y + 25)));
-			brickSegments.Add(new Collision.MapSegment(new Point((int)position.X + 25, (int)position.Y + 25), new Point((int)position.X, (int)position.Y + 25)));
-			brickSegments.Add(new Collision.MapSegment(new Point((int)position.X, (int)position.Y + 25), new Point((int)position.X, (int)position.Y)));
+			brickSegments.Add(new Collision.MapSegment(new Point((int)Position.X, (int)Position.Y), new Point((int)Position.X + 25, (int)Position.Y)));
+			brickSegments.Add(new Collision.MapSegment(new Point((int)Position.X + 25, (int)Position.Y), new Point((int)Position.X + 25, (int)Position.Y + 25)));
+			brickSegments.Add(new Collision.MapSegment(new Point((int)Position.X + 25, (int)Position.Y + 25), new Point((int)Position.X, (int)Position.Y + 25)));
+			brickSegments.Add(new Collision.MapSegment(new Point((int)Position.X, (int)Position.Y + 25), new Point((int)Position.X, (int)Position.Y)));
 
 			base.Update(gameTime);
 		}

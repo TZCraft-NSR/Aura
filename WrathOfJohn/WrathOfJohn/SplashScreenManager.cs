@@ -18,7 +18,7 @@ namespace WrathOfJohn
 	public class SplashScreenManager : Microsoft.Xna.Framework.DrawableGameComponent
 	{
 		/// <summary>
-		///  Used for reseting the timer -not really needed-
+		/// Used for reseting the timer -not really needed-
 		/// </summary>
 		int countdownTimerDefault = 5000;
 		/// <summary>

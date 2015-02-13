@@ -29,9 +29,9 @@ namespace VoidEngine
 			: base(position, color, animationSetList)
 		{
 			this.myGame = myGame;
-			this.color = color;
-			animationSets = animationSetList;
-			this.position = position;
+			_Color = color;
+			AnimationSets = animationSetList;
+			Position = position;
 		}
 	}
 }

@@ -46,8 +46,8 @@ namespace VoidEngine
 		public Button(Vector2 position, SpriteFont font, float scale, Color fontColor, string text, Color color, List<Sprite.AnimationSet> animationSetList)
 			: base(position, color, animationSetList)
 		{
-			this.color = color;
-			animationSets = animationSetList;
+			_Color = color;
+			AnimationSets = animationSetList;
 			label = new Label(new Vector2(position.X + ((animationSetList[0].frameSize.X - font.MeasureString(text).X) / 2), position.Y + ((animationSetList[0].frameSize.Y - font.MeasureString(text).Y) / 2)), font, scale, fontColor, text);
 		}
 
@@ -77,10 +77,8 @@ namespace VoidEngine
 		/// </summary>
 		public void updButton()
 		{
-			if (hitButtonAlpha(position.X, position.Y, currentAnimation.frameSize, mouseX, mouseY))
+			if (hitButtonAlpha(Position.X, Position.Y, CurrentAnimation.frameSize, mouseX, mouseY))
 			{
-				currentAnimation.framesPerMillisecond = 0;
-
 				if (mousePress)
 				{
 					buttonState = bState.DOWN;
@@ -104,11 +102,6 @@ namespace VoidEngine
 			{
 				buttonState = bState.UP;
 				SetAnimation("REG");
-
-				if (currentAnimation.framesPerMillisecond > 0)
-				{
-					currentAnimation.framesPerMillisecond -= currentAnimation.framesPerMillisecond;
-				}
 			}
 		}
 
@@ -118,8 +111,6 @@ namespace VoidEngine
 		/// <param name="gameTime">The main GameTime</param>
 		public override void Update(GameTime gameTime)
 		{
-			currentAnimation.framesPerMillisecond = gameTime.ElapsedGameTime.Milliseconds / 1000;
-
 			MouseState mState = Mouse.GetState();
 
 			mouseX = mState.X;

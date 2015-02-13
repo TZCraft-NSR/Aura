@@ -64,7 +64,7 @@ namespace VoidEngine
 
 		public void Update(GameTime gameTime)
 		{
-			parallax = camera.OverallPlayerPosition.X;
+			parallax = camera.OverallPlayerPosition.X * multiplier;
 		}
 
 		public void Draw(GameTime gameTime, SpriteBatch spriteBatch)

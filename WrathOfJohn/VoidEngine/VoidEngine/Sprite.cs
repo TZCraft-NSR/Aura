@@ -27,8 +27,7 @@ namespace VoidEngine
 			ENEMY,
 			AI,
 			PLAYER
-		};
-
+		}
 		// <summary>
 		// The type of movement that the player or AI or sprite will have
 		// </summary>
@@ -39,8 +38,7 @@ namespace VoidEngine
 			VERTICAL,
 			TOPDOWN,
 			PLATFORMER
-		};
-
+		}
 		// <summary>
 		// The animation set for each type of animation in the player sprite sheet.
 		// </summary>
@@ -67,7 +65,7 @@ namespace VoidEngine
 			// </summary>
 			public int framesPerMillisecond;
 			// <summary>
-			// The start position in exact cordinates that the animation starts at.
+			// The start Position in exact cordinates that the animation starts at.
 			// </summary>
 			public Point startPosition;
 
@@ -79,7 +77,7 @@ namespace VoidEngine
 			// <param name="frameSize2">The size of each frame, all frames have to be the same size in one animation.</param>
 			// <param name="sheetSize2">The size of that animation in the sheet in frames.</param>
 			// <param name="startPosition2">The rate in milliseconds that the frames change</param>
-			// <param name="framesPerMillisecond2">The start position in exact cordinates that the animation starts at.</param>
+			// <param name="framesPerMillisecond2">The start Position in exact cordinates that the animation starts at.</param>
 			public AnimationSet(string name2, Texture2D texture2, Point frameSize2, Point sheetSize2, Point startPosition2, int framesPerMillisecond2)
 			{
 				name = name2;
@@ -92,181 +90,204 @@ namespace VoidEngine
 		}
 
 		// <summary>
-		// The current AnimationSet.
+		// Gets or sets the sprite's current animation.
 		// </summary>
-		public AnimationSet currentAnimation;
-		/// <summary>
-		/// The list of animation sets.
-		/// </summary>
-		protected List<AnimationSet> animationSets = new List<AnimationSet>();
-		/// <summary>
-		/// The current frame's position in sheet cords.
-		/// </summary>
-		Point currentFrame;
-		/// <summary>
-		/// Frame time before the update.
-		/// </summary>
-		int lastFrameTime;
-		/// <summary>
-		/// The current direction that the sprite is moving at.
-		/// </summary>
-		public Vector2 direction;
-		/// <summary>
-		/// The current direction that the sprite is at.
-		/// </summary>
-		public Vector2 position;
-		/// <summary>
-		/// The current speed that the sprite is moving at.
-		/// <summary>
-		public float speed;
-		/// <summary>
-		/// Weither the sprite can move or not.
-		/// </summary>
-		bool move = false;
-		/// <summary>
-		/// Gets or Sets if the sprite can move.
-		/// </summary>
-		public bool canMove
+		protected AnimationSet CurrentAnimation
 		{
-			set
-			{
-				move = value;
-			}
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets the animation sets.
+		/// </summary>
+		protected List<AnimationSet> AnimationSets
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// The sprites current animation frame.
+		/// </summary>
+		private Point currentFrame;
+		/// <summary>
+		/// Gets or sets the sprites current animation frame.
+		/// </summary>
+		public Point CurrentFrame
+		{
 			get
 			{
-				return move;
+				return currentFrame;
+			}
+			set
+			{
+				currentFrame = value;
 			}
 		}
 		/// <summary>
-		/// The type of AI the sprite has.
+		/// Gets or sets the animations last frame time.
 		/// </summary>
-		public AIType aiType;
-		/// <summary>
-		/// The type of movement the sprite has.
-		/// </summary>
-		public MovementType movementType;
-		/// <summary>
-		/// The list of keys that the sprite can move at.
-		/// indexes: [0]: Left | [1]: Up | [2]: Right | [3]: Down | [4]: Custom1 | [5]: Custom2 | [6]: Custom3
-		/// </summary>
-		public List<Keys> MovementKeys = new List<Keys>();
-		/// <summary>
-		/// To flip the sprite
-		/// </summary>
-		public SpriteEffects flipped;
-		/// <summary>
-		/// The keyboard detection
-		/// </summary>
-		protected KeyboardState keyboardState, previousKeyboardState;
-		/// <summary>
-		/// Sets or Gets if the sprite is jumping.
-		/// </summary>
-		bool jumping = false;
-		/// <summary>
-		/// gets if the sprite is jumping.
-		/// </summary>
-		public bool isJumping
+		protected int LastFrameTime
 		{
-			set
-			{
-				jumping = value;
-			}
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets the direction that the sprite is moving towards.
+		/// </summary>
+		protected Vector2 Direction
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// The Position that the sprite is at.
+		/// </summary>
+		protected Vector2 Position;
+		/// <summary>
+		/// Gets the position that the sprite is at.
+		/// </summary>
+		public Vector2 GetPosition
+		{
 			get
 			{
-				return jumping;
+				return Position;
 			}
 		}
 		/// <summary>
-		/// Sets or Gets if the sprite is grounded.
-		/// </summary>
-		bool grounded = true;
+		/// Gets or sets the Speed that the sprite moves at.
 		/// <summary>
-		/// Gets if the sprite is grounded
-		/// </summary>
-		public bool isGrounded
+		protected float Speed
 		{
-			set
-			{
-				grounded = value;
-			}
-			get
-			{
-				return grounded;
-			}
+			get;
+			set;
 		}
 		/// <summary>
-		/// If the sprite is falling
+		/// Gets or sets weither the spite can move or not.
 		/// </summary>
-		bool falling = false;
-		/// <summary>
-		/// Gets or Sets if the sprite is falling.
-		/// </summary>
-		public bool isFalling
+		protected bool CanMove
 		{
-			set
-			{
-				falling = value;
-			}
-			get
-			{
-				return falling;
-			}
+			get;
+			set;
 		}
 		/// <summary>
-		/// This is to trigger gravity speed.
+		/// Gets or sets the type of AI the sprite uses.
 		/// </summary>
-		float bleedOff = 2.0f;
-		/// <summary>
-		/// Sets or Gets the gravity acceleration.
-		/// </summary>
-		public float BleedOff
+		public AIType _AIType
 		{
-			set
-			{
-				bleedOff = value;
-			}
-			get
-			{
-				return bleedOff;
-			}
+			get;
+			set;
 		}
 		/// <summary>
-		/// This is to set the default gravity size.
+		/// Gets or sets the type of movement the sprite uses.
 		/// </summary>
-		float gravity;
-		/// <summary>
-		/// Gets or Sets the default Gravity Acceleration
-		/// </summary>
-		public float Gravity
+		public MovementType _MovementType
 		{
-			set
-			{
-				gravity = value;
-			}
-			get
-			{
-				return bleedOff;
-			}
+			get;
+			set;
 		}
 		/// <summary>
-		/// This is to set the default ground position.
+		/// Gets or sets the list of keys that the sprite uses.
+		/// Indexes: [0]: Left | [1]: Up | [2]: Right | [3]: Down | [4]: Custom1 | [5]: Custom2 | [6]: Custom3 | [?]: etc.
 		/// </summary>
-		public Vector2 ground;
-		Rectangle destinationRectangle;
-		Rectangle sourceRectangle;
-		public Color color;
+		protected List<Keys> MovementKeys
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets if the sprite is flipped.
+		/// </summary>
+		public SpriteEffects isFlipped
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets if the sprite is jumping. (Used for player or enemy classes)
+		/// </summary>
+		protected bool isJumping
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets if the sprite is on the ground. (Used for player or enemy classes)
+		/// </summary>
+		protected bool isGrounded
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets if the sprite is falling. (Used for player or enemy classes)
+		/// </summary>
+		protected bool isFalling
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets the sprites bleed off of gravity. (Used for player or enemy classes)
+		/// </summary>
+		protected float BleedOff
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets the sprites gravity. (Used for player or enemy classes)
+		/// </summary>
+		protected float Gravity
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets the sprites ground. (Used for player or enemy classes)
+		/// </summary>
+		protected Vector2 Ground
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets the sprites color.
+		/// </summary>
+		protected Color _Color
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets the keyboard state.
+		/// </summary>
+		protected KeyboardState _KeyboardState
+		{
+			get;
+			private set;
+		}
+		/// <summary>
+		/// Gets or sets the previous keyboard state.
+		/// </summary>
+		protected KeyboardState _PreviousKeyboardState
+		{
+			get;
+			private set;
+		}
 
 		/// <summary>
 		/// Creates the sprite with custom properties
 		/// </summary>
-		/// <param name="postion">The position of the sprite.</param>
+		/// <param name="postion">The Position of the sprite.</param>
 		/// <param name="animationSetList">The list of animations.</param>
 		public Sprite(Vector2 position, Color color, List<AnimationSet> animationSetList)
 		{
-			animationSets = animationSetList;
-			this.position = position;
-			lastFrameTime = 0;
-			this.color = color;
+			MovementKeys = new List<Keys>();
+			AnimationSets = new List<AnimationSet>();
+			AnimationSets = animationSetList;
+			Position = position;
+			LastFrameTime = 0;
+			_Color = color;
 		}
 
 		/// <summary>
@@ -275,36 +296,32 @@ namespace VoidEngine
 		/// <param name="gameTime">The main GameTime</param>
 		public virtual void Update(GameTime gameTime)
 		{
-			keyboardState = Keyboard.GetState();
-			previousKeyboardState = keyboardState;
+			_KeyboardState = Keyboard.GetState();
+			_PreviousKeyboardState = _KeyboardState;
 
-			lastFrameTime += gameTime.ElapsedGameTime.Milliseconds;
+			LastFrameTime += gameTime.ElapsedGameTime.Milliseconds;
 
-			if (lastFrameTime >= currentAnimation.framesPerMillisecond)
+			if (LastFrameTime >= CurrentAnimation.framesPerMillisecond)
 			{
 				currentFrame.X++;
 
-				if (currentFrame.X >= currentAnimation.sheetSize.X)
+				if (currentFrame.X >= CurrentAnimation.sheetSize.X)
 				{
 					currentFrame.Y++;
 					currentFrame.X = 0;
 
-					if (currentFrame.Y >= currentAnimation.sheetSize.Y)
+					if (currentFrame.Y >= CurrentAnimation.sheetSize.Y)
 					{
 						currentFrame.Y = 0;
 					}
 				}
 
-				lastFrameTime = 0;
+				LastFrameTime = 0;
 			}
 
 			UpdateMovement();
-		}
 
-		public void UpdateRecangle(Rectangle DestinationRectangle, Rectangle SourceRectangle)
-		{
-			destinationRectangle = DestinationRectangle;
-			sourceRectangle = SourceRectangle;
+			_PreviousKeyboardState = _KeyboardState;
 		}
 
 		/// <summary>
@@ -314,7 +331,7 @@ namespace VoidEngine
 		/// <param name="spriteBatch">The main SpriteBatch</param>
 		public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 		{
-			spriteBatch.Draw(currentAnimation.texture, this.position, new Rectangle(currentAnimation.startPosition.X + (currentFrame.X * currentAnimation.frameSize.X), currentAnimation.startPosition.Y + (currentFrame.Y * currentAnimation.frameSize.Y), currentAnimation.frameSize.X, currentAnimation.frameSize.Y), color, 0f, Vector2.Zero, 1f, flipped, 0);
+			spriteBatch.Draw(CurrentAnimation.texture, this.Position, new Rectangle(CurrentAnimation.startPosition.X + (CurrentFrame.X * CurrentAnimation.frameSize.X), CurrentAnimation.startPosition.Y + (CurrentFrame.Y * CurrentAnimation.frameSize.Y), CurrentAnimation.frameSize.X, CurrentAnimation.frameSize.Y), _Color, 0f, Vector2.Zero, 1f, isFlipped, 0);
 		}
 
 		/// <summary>
@@ -323,84 +340,87 @@ namespace VoidEngine
 		/// <param name="setName">The name of the animation to set.</param>
 		public void SetAnimation(string setName)
 		{
-			if (currentAnimation.name != setName)
+			if (CurrentAnimation.name != setName)
 			{
-				foreach (AnimationSet a in animationSets)
+				foreach (AnimationSet a in AnimationSets)
 				{
 					if (a.name == setName)
 					{
-						currentAnimation = a;
-						currentFrame = Point.Zero;
+						CurrentAnimation = a;
+						CurrentFrame = Point.Zero;
 					}
 				}
 			}
 		}
 
+		/// <summary>
+		/// Updates the sprites movement.
+		/// </summary>
 		public virtual void UpdateMovement()
 		{
-			if (movementType == MovementType.HORIZONTAL)
+			if (_MovementType == MovementType.HORIZONTAL)
 			{
-				if (aiType == AIType.PLAYER)
+				if (_AIType == AIType.PLAYER)
 				{
-					if (keyboardState.IsKeyDown(MovementKeys[0]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[0]))
 					{
-						position.X -= speed;
+						Position.X -= Speed;
 					}
-					if (keyboardState.IsKeyDown(MovementKeys[2]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[2]))
 					{
-						position.X += speed;
+						Position.X += Speed;
 					}
 				}
 			}
-			if (movementType == MovementType.VERTICAL)
+			if (_MovementType == MovementType.VERTICAL)
 			{
-				if (aiType == AIType.PLAYER)
+				if (_AIType == AIType.PLAYER)
 				{
-					if (keyboardState.IsKeyDown(MovementKeys[1]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[1]))
 					{
-						position.Y -= speed;
+						Position.Y -= Speed;
 					}
-					if (keyboardState.IsKeyDown(MovementKeys[3]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[3]))
 					{
-						position.Y += speed;
+						Position.Y += Speed;
 					}
 				}
 			}
-			if (movementType == MovementType.TOPDOWN)
+			if (_MovementType == MovementType.TOPDOWN)
 			{
-				if (aiType == AIType.PLAYER)
+				if (_AIType == AIType.PLAYER)
 				{
-					if (keyboardState.IsKeyDown(MovementKeys[0]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[0]))
 					{
-						position.X -= speed;
+						Position.X -= Speed;
 					}
-					if (keyboardState.IsKeyDown(MovementKeys[1]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[1]))
 					{
-						position.Y -= speed;
+						Position.Y -= Speed;
 					}
-					if (keyboardState.IsKeyDown(MovementKeys[2]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[2]))
 					{
-						position.X += speed;
+						Position.X += Speed;
 					}
-					if (keyboardState.IsKeyDown(MovementKeys[3]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[3]))
 					{
-						position.Y += speed;
+						Position.Y += Speed;
 					}
 				}
 			}
-			if (movementType == MovementType.PLATFORMER)
+			if (_MovementType == MovementType.PLATFORMER)
 			{
-				if (aiType == AIType.PLAYER)
+				if (_AIType == AIType.PLAYER)
 				{
-					if (keyboardState.IsKeyDown(MovementKeys[0]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[0]))
 					{
-						position.X -= speed;
+						Position.X -= Speed;
 					}
-					if (keyboardState.IsKeyDown(MovementKeys[2]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[2]))
 					{
-						position.X += speed;
+						Position.X += Speed;
 					}
-					if (keyboardState.IsKeyDown(MovementKeys[4]))
+					if (_KeyboardState.IsKeyDown(MovementKeys[4]))
 					{
 						isJumping = true;
 						isGrounded = false;
@@ -419,11 +439,11 @@ namespace VoidEngine
 		{
 			if (toFlip)
 			{
-				flipped = SpriteEffects.FlipHorizontally;
+				isFlipped = SpriteEffects.FlipHorizontally;
 			}
 			else
 			{
-				flipped = SpriteEffects.None;
+				isFlipped = SpriteEffects.None;
 			}
 		}
 
@@ -435,7 +455,7 @@ namespace VoidEngine
 		{
 			if (isJumping)
 			{
-				position.Y -= BleedOff;
+				Position.Y -= BleedOff;
 				BleedOff -= 0.03f;
 
 				isGrounded = false;
@@ -448,16 +468,16 @@ namespace VoidEngine
 
 			if (isFalling)
 			{
-				if (position.Y >= ground.Y)
+				if (Position.Y >= Ground.Y)
 				{
 					isGrounded = true;
 					isJumping = false;
 					isFalling = false;
-					BleedOff = gravity;
+					BleedOff = Gravity;
 				}
 			}
 
-			BleedOff = MathHelper.Clamp(BleedOff, -gravity - 1f, gravity);
+			BleedOff = MathHelper.Clamp(BleedOff, -Gravity - 1f, Gravity);
 		}
 
 		/// <summary>
@@ -465,20 +485,16 @@ namespace VoidEngine
 		/// </summary>
 		public Rectangle collisionRectangle()
 		{
-			return new Rectangle((int)position.X, (int)position.Y, currentAnimation.frameSize.X, currentAnimation.frameSize.Y);
+			return new Rectangle((int)Position.X, (int)Position.Y, CurrentAnimation.frameSize.X, CurrentAnimation.frameSize.Y);
 		}
 
+		/// <summary>
+		/// Sets the current sprite Position.
+		/// </summary>
+		/// <param name="newPosition">The Position to set the sprite to.</param>
 		public void SetPosition(Vector2 newPosition)
 		{
-			position = newPosition;
-		}
-
-		public Vector2 GetPosition
-		{
-			get
-			{
-				return position;
-			}
+			Position = newPosition;
 		}
 	}
 }

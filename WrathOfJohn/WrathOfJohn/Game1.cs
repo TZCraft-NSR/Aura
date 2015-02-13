@@ -46,7 +46,7 @@ namespace WrathOfJohn
 			}
 		}
 
-		Vector2 resolution = new Vector2(700, 500);
+		Vector2 resolution = new Vector2(800, 450);
 		public Vector2 Resolution
 		{
 			get

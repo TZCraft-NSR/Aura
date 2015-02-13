@@ -13,9 +13,8 @@ using VoidEngine;
 
 namespace WrathOfJohn
 {
-	class Projectile : Sprite
+	public class Projectile : Player
 	{
-		Game1 myGame;
 		List<Collision.MapSegment> projectileSegments = new List<Collision.MapSegment>();
 		Vector2 startPosition;
 		public Vector2 StartPosition
@@ -60,50 +59,49 @@ namespace WrathOfJohn
 		public Projectile(Vector2 startPosition, Color color, List<AnimationSet> animationSetList, Player player, Game1 game)
 			: base(startPosition, color, animationSetList)
 		{
-			myGame = game;
 			this.startPosition = startPosition;
-			position = startPosition;
+			Position = startPosition;
 			color = Color.White;
-			animationSets = animationSetList;
+			AnimationSets = animationSetList;
 
-			if (player.flipped == SpriteEffects.FlipHorizontally)
+			if (player.isFlipped == SpriteEffects.FlipHorizontally)
 			{
-				position.X = position.X - 25;
-				direction = new Vector2(-1, 0);
+				Position.X = Position.X - 25;
+				Direction = new Vector2(-1, 0);
 			}
 			else
 			{
-				direction = new Vector2(1, 0);
+				Direction = new Vector2(1, 0);
 			}
 		}
 
 		public void Fire()
 		{
-			speed = 1;
+			Speed = 1;
 			maxDistance = 50;
 
 			visible = true;
 
 			SetAnimation("IDLE");
 
-			projectileSegments.Add(new Collision.MapSegment(new Point((int)position.X, (int)position.Y), new Point((int)position.X + currentAnimation.frameSize.X, (int)position.Y)));
-			projectileSegments.Add(new Collision.MapSegment(new Point((int)position.X + currentAnimation.frameSize.X, (int)position.Y), new Point((int)position.X + currentAnimation.frameSize.X, (int)position.Y + currentAnimation.frameSize.Y)));
-			projectileSegments.Add(new Collision.MapSegment(new Point((int)position.X + currentAnimation.frameSize.X, (int)position.Y + currentAnimation.frameSize.Y), new Point((int)position.X, (int)position.Y + currentAnimation.frameSize.Y)));
-			projectileSegments.Add(new Collision.MapSegment(new Point((int)position.X, (int)position.Y + currentAnimation.frameSize.Y), new Point((int)position.X, (int)position.Y)));
+			projectileSegments.Add(new Collision.MapSegment(new Point((int)Position.X, (int)Position.Y), new Point((int)Position.X + CurrentAnimation.frameSize.X, (int)Position.Y)));
+			projectileSegments.Add(new Collision.MapSegment(new Point((int)Position.X + CurrentAnimation.frameSize.X, (int)Position.Y), new Point((int)Position.X + CurrentAnimation.frameSize.X, (int)Position.Y + CurrentAnimation.frameSize.Y)));
+			projectileSegments.Add(new Collision.MapSegment(new Point((int)Position.X + CurrentAnimation.frameSize.X, (int)Position.Y + CurrentAnimation.frameSize.Y), new Point((int)Position.X, (int)Position.Y + CurrentAnimation.frameSize.Y)));
+			projectileSegments.Add(new Collision.MapSegment(new Point((int)Position.X, (int)Position.Y + CurrentAnimation.frameSize.Y), new Point((int)Position.X, (int)Position.Y)));
 		}
 
 		public override void UpdateMovement()
 		{
 			base.UpdateMovement();
 
-			if (Vector2.Distance(startPosition, position) > maxDistance)
+			if (Vector2.Distance(startPosition, Position) > maxDistance)
 			{
 				visible = false;
 			}
 
 			if (visible == true)
 			{
-				position += direction * speed;
+				Position += Direction * Speed;
 			}
 		}
 	}

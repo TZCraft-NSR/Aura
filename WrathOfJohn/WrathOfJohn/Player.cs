@@ -16,78 +16,148 @@ namespace WrathOfJohn
 	public class Player : Sprite
 	{
 		/// <summary>
-		/// This is the Game class that the Player class is running off of.
+		/// The mana struct for the player class.
 		/// </summary>
-		Game1 myGame;
+		public struct Mana
+		{
+			/// <summary>
+			/// The amount of mana the player has.
+			/// </summary>
+			public float mana;
+			/// <summary>
+			/// The maxium mana the player can have.
+			/// </summary>
+			public float maxMana;
+			/// <summary>
+			/// The ammount of time the mana recharges after.
+			/// </summary>
+			public float manaRechargeTime;
+			/// <summary>
+			/// The ammount of time the mana takes to charge at.
+			/// </summary>
+			public float manaInterval;
+
+			/// <summary>
+			/// Creates the Mana struct.
+			/// </summary>
+			/// <param name="maxMana">The maxium ammount of mana.</param>
+			/// <param name="manaRechargeTime">The ammout of time the mana recharges after.</param>
+			/// <param name="manaInterval">The ammount of time the mana takes to charge at.</param>
+			public Mana(float maxMana, float manaRechargeTime, float manaInterval)
+			{
+				this.mana = maxMana;
+				this.maxMana = maxMana;
+				this.manaRechargeTime = manaRechargeTime;
+				this.manaInterval = manaInterval;
+			}
+		}
+
 		/// <summary>
-		/// This is the animationSet list for the player.
+		/// Gets or sets the game that the player is running off of.
 		/// </summary>
-		public List<Collision.MapSegment> playerSegments = new List<Collision.MapSegment>();
-		float fireTime = 100;
-		public float FireTime
+		public Game1 myGame
 		{
-			get
-			{
-				return fireTime;
-			}
+			get;
+			private set;
 		}
-		bool hasShot = false;
-		public bool HasShot
+		/// <summary>
+		/// Gets or sets the player segements.
+		/// </summary>
+		public List<Collision.MapSegment> playerSegments
 		{
-			get
-			{
-				return hasShot;
-			}
+			get;
+			private set;
 		}
-		bool canShoot = true;
-		public bool CanShoot
+		/// <summary>
+		/// The mana for the player class.
+		/// </summary>
+		protected Mana _Mana;
+
+		#region Projectiles
+		/// <summary>
+		/// Gets or sets the projectiles animation sets.
+		/// </summary>
+		protected List<Sprite.AnimationSet> ProjectileAnimationSet
 		{
-			get
-			{
-				return canShoot;
-			}
+			get;
+			private set;
 		}
-		float mana = 100;
-		float maxMana = 100;
-		float manaRechargeTime = 5000;
-		float manaInterval = 1000;
-		List<Sprite.AnimationSet> projectileAnimationSet = new List<Sprite.AnimationSet>();
-		List<Projectile> projectileList = new List<Projectile>();
-		bool projectileListCreated = false;
-		bool createNew = true;
+		/// <summary>
+		/// Gets or sets the list of projectiles.
+		/// </summary>
+		protected List<Projectile> ProjectileList
+		{
+			get;
+			private set;
+		}
+		/// <summary>
+		/// Gets or sets if the projectile list is created.
+		/// </summary>
+		public bool ProjectileListCreated
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets if the player has shot.
+		/// </summary>
+		protected bool HasShot
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets if the player can shoot.
+		/// </summary>
+		protected bool CanShoot
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets or sets if a new projectile can be created.
+		/// </summary>
+		protected bool CreateNew
+		{
+			get;
+			set;
+		}
+		#endregion
 
 		/// <summary>
 		/// This is to create the Player class.
 		/// </summary>
 		/// <param name="texture">This is the player's texture</param>
 		/// <param name="position">This sets the player's position</param>
-		/// <param name="game">This is the Game class that the player runs on</param>
-		/// <param name="left">The left key</param>
-		/// <param name="right">The right key</param>
-		/// <param name="jump">The jump key</param>
-		/// <param name="attack"></param>
-		/// <param name="gravity2">The force of gravity</param>
-		/// <param name="color"></param>
-		/// <param name="animationSetList">The set of animations</param>
-		public Player(Texture2D texture, Vector2 position, Game1 game, Keys left, Keys right, Keys jump, Keys attack, float gravity2, Color color, List<AnimationSet> animationSetList)
+		/// <param name="movementKeys">The list of keys the player uses.</param>
+		/// <param name="gravity">The force of gravity.</param>
+		/// <param name="color">The color to mask the sprite.</param>
+		/// <param name="animationSetList">The set of animations the player has.</param>
+		/// <param name="game">This is the Game class that the player runs on.</param>
+		public Player(Vector2 position, List<Keys> movementKeys, float gravity, Mana mana, Color color, List<AnimationSet> animationSetList, Game1 game)
 			: base(position, color, animationSetList)
 		{
-			animationSets = animationSetList;
-			this.color = color;
-			movementType = MovementType.PLATFORMER;
-			aiType = AIType.PLAYER;
-			BleedOff = gravity2;
-			Gravity = gravity2;
+			#region Create Lists
+			playerSegments = new List<Collision.MapSegment>();
+			ProjectileList = new List<Projectile>();
+			ProjectileAnimationSet = new List<AnimationSet>();
+			#endregion
+
+			#region Set Projectile Factors
+			_Mana = mana;
+			#endregion
+
+			#region Set Movement Factors
+			_MovementType = MovementType.PLATFORMER;
+			_AIType = AIType.PLAYER;
+			BleedOff = gravity;
+			Gravity = gravity;
 			myGame = game;
-			MovementKeys.Add(left);
-			MovementKeys.Add(Keys.None);
-			MovementKeys.Add(right);
-			MovementKeys.Add(Keys.None);
-			MovementKeys.Add(jump);
-			MovementKeys.Add(attack);
-			canMove = true;
-			speed = 1;
-			ground = new Vector2(0, position.Y);
+			MovementKeys = movementKeys;
+			CanMove = true;
+			Speed = 1;
+			Ground = new Vector2(0, position.Y);
+			#endregion
 
 			playerSegments.Add(new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 5), new Point((int)position.X + 20, (int)position.Y + 49)));
 			playerSegments.Add(new Collision.MapSegment(new Point((int)position.X + 40, (int)position.Y + 49), new Point((int)position.X + 40, (int)position.Y + 5)));
@@ -96,23 +166,33 @@ namespace WrathOfJohn
 		}
 
 		/// <summary>
+		/// Creates a minimal player object.
+		/// </summary>
+		/// <param name="position">The starting position.</param>
+		/// <param name="color">The color to mask with.</param>
+		/// <param name="animationSetList">The animation set list.</param>
+		public Player(Vector2 position, Color color, List<AnimationSet> animationSetList) : base(position, color, animationSetList)
+		{
+		}
+
+		/// <summary>
 		/// Updates the Player class
 		/// </summary>
 		/// <param name="gameTime">To keep track of run time.</param>
 		public override void Update(GameTime gameTime)
 		{
-			playerSegments[0] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 5), new Point((int)position.X + 20, (int)position.Y + 48));
-			playerSegments[1] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 5), new Point((int)position.X + 40, (int)position.Y + 5));
-			playerSegments[2] = new Collision.MapSegment(new Point((int)position.X + 40, (int)position.Y + 5), new Point((int)position.X + 40, (int)position.Y + 48));
-			playerSegments[3] = new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 48), new Point((int)position.X + 40, (int)position.Y + 48));
+			playerSegments[0] = new Collision.MapSegment(new Point((int)Position.X + 20, (int)Position.Y + 5), new Point((int)Position.X + 20, (int)Position.Y + 48));
+			playerSegments[1] = new Collision.MapSegment(new Point((int)Position.X + 20, (int)Position.Y + 5), new Point((int)Position.X + 40, (int)Position.Y + 5));
+			playerSegments[2] = new Collision.MapSegment(new Point((int)Position.X + 40, (int)Position.Y + 5), new Point((int)Position.X + 40, (int)Position.Y + 48));
+			playerSegments[3] = new Collision.MapSegment(new Point((int)Position.X + 20, (int)Position.Y + 48), new Point((int)Position.X + 40, (int)Position.Y + 48));
 
-			if (projectileListCreated == false)
+			if (ProjectileListCreated == false)
 			{
-				projectileAnimationSet.Add(new AnimationSet("IDLE", myGame.gameManager.projectileTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
-				projectileListCreated = true;
+				ProjectileAnimationSet.Add(new AnimationSet("IDLE", myGame.gameManager.projectileTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
+				ProjectileListCreated = true;
 			}
 
-			foreach (Projectile p in projectileList)
+			foreach (Projectile p in ProjectileList)
 			{
 				p.Update(gameTime);
 			}
@@ -127,7 +207,7 @@ namespace WrathOfJohn
 		/// <param name="spriteBatch">The spriteBatch to draw with.</param>
 		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 		{
-			foreach (Projectile p in projectileList)
+			foreach (Projectile p in ProjectileList)
 			{
 				p.Draw(gameTime, spriteBatch);
 			}
@@ -139,19 +219,19 @@ namespace WrathOfJohn
 		{
 			if (myGame.gameManager.mapSegments[0].point1.X >= playerSegments[0].point1.X)
 			{
-				position.X = myGame.gameManager.mapSegments[0].point1.X - ((currentAnimation.frameSize.X - 20) / 2);
+				Position.X = myGame.gameManager.mapSegments[0].point1.X - ((CurrentAnimation.frameSize.X - 20) / 2);
 			}
 			if (myGame.gameManager.mapSegments[1].point1.Y >= playerSegments[1].point1.Y)
 			{
-				position.Y = myGame.gameManager.mapSegments[1].point1.Y - 48;
+				Position.Y = myGame.gameManager.mapSegments[1].point1.Y;
 			}
 			if (myGame.gameManager.mapSegments[2].point1.X <= playerSegments[2].point1.X)
 			{
-				position.X = myGame.gameManager.mapSegments[2].point1.X - ((currentAnimation.frameSize.X - 20));
+				Position.X = myGame.gameManager.mapSegments[2].point1.X - ((CurrentAnimation.frameSize.X - 20));
 			}
 			if (myGame.gameManager.mapSegments[3].point1.Y <= playerSegments[3].point1.Y)
 			{
-				position.Y = myGame.gameManager.mapSegments[3].point1.Y - 48;
+				Position.Y = myGame.gameManager.mapSegments[3].point1.Y - 48;
 			}
 
 			base.UpdateMovement();
@@ -191,8 +271,7 @@ namespace WrathOfJohn
 
 			if ((myGame.keyboardState.IsKeyUp(MovementKeys[5]) && !myGame.previousKeyboardState.IsKeyUp(MovementKeys[5])))
 			{
-
-				hasShot = false;
+				HasShot = false;
 			}
 
 			// To set the animation to idle.
@@ -201,80 +280,78 @@ namespace WrathOfJohn
 				SetAnimation("IDLE");
 			}
 
-			if (mana < maxMana)
+			if (_Mana.mana < _Mana.maxMana)
 			{
 				if (!HasShot)
 				{
-					manaRechargeTime -= myGame.elapsedTime;
+					_Mana.manaRechargeTime -= myGame.elapsedTime;
 				}
 
-				if (mana <= 0)
+				if (_Mana.mana <= 0)
 				{
-					canShoot = false;
+					CanShoot = false;
 				}
-				else if (mana >= 0)
+				else if (_Mana.mana >= 0)
 				{
-					canShoot = true;
+					CanShoot = true;
 				}
 
-				if (manaRechargeTime <= 0 && mana < maxMana && !HasShot)
+				if (_Mana.manaRechargeTime <= 0 && _Mana.mana < _Mana.maxMana && !HasShot)
 				{
-					manaInterval -= myGame.elapsedTime;
+					_Mana.manaInterval -= myGame.elapsedTime;
 
-					if (manaInterval <= 0)
+					if (_Mana.manaInterval <= 0)
 					{
-						mana += 9.5f;
-						manaInterval = 500;
+						_Mana.mana += 9.5f;
+						_Mana.manaInterval = 500;
 					}
 				}
 
-				if (mana >= maxMana || (HasShot && CanShoot))
+				if (_Mana.mana >= _Mana.maxMana || (HasShot && CanShoot))
 				{
-					manaRechargeTime = 5000;
+					_Mana.manaRechargeTime = 5000;
 				}
 
-				if (mana > maxMana)
+				if (_Mana.mana > _Mana.maxMana)
 				{
-					mana = maxMana;
+					_Mana.mana = _Mana.maxMana;
 				}
 			}
-
-			myGame.gameManager.firstLine10 = "mana=" + mana + " manaRechargeTime=" + manaRechargeTime + " HasShot=" + HasShot;
 		}
 
-		public List<Collision.MapSegment> getPlayerSgements()
+		public List<Collision.MapSegment> GetPlayerSgements()
 		{
 			return playerSegments;
 		}
 
 		public void ShootBeam()
 		{
-			foreach (Projectile p in projectileList)
+			foreach (Projectile p in ProjectileList)
 			{
 				if (!p.isVisible)
 				{
-					createNew = true;
-					projectileList.RemoveAt(0);
+					CreateNew = true;
+					ProjectileList.RemoveAt(0);
 					break;
 				}
 			}
 
-			if (createNew == true && canShoot && mana >= maxMana / 3)
+			if (CreateNew == true && CanShoot && _Mana.mana >= _Mana.maxMana / 3)
 			{
-				if (canShoot)
+				if (CanShoot)
 				{
-					hasShot = true;
+					HasShot = true;
 				}
 
-				mana -= maxMana / 3;
-				Projectile projectile = new Projectile(new Vector2(position.X + 35, position.Y + ((projectileAnimationSet[0].frameSize.Y - 4) / 2) + 8), Color.White, projectileAnimationSet, this, myGame);
+				_Mana.mana -= _Mana.maxMana / 3;
+				Projectile projectile = new Projectile(new Vector2(Position.X + 35, Position.Y + ((ProjectileAnimationSet[0].frameSize.Y - 4) / 2) + 8), Color.White, ProjectileAnimationSet, this, myGame);
 				projectile.Fire();
-				projectileList.Add(projectile);
+				ProjectileList.Add(projectile);
 			}
 
-			if (mana < 0)
+			if (_Mana.mana < 0)
 			{
-				mana = 0;
+				_Mana.mana = 0;
 			}
 		}
 	}

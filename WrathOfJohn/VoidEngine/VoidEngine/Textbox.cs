@@ -28,10 +28,10 @@ namespace VoidEngine
 		public Textbox(Vector2 position, Color color, List<AnimationSet> animationSetList, Game myGame)
 			: base(position, color, animationSetList)
 		{
-			this.color = color;
+			_Color = color;
 			this.myGame = myGame;
-			animationSets = animationSetList;
-			this.position = position;
+			AnimationSets = animationSetList;
+			Position = position;
 		}
 	}
 }

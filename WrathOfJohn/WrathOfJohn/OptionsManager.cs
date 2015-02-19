@@ -57,10 +57,10 @@ namespace WrathOfJohn
 			buttonAnimationSetList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(170, 0), 0));
 			buttonAnimationSetList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(340, 0), 0));
 
-			applyButton = new Button(new Vector2((myGame.WindowSize.X / 2) - (buttonAnimationSetList[0].frameSize.X + 50), myGame.WindowSize.Y - buttonTexture.Height - 25), myGame.ubuntuRegular, 1f, Color.Black, "APPLY", Color.White, buttonAnimationSetList);
+			applyButton = new Button(new Vector2((myGame.WindowSize.X / 2) - (buttonAnimationSetList[0].frameSize.X + 50), myGame.WindowSize.Y - buttonTexture.Height - 25), myGame.segoeUIRegular, 1f, Color.Black, "APPLY", Color.White, buttonAnimationSetList);
 			applyButton.SetAnimation("REG");
 
-			cancelButton = new Button(new Vector2((myGame.WindowSize.X / 2) + 50, myGame.WindowSize.Y - buttonTexture.Height - 25), myGame.ubuntuRegular, 1f, Color.Black, "CANCEL", Color.White, buttonAnimationSetList);
+			cancelButton = new Button(new Vector2((myGame.WindowSize.X / 2) + 50, myGame.WindowSize.Y - buttonTexture.Height - 25), myGame.segoeUIRegular, 1f, Color.Black, "CANCEL", Color.White, buttonAnimationSetList);
 			cancelButton.SetAnimation("REG");
 
 			base.LoadContent();

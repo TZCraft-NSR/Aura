@@ -205,7 +205,7 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets if the sprite is jumping. (Used for player or enemy classes)
 		/// </summary>
-		protected bool isJumping
+		public bool isJumping
 		{
 			get;
 			set;
@@ -213,15 +213,16 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets if the sprite is on the ground. (Used for player or enemy classes)
 		/// </summary>
-		protected bool isGrounded
+		public bool isGrounded
 		{
 			get;
 			set;
 		}
+		public bool isTouchingGround;
 		/// <summary>
 		/// Gets or sets if the sprite is falling. (Used for player or enemy classes)
 		/// </summary>
-		protected bool isFalling
+		public bool isFalling
 		{
 			get;
 			set;
@@ -229,7 +230,7 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the sprites bleed off of gravity. (Used for player or enemy classes)
 		/// </summary>
-		protected float BleedOff
+		public float BleedOff
 		{
 			get;
 			set;
@@ -238,14 +239,6 @@ namespace VoidEngine
 		/// Gets or sets the sprites gravity. (Used for player or enemy classes)
 		/// </summary>
 		protected float Gravity
-		{
-			get;
-			set;
-		}
-		/// <summary>
-		/// Gets or sets the sprites ground. (Used for player or enemy classes)
-		/// </summary>
-		protected Vector2 Ground
 		{
 			get;
 			set;
@@ -288,6 +281,8 @@ namespace VoidEngine
 			Position = position;
 			LastFrameTime = 0;
 			_Color = color;
+			BleedOff = 0;
+			isTouchingGround = false;
 		}
 
 		/// <summary>
@@ -422,8 +417,13 @@ namespace VoidEngine
 					}
 					if (_KeyboardState.IsKeyDown(MovementKeys[4]))
 					{
-						isJumping = true;
-						isGrounded = false;
+						if (isGrounded)
+						{
+							BleedOff = Gravity;
+							isJumping = true;
+							isGrounded = false;
+							isTouchingGround = false;
+						}
 					}
 				}
 
@@ -453,27 +453,41 @@ namespace VoidEngine
 		/// <param name="gameTime"></param>
 		public void UpdateGravity()
 		{
-			if (isJumping)
+			if (isJumping || isFalling)
 			{
-				Position.Y -= BleedOff;
-				BleedOff -= 0.03f;
+				if (BleedOff > 0f && isJumping)
+				{
+					Direction = new Vector2(0, -BleedOff);
+					BleedOff -= 0.03f;
+				}
 
-				isGrounded = false;
-
-				if (BleedOff <= 0f)
+				if (BleedOff <= 0f && isJumping)
 				{
 					isFalling = true;
+					isJumping = false;
+				}
+				if (isFalling && !isJumping)
+				{
+					Direction = new Vector2(0, -BleedOff);
+					BleedOff -= 0.06f;
 				}
 			}
 
 			if (isFalling)
 			{
-				if (Position.Y >= Ground.Y)
+				if (isGrounded)
 				{
-					isGrounded = true;
+					Direction = Vector2.Zero;
 					isJumping = false;
 					isFalling = false;
-					BleedOff = Gravity;
+				}
+			}
+
+			if (!isTouchingGround)
+			{
+				if (isGrounded)
+				{
+					isFalling = false;
 				}
 			}
 

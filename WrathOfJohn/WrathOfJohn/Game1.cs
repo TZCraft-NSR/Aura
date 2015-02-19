@@ -98,10 +98,10 @@ namespace WrathOfJohn
 		public float elapsedTime, previousElapsedTime;
 
 		#region Fonts
-		public SpriteFont ubuntuMono;
-		public SpriteFont ubuntuRegular;
-		public SpriteFont ubuntuBold;
-		public SpriteFont ubuntuItalic;
+		public SpriteFont segoeUIMono;
+		public SpriteFont segoeUIRegular;
+		public SpriteFont segoeUIBold;
+		public SpriteFont segoeUIItalic;
 		#endregion
 
 		public Game1()
@@ -139,10 +139,10 @@ namespace WrathOfJohn
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			ubuntuMono = Content.Load<SpriteFont>(@"Fonts\Ubuntu Mono");
-			ubuntuRegular = Content.Load<SpriteFont>(@"Fonts\Ubuntu Regular");
-			ubuntuBold = Content.Load<SpriteFont>(@"Fonts\Ubuntu Bold");
-			ubuntuItalic = Content.Load<SpriteFont>(@"Fonts\Ubuntu Italic");
+			segoeUIMono = Content.Load<SpriteFont>(@"Fonts\Segoe UI Mono");
+			segoeUIRegular = Content.Load<SpriteFont>(@"Fonts\Segoe UI Regular");
+			segoeUIBold = Content.Load<SpriteFont>(@"Fonts\Segoe UI Bold");
+			segoeUIItalic = Content.Load<SpriteFont>(@"Fonts\Segoe UI Italic");
 
 			splashScreenManager = new SplashScreenManager(this);
 			menuManager = new MenuManager(this);

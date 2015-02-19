@@ -13,14 +13,12 @@ namespace VoidEngine
 	{
 		Game myGame;
 
+		public float radius = 10;
 		public int type;
-		List<Collision.MapSegment> brickSegments;
 
 		public PlatformManager(Vector2 pos, Game mygame, int type, List<AnimationSet> animationSetLists)
 			: base(pos, Color.White, animationSetLists)
 		{
-			AnimationSets = animationSetLists;
-			brickSegments = new List<Collision.MapSegment>();
 			myGame = mygame;
 			this.type = type;
 			SetAnimation("IDLE1");
@@ -28,11 +26,6 @@ namespace VoidEngine
 
 		public override void Update(GameTime gameTime)
 		{
-			brickSegments.Add(new Collision.MapSegment(new Point((int)Position.X, (int)Position.Y), new Point((int)Position.X + 25, (int)Position.Y)));
-			brickSegments.Add(new Collision.MapSegment(new Point((int)Position.X + 25, (int)Position.Y), new Point((int)Position.X + 25, (int)Position.Y + 25)));
-			brickSegments.Add(new Collision.MapSegment(new Point((int)Position.X + 25, (int)Position.Y + 25), new Point((int)Position.X, (int)Position.Y + 25)));
-			brickSegments.Add(new Collision.MapSegment(new Point((int)Position.X, (int)Position.Y + 25), new Point((int)Position.X, (int)Position.Y)));
-
 			base.Update(gameTime);
 		}
 
@@ -47,11 +40,6 @@ namespace VoidEngine
 				SetAnimation("IDLE2");
 			}
 			base.Draw(gameTime, spriteBatch);
-		}
-
-		public List<Collision.MapSegment> GetSegments()
-		{
-			return brickSegments;
 		}
 	}
 }

@@ -117,7 +117,7 @@ namespace VoidEngine
 			Line.vector.Y = Segement.point2.Y - Segement.point1.Y;
 
 
-			double OH = Math.Abs(((Line.vector.X * (Circle.point.Y)) - (Line.vector.Y * (Circle.point.X - Line.point.X))) / (Math.Sqrt(Line.vector.X * Line.vector.X + Line.vector.Y * Line.vector.Y)));
+			double OH = Math.Abs(((Line.vector.X * (Circle.point.Y - Line.point.Y)) - (Line.vector.Y * (Circle.point.X - Line.point.X))) / (Math.Sqrt(Line.vector.X * Line.vector.X + Line.vector.Y * Line.vector.Y)));
 
 			if (OH <= Circle.radius)
 			{
@@ -137,7 +137,7 @@ namespace VoidEngine
 					CollisionPoint2.X = (float)((-b - Math.Sqrt(b * b - 4 * a * c)) / (2 * a));
 
 					CollisionPoint1.Y = Line.Slope() * CollisionPoint1.X + Line.YInt();
-					CollisionPoint2.Y = Line.Slope() * CollisionPoint1.X + Line.YInt();
+					CollisionPoint2.Y = Line.Slope() * CollisionPoint2.X + Line.YInt();
 
 					bool cond1 = (Math.Min(Segement.point1.X, Segement.point2.X) <= CollisionPoint1.X && CollisionPoint1.X <= Math.Max(Segement.point1.X, Segement.point2.X));
 

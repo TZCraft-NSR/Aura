@@ -15,6 +15,12 @@ namespace WrathOfJohn
 {
 	public class Player : Sprite
 	{
+		public enum CollisionState
+		{
+			COLLIDE,
+			NOT
+		}
+
 		/// <summary>
 		/// The mana struct for the player class.
 		/// </summary>
@@ -61,17 +67,15 @@ namespace WrathOfJohn
 			private set;
 		}
 		/// <summary>
-		/// Gets or sets the player segements.
-		/// </summary>
-		public List<Collision.MapSegment> playerSegments
-		{
-			get;
-			private set;
-		}
-		/// <summary>
 		/// The mana for the player class.
 		/// </summary>
 		protected Mana _Mana;
+
+		protected CollisionState collisionState;
+
+		protected Collision.Circle playerCircle;
+
+		public bool isColliding = false;
 
 		#region Projectiles
 		/// <summary>
@@ -138,7 +142,7 @@ namespace WrathOfJohn
 			: base(position, color, animationSetList)
 		{
 			#region Create Lists
-			playerSegments = new List<Collision.MapSegment>();
+			//playerSegments = new List<Collision.MapSegment>();
 			ProjectileList = new List<Projectile>();
 			ProjectileAnimationSet = new List<AnimationSet>();
 			#endregion
@@ -150,20 +154,15 @@ namespace WrathOfJohn
 			#region Set Movement Factors
 			_MovementType = MovementType.PLATFORMER;
 			_AIType = AIType.PLAYER;
-			BleedOff = gravity;
 			Gravity = gravity;
 			myGame = game;
 			MovementKeys = movementKeys;
 			CanMove = true;
-			Speed = 1;
-			Ground = new Vector2(0, position.Y);
+			Speed = 2;
 			#endregion
 
-			playerSegments.Add(new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 5), new Point((int)position.X + 20, (int)position.Y + 49)));
-			playerSegments.Add(new Collision.MapSegment(new Point((int)position.X + 40, (int)position.Y + 49), new Point((int)position.X + 40, (int)position.Y + 5)));
-			playerSegments.Add(new Collision.MapSegment(new Point((int)position.X + 20, (int)position.Y + 49), new Point((int)position.X + 40, (int)position.Y + 49)));
-			playerSegments.Add(new Collision.MapSegment(new Point((int)position.X + 40, (int)position.Y + 5), new Point((int)position.X + 20, (int)position.Y + 5)));
-		}
+			Direction = Vector2.Zero;
+        }
 
 		/// <summary>
 		/// Creates a minimal player object.
@@ -181,10 +180,26 @@ namespace WrathOfJohn
 		/// <param name="gameTime">To keep track of run time.</param>
 		public override void Update(GameTime gameTime)
 		{
-			playerSegments[0] = new Collision.MapSegment(new Point((int)Position.X + 20, (int)Position.Y + 5), new Point((int)Position.X + 20, (int)Position.Y + 48));
-			playerSegments[1] = new Collision.MapSegment(new Point((int)Position.X + 20, (int)Position.Y + 5), new Point((int)Position.X + 40, (int)Position.Y + 5));
-			playerSegments[2] = new Collision.MapSegment(new Point((int)Position.X + 40, (int)Position.Y + 5), new Point((int)Position.X + 40, (int)Position.Y + 48));
-			playerSegments[3] = new Collision.MapSegment(new Point((int)Position.X + 20, (int)Position.Y + 48), new Point((int)Position.X + 40, (int)Position.Y + 48));
+			Position += Direction * Speed;
+
+			playerCircle.point.X = Position.X + ((CurrentAnimation.frameSize.X) / 2);
+			playerCircle.point.Y = Position.Y + (CurrentAnimation.frameSize.Y - 10);
+			playerCircle.radius = 10;
+
+			isColliding = DetectCircleCollision();
+
+			if (!DetectCircleCollision())
+			{
+				isGrounded = true;
+				isTouchingGround = true;
+			}
+
+			if (DetectCircleCollision() && isGrounded && isTouchingGround)
+			{
+				isGrounded = false;
+				isTouchingGround = false;
+				isFalling = true;
+			}
 
 			if (ProjectileListCreated == false)
 			{
@@ -217,23 +232,6 @@ namespace WrathOfJohn
 
 		public override void UpdateMovement()
 		{
-			if (myGame.gameManager.mapSegments[0].point1.X >= playerSegments[0].point1.X)
-			{
-				Position.X = myGame.gameManager.mapSegments[0].point1.X - ((CurrentAnimation.frameSize.X - 20) / 2);
-			}
-			if (myGame.gameManager.mapSegments[1].point1.Y >= playerSegments[1].point1.Y)
-			{
-				Position.Y = myGame.gameManager.mapSegments[1].point1.Y;
-			}
-			if (myGame.gameManager.mapSegments[2].point1.X <= playerSegments[2].point1.X)
-			{
-				Position.X = myGame.gameManager.mapSegments[2].point1.X - ((CurrentAnimation.frameSize.X - 20));
-			}
-			if (myGame.gameManager.mapSegments[3].point1.Y <= playerSegments[3].point1.Y)
-			{
-				Position.Y = myGame.gameManager.mapSegments[3].point1.Y - 48;
-			}
-
 			base.UpdateMovement();
 
 			// To play the jumping animation.
@@ -319,9 +317,9 @@ namespace WrathOfJohn
 			}
 		}
 
-		public List<Collision.MapSegment> GetPlayerSgements()
+		public Collision.Circle GetPlayerCircle()
 		{
-			return playerSegments;
+			return playerCircle;
 		}
 
 		public void ShootBeam()
@@ -353,6 +351,44 @@ namespace WrathOfJohn
 			{
 				_Mana.mana = 0;
 			}
+		}
+
+		public bool DetectCircleCollision()
+		{
+			bool tempBoolean = true;
+
+			foreach (Collision.Circle cm in myGame.gameManager.platformCircles)
+			{
+				if (collisionState == CollisionState.NOT)
+				{
+					if (Collision.CheckCircleCircleCollision(playerCircle, cm))
+					{
+						collisionState = CollisionState.COLLIDE;
+
+						myGame.gameManager.firstLine10 = (cm.point.X - 10).ToString() + "  " + (playerCircle.point.X + playerCircle.radius).ToString();
+
+						if (playerCircle.point.X + playerCircle.radius == Math.Round(cm.point.X - 10))
+						{
+							Position.X = cm.point.X - ((float)cm.radius * 3);
+						}
+						/*
+						if (playerCircle.point.X + playerCircle.radius >= cm.point.X + (cm.radius * 2) - 5 && playerCircle.point.X + playerCircle.radius <= cm.point.X + (cm.radius * 2))
+						{
+							Position.X = cm.point.X - (float)cm.radius - 5;
+						}
+						 * */
+
+						tempBoolean = true;
+					}
+				}
+				if (collisionState == CollisionState.COLLIDE)
+				{
+					collisionState = CollisionState.NOT;
+					tempBoolean = false;
+				}
+			}
+
+			return tempBoolean;
 		}
 	}
 }

@@ -43,10 +43,7 @@ namespace WrathOfJohn
 		/// The player class' texture.
 		/// </summary>
 		Texture2D playerTexture;
-		/// <summary>
-		/// The players collision segements.
-		/// </summary>
-		List<Collision.MapSegment> playerSegments;
+		protected Collision.Circle playerCircle;
 		/// <summary>
 		/// The players projectile texture
 		/// </summary>
@@ -75,43 +72,43 @@ namespace WrathOfJohn
 		/// <summary>
 		/// The first debug string.
 		/// </summary>
-		string firstLine1;
+		string firstLine1 = "";
 		/// <summary>
 		/// The second debug string.
 		/// </summary>
-		string firstLine2;
+		string firstLine2 = "";
 		/// <summary>
 		/// The third debug string.
 		/// </summary>
-		string firstLine3;
+		string firstLine3 = "";
 		/// <summary>
 		/// The forth debug string.
 		/// </summary>
-		string firstLine4;
+		string firstLine4 = "";
 		/// <summary>
 		/// The fifth debug string.
 		/// </summary>
-		string firstLine5;
+		string firstLine5 = "";
 		/// <summary>
 		/// The sixth debug string.
 		/// </summary>
-		string firstLine6;
+		string firstLine6 = "";
 		/// <summary>
 		/// The seventh debug string.
 		/// </summary>
-		string firstLine7;
+		string firstLine7 = "";
 		/// <summary>
 		/// The eighth debug string.
 		/// </summary>
-		string firstLine8;
+		string firstLine8 = "";
 		/// <summary>
 		/// The ninth debug string.
 		/// </summary>
-		string firstLine9;
+		string firstLine9 = "";
 		/// <summary>
 		/// The tenth debug string.
 		/// </summary>
-		public string firstLine10;
+		public string firstLine10 = "";
 		#endregion
 		#endregion
 
@@ -123,7 +120,7 @@ namespace WrathOfJohn
 		/// <summary>
 		/// The list of blocks.
 		/// </summary>
-		List<PlatformManager> platformList;
+		public List<PlatformManager> platformList;
 		/// <summary>
 		/// The texture sheet of blocks.
 		/// </summary>
@@ -132,6 +129,7 @@ namespace WrathOfJohn
 		/// The animation set list of the blocks.
 		/// </summary>
 		List<Sprite.AnimationSet> platformAnimationSetList;
+		public List<Collision.Circle> platformCircles;
 		#endregion
 
 		#region Background Variables
@@ -190,9 +188,9 @@ namespace WrathOfJohn
 			playerAnimationSetList = new List<Sprite.AnimationSet>();
 			platformAnimationSetList = new List<Sprite.AnimationSet>();
 			mapSegments = new List<Collision.MapSegment>();
-			playerSegments = new List<Collision.MapSegment>();
 			platformList = new List<PlatformManager>();
 			MovementKeys = new List<Keys>();
+			platformCircles = new List<Collision.Circle>();
 
 			base.Initialize();
 		}
@@ -213,13 +211,13 @@ namespace WrathOfJohn
 			parallax4 = Game.Content.Load<Texture2D>(@"Images\screens\game\paralax\parallax4");
 			platformTexture = Game.Content.Load<Texture2D>(@"Images\tiles\tile");
 
-			camera = new Camera(GraphicsDevice.Viewport, (int)myGame.Resolution.X * 4, (int)myGame.Resolution.Y, 1f);
+			camera = new Camera(GraphicsDevice.Viewport, 6400, 450, 1f);
 			camera.Position = new Vector2(0, 0);
 
 			mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point(0, (int)camera.Size.Y - 23)));
 			mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point((int)camera.Size.X - 1, 0)));
 			mapSegments.Add(new Collision.MapSegment(new Point((int)camera.Size.X - 1, 0), new Point((int)camera.Size.X - 1, (int)camera.Size.Y - 23)));
-			mapSegments.Add(new Collision.MapSegment(new Point(0, (int)camera.Size.Y - 23), new Point((int)camera.Size.X - 1, (int)camera.Size.Y - 23)));
+			mapSegments.Add(new Collision.MapSegment(new Point(0, (int)camera.Size.Y), new Point((int)camera.Size.X - 1, (int)camera.Size.Y)));
 
 			parallax1Background = new ParallaxBackground(parallax1, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
 			parallax2Background = new ParallaxBackground(parallax2, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 28), Color.White, 1.125f, camera);
@@ -236,7 +234,6 @@ namespace WrathOfJohn
 			platformAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
 			platformAnimationSetList.Add(new Sprite.AnimationSet("IDLE2", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
 
-
 			MovementKeys.Add(Keys.A);
 			MovementKeys.Add(Keys.W);
 			MovementKeys.Add(Keys.D);
@@ -244,9 +241,11 @@ namespace WrathOfJohn
 			MovementKeys.Add(Keys.Space);
 			MovementKeys.Add(Keys.E);
 
-			player = new Player(new Vector2((myGame.WindowSize.X - 60) / 2, myGame.WindowSize.Y - (playerAnimationSetList[0].frameSize.Y + 25)), MovementKeys, 3f, _Mana, Color.White, playerAnimationSetList, myGame);
+			player = new Player(new Vector2(25, myGame.WindowSize.Y - (playerAnimationSetList[0].frameSize.Y + 22)), MovementKeys, 1.25f, _Mana, Color.White, playerAnimationSetList, myGame);
 
-			debugLabel0 = new Label(new Vector2(0, 00), myGame.ubuntuMono, 0.50f, Color.Black, "");
+			debugLabel0 = new Label(new Vector2(0, 00), myGame.segoeUIMono, 0.54f, Color.Black, "");
+
+			SpawnBricks();
 
 			base.LoadContent();
 		}
@@ -257,6 +256,7 @@ namespace WrathOfJohn
 		/// <param name="gameTime">This is to check the run time.</param>
 		public override void Update(GameTime gameTime)
 		{
+			#region Parallax Stuff
 			if (camera.IsInView(player.GetPosition, new Vector2(20, 49)))
 			{
 				camera.Position = new Vector2(player.GetPosition.X + 200f, 0);
@@ -272,21 +272,11 @@ namespace WrathOfJohn
 			parallax3Background.Update(gameTime);
 			parallax4Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 272);
 			parallax4Background.Update(gameTime);
+			#endregion
 
-			playerSegments = player.GetPlayerSgements();
+			playerCircle = player.GetPlayerCircle();
 
 			player.Update(gameTime);
-
-			firstLine1 = "";
-			firstLine2 = "";
-			firstLine3 = "";
-			firstLine4 = "";
-			firstLine5 = "";
-			firstLine6 = "";
-			firstLine7 = "";
-			firstLine8 = "";
-			firstLine9 = "";
-			firstLine10 = "";
 
 			debugLabel0.Update(gameTime, firstLine1 + "   " + firstLine2 + "\n" + firstLine3 + "   " + firstLine4 + "\n" + firstLine5 + "   " + firstLine6 + "\n" + firstLine7 + "   " + firstLine8 + "\n" + firstLine9 + "   " + firstLine10);
 
@@ -306,11 +296,17 @@ namespace WrathOfJohn
 				parallax3Background.Draw(gameTime, spriteBatch);
 				parallax4Background.Draw(gameTime, spriteBatch);
 
-				SpawnBricks();
 
 				foreach (PlatformManager pm in platformList)
 				{
 					pm.Draw(gameTime, spriteBatch);
+				}
+
+				firstLine1 = "isColliding=" + player.isColliding + " IsGrounded=" + player.isGrounded + " IsTouchingGround=" + player.isTouchingGround + " IsJumping=" + player.isJumping + " IsFalling=" + player.isFalling + " BleedOff=" + player.BleedOff;
+
+				for (int i = 0; i < platformCircles.Count; i++)
+				{
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformCircles[i].point.X, (int)platformCircles[i].point.Y - (int)platformCircles[i].radius, 1, (int)platformCircles[i].radius), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
 				}
 
 				// Draw the player.
@@ -323,10 +319,7 @@ namespace WrathOfJohn
 				spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[3].point1.X, mapSegments[3].point1.Y, mapSegments[3].point2.X + 1, 1), Color.Gray);
 
 				// Debug bounding player boxes.
-				spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[0].point1.X, playerSegments[0].point1.Y, 1, 44), Color.Blue);
-				spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[1].point1.X, playerSegments[1].point1.Y, 20, 1), Color.Blue);
-				spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[2].point1.X, playerSegments[2].point1.Y, 1, 44), Color.Blue);
-				spriteBatch.Draw(debugDotTexture, new Rectangle(playerSegments[3].point1.X, playerSegments[3].point1.Y, 20, 1), Color.Blue);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)playerCircle.point.X, (int)playerCircle.point.Y, 1, (int)playerCircle.radius), Color.Red);
 			}
 			spriteBatch.End();
 
@@ -342,8 +335,8 @@ namespace WrathOfJohn
 
 		public void SpawnBricks()
 		{
-			int width = 128;
-			int height = 18;
+			int width = (int)camera.Size.X / 25;
+			int height = (int)camera.Size.Y / 25;
 			uint[,] brickspawn;
 
 			brickspawn = Maps.GetBrickArray(Maps.HappyFace());
@@ -357,6 +350,11 @@ namespace WrathOfJohn
 						platformList.Add(new PlatformManager(new Vector2(x * 25, y * 25), myGame, (int)brickspawn[x, y], platformAnimationSetList));
 					}
 				}
+			}
+
+			foreach (PlatformManager pm in platformList)
+			{
+				platformCircles.Add(new Collision.Circle(new Vector2(pm.GetPosition.X + 12.5f, pm.GetPosition.Y + 12.5f), 12.5));
 			}
 		}
 	}

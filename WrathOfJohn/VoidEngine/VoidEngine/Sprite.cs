@@ -17,10 +17,15 @@ namespace VoidEngine
 	/// </summary>
 	public class Sprite
 	{
-		// <summary>
-		// The type of AI the sprite or enemy or player will have
-		// Only PLAYER and NONE are implemented
-		// </summary>
+		public enum CollisionState
+		{
+			COLLIDE,
+			NOT
+		}
+		/// <summary>
+		/// The type of AI the sprite or enemy or player will have
+		/// Only PLAYER and NONE are implemented
+		/// </summary>
 		public enum AIType
 		{
 			NONE,
@@ -28,9 +33,9 @@ namespace VoidEngine
 			AI,
 			PLAYER
 		}
-		// <summary>
-		// The type of movement that the player or AI or sprite will have
-		// </summary>
+		/// <summary>
+		/// The type of movement that the player or AI or sprite will have
+		/// </summary>
 		public enum MovementType
 		{
 			NONE,
@@ -39,9 +44,9 @@ namespace VoidEngine
 			TOPDOWN,
 			PLATFORMER
 		}
-		// <summary>
-		// The animation set for each type of animation in the player sprite sheet.
-		// </summary>
+		/// <summary>
+		/// The animation set for each type of animation in the player sprite sheet.
+		/// </summary>
 		public struct AnimationSet
 		{
 			// <summary>
@@ -89,9 +94,9 @@ namespace VoidEngine
 			}
 		}
 
-		// <summary>
-		// Gets or sets the sprite's current animation.
-		// </summary>
+		/// <summary>
+		/// Gets or sets the sprite's current animation.
+		/// </summary>
 		protected AnimationSet CurrentAnimation
 		{
 			get;
@@ -112,17 +117,7 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the sprites current animation frame.
 		/// </summary>
-		public Point CurrentFrame
-		{
-			get
-			{
-				return currentFrame;
-			}
-			set
-			{
-				currentFrame = value;
-			}
-		}
+		public Point CurrentFrame;
 		/// <summary>
 		/// Gets or sets the animations last frame time.
 		/// </summary>
@@ -134,11 +129,7 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the direction that the sprite is moving towards.
 		/// </summary>
-		protected Vector2 Direction
-		{
-			get;
-			set;
-		}
+		protected Vector2 Direction;
 		/// <summary>
 		/// The Position that the sprite is at.
 		/// </summary>
@@ -267,6 +258,14 @@ namespace VoidEngine
 			get;
 			private set;
 		}
+
+		protected CollisionState collisionTopState = CollisionState.NOT;
+		protected CollisionState collisionLeftState = CollisionState.NOT;
+		protected CollisionState collisionRightState = CollisionState.NOT;
+
+		public bool isColliding1 = false;
+		public bool isColliding2 = false;
+		public bool isColliding3 = false;
 
 		/// <summary>
 		/// Creates the sprite with custom properties
@@ -407,24 +406,6 @@ namespace VoidEngine
 			{
 				if (_AIType == AIType.PLAYER)
 				{
-					if (_KeyboardState.IsKeyDown(MovementKeys[0]))
-					{
-						Position.X -= Speed;
-					}
-					if (_KeyboardState.IsKeyDown(MovementKeys[2]))
-					{
-						Position.X += Speed;
-					}
-					if (_KeyboardState.IsKeyDown(MovementKeys[4]))
-					{
-						if (isGrounded)
-						{
-							BleedOff = Gravity;
-							isJumping = true;
-							isGrounded = false;
-							isTouchingGround = false;
-						}
-					}
 				}
 
 				UpdateGravity();
@@ -457,18 +438,18 @@ namespace VoidEngine
 			{
 				if (BleedOff > 0f && isJumping)
 				{
-					Direction = new Vector2(0, -BleedOff);
+					Direction = new Vector2(Direction.X, -BleedOff);
 					BleedOff -= 0.03f;
 				}
 
-				if (BleedOff <= 0f && isJumping)
+				if (BleedOff <= 0f)
 				{
 					isFalling = true;
 					isJumping = false;
 				}
 				if (isFalling && !isJumping)
 				{
-					Direction = new Vector2(0, -BleedOff);
+					Direction = new Vector2(Direction.X, -BleedOff);
 					BleedOff -= 0.06f;
 				}
 			}
@@ -510,5 +491,79 @@ namespace VoidEngine
 		{
 			Position = newPosition;
 		}
+
+		public bool DetectTopSegmentCollision(Collision.Circle spriteCircle, List<Collision.MapSegment> mapSegments)
+		{
+			bool tempBoolean = true;
+
+			foreach (Collision.MapSegment mapSegment in mapSegments)
+			{
+				if (collisionTopState == CollisionState.NOT)
+				{
+					if (Collision.CheckCircleSegmentCollision(spriteCircle, mapSegment))
+					{
+                        collisionTopState = CollisionState.COLLIDE;
+
+						tempBoolean = true;
+					}
+				}
+                if (collisionTopState == CollisionState.COLLIDE)
+				{
+                    collisionTopState = CollisionState.NOT;
+					tempBoolean = false;
+				}
+			}
+
+			return tempBoolean;
+		}
+
+        public bool DetectLeftSegmentCollision(Collision.Circle spriteCircle, List<Collision.MapSegment> mapSegments)
+        {
+            bool tempBoolean = false;
+
+            foreach (Collision.MapSegment mapSegment in mapSegments)
+            {
+                if (collisionLeftState == CollisionState.NOT)
+                {
+                    if (Collision.CheckCircleSegmentCollision(spriteCircle, mapSegment))
+                    {
+                        collisionLeftState = CollisionState.COLLIDE;
+
+                        tempBoolean = false;
+                    }
+                }
+                if (collisionLeftState == CollisionState.COLLIDE)
+                {
+                    collisionLeftState = CollisionState.NOT;
+                    tempBoolean = true;
+                }
+            }
+
+            return tempBoolean;
+        }
+
+        public bool DetectRightSegmentCollision(Collision.Circle spriteCircle, List<Collision.MapSegment> mapSegments)
+        {
+            bool tempBoolean = false;
+
+            foreach (Collision.MapSegment mapSegment in mapSegments)
+            {
+                if (collisionRightState == CollisionState.NOT)
+                {
+                    if (Collision.CheckCircleSegmentCollision(spriteCircle, mapSegment))
+                    {
+                        collisionRightState = CollisionState.COLLIDE;
+                        tempBoolean = false;
+                    }
+                }
+                if (collisionRightState == CollisionState.COLLIDE)
+                {
+                    collisionRightState = CollisionState.NOT;
+                    tempBoolean = true;
+                }
+            }
+
+            return tempBoolean;
+        }
 	}
 }

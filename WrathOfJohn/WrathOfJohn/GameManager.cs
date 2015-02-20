@@ -114,10 +114,6 @@ namespace WrathOfJohn
 
 		#region Map Variables
 		/// <summary>
-		/// The maps collision segements
-		/// </summary>
-		public List<Collision.MapSegment> mapSegments;
-		/// <summary>
 		/// The list of blocks.
 		/// </summary>
 		public List<PlatformManager> platformList;
@@ -129,7 +125,9 @@ namespace WrathOfJohn
 		/// The animation set list of the blocks.
 		/// </summary>
 		List<Sprite.AnimationSet> platformAnimationSetList;
-		public List<Collision.Circle> platformCircles;
+		public List<Collision.MapSegment> platformTopSegments;
+		public List<Collision.MapSegment> platformLeftSegments;
+		public List<Collision.MapSegment> platformRightSegments;
 		#endregion
 
 		#region Background Variables
@@ -146,10 +144,6 @@ namespace WrathOfJohn
 		/// </summary>
 		Texture2D parallax3;
 		/// <summary>
-		/// The forth parallax texture.
-		/// </summary>
-		Texture2D parallax4;
-		/// <summary>
 		/// The first parallax background class.
 		/// </summary>
 		ParallaxBackground parallax1Background;
@@ -161,10 +155,6 @@ namespace WrathOfJohn
 		/// The third parallax background class.
 		/// </summary>
 		ParallaxBackground parallax3Background;
-		/// <summary>
-		/// The forth parallax background class.
-		/// </summary>
-		ParallaxBackground parallax4Background;
 		#endregion
 
 		/// <summary>
@@ -187,10 +177,11 @@ namespace WrathOfJohn
 		{
 			playerAnimationSetList = new List<Sprite.AnimationSet>();
 			platformAnimationSetList = new List<Sprite.AnimationSet>();
-			mapSegments = new List<Collision.MapSegment>();
 			platformList = new List<PlatformManager>();
 			MovementKeys = new List<Keys>();
-			platformCircles = new List<Collision.Circle>();
+			platformTopSegments = new List<Collision.MapSegment>();
+			platformLeftSegments = new List<Collision.MapSegment>();
+			platformRightSegments = new List<Collision.MapSegment>();
 
 			base.Initialize();
 		}
@@ -205,34 +196,28 @@ namespace WrathOfJohn
 			playerTexture = Game.Content.Load<Texture2D>(@"Images\players\player");
 			debugDotTexture = Game.Content.Load<Texture2D>(@"Images\debugStuff\line");
 			projectileTexture = Game.Content.Load<Texture2D>(@"Images\projectiles\beam1");
-			parallax1 = Game.Content.Load<Texture2D>(@"Images\screens\game\paralax\parallax1");
-			parallax2 = Game.Content.Load<Texture2D>(@"Images\screens\game\paralax\parallax2");
-			parallax3 = Game.Content.Load<Texture2D>(@"Images\screens\game\paralax\parallax3");
-			parallax4 = Game.Content.Load<Texture2D>(@"Images\screens\game\paralax\parallax4");
-			platformTexture = Game.Content.Load<Texture2D>(@"Images\tiles\tile");
+			parallax1 = Game.Content.Load<Texture2D>(@"Images\screens\game\parallax\backgroundFG");
+			parallax2 = Game.Content.Load<Texture2D>(@"Images\screens\game\parallax\backgroundMG");
+			parallax3 = Game.Content.Load<Texture2D>(@"Images\screens\game\parallax\backgroundWOJ");
+			platformTexture = Game.Content.Load<Texture2D>(@"Images\tiles\platforms");
 
 			camera = new Camera(GraphicsDevice.Viewport, 6400, 450, 1f);
 			camera.Position = new Vector2(0, 0);
 
-			mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point(0, (int)camera.Size.Y - 23)));
-			mapSegments.Add(new Collision.MapSegment(new Point(0, 0), new Point((int)camera.Size.X - 1, 0)));
-			mapSegments.Add(new Collision.MapSegment(new Point((int)camera.Size.X - 1, 0), new Point((int)camera.Size.X - 1, (int)camera.Size.Y - 23)));
-			mapSegments.Add(new Collision.MapSegment(new Point(0, (int)camera.Size.Y), new Point((int)camera.Size.X - 1, (int)camera.Size.Y)));
-
 			parallax1Background = new ParallaxBackground(parallax1, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
 			parallax2Background = new ParallaxBackground(parallax2, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 28), Color.White, 1.125f, camera);
 			parallax3Background = new ParallaxBackground(parallax3, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 302), Color.White, 1.250f, camera);
-			parallax4Background = new ParallaxBackground(parallax4, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 272), Color.White, 1.500f, camera);
-			
-			_Mana = new Player.Mana(100, 5000, 100);
 
 			playerAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(60, 50), new Point(1, 1), new Point(0, 0), 1000));
 			playerAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(60, 50), new Point(4, 3), new Point(0, 0), 50));
 			playerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(60, 50), new Point(4, 1), new Point(0, 150), 100));
 			playerAnimationSetList.Add(new Sprite.AnimationSet("SHOOT", playerTexture, new Point(60, 50), new Point(1, 3), new Point(240, 0), 250));
 
-			platformAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("IDLE2", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("1", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("2", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("3", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0));
+            platformAnimationSetList.Add(new Sprite.AnimationSet("4", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0));
+            platformAnimationSetList.Add(new Sprite.AnimationSet("5", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0));
 
 			MovementKeys.Add(Keys.A);
 			MovementKeys.Add(Keys.W);
@@ -241,7 +226,8 @@ namespace WrathOfJohn
 			MovementKeys.Add(Keys.Space);
 			MovementKeys.Add(Keys.E);
 
-			player = new Player(new Vector2(25, myGame.WindowSize.Y - (playerAnimationSetList[0].frameSize.Y + 22)), MovementKeys, 1.25f, _Mana, Color.White, playerAnimationSetList, myGame);
+            _Mana = new Player.Mana(100, 5000, 100);
+			player = new Player(new Vector2(25, myGame.WindowSize.Y - (playerAnimationSetList[0].frameSize.Y + 24)), MovementKeys, 1.25f, _Mana, Color.White, playerAnimationSetList, myGame);
 
 			debugLabel0 = new Label(new Vector2(0, 00), myGame.segoeUIMono, 0.54f, Color.Black, "");
 
@@ -270,15 +256,13 @@ namespace WrathOfJohn
 			parallax2Background.Update(gameTime);
 			parallax3Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 302);
 			parallax3Background.Update(gameTime);
-			parallax4Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 272);
-			parallax4Background.Update(gameTime);
 			#endregion
 
 			playerCircle = player.GetPlayerCircle();
 
 			player.Update(gameTime);
 
-			debugLabel0.Update(gameTime, firstLine1 + "   " + firstLine2 + "\n" + firstLine3 + "   " + firstLine4 + "\n" + firstLine5 + "   " + firstLine6 + "\n" + firstLine7 + "   " + firstLine8 + "\n" + firstLine9 + "   " + firstLine10);
+			debugLabel0.Update(gameTime, firstLine1 + "\n" + firstLine2 + "\n" + firstLine3 + "\n" + firstLine4 + "\n" + firstLine5 + "\n" + firstLine6 + "\n" + firstLine7 + "\n" + firstLine8 + "\n" + firstLine9 + "\n" + firstLine10);
 
 			base.Update(gameTime);
 		}
@@ -294,29 +278,31 @@ namespace WrathOfJohn
 				parallax1Background.Draw(gameTime, spriteBatch);
 				parallax2Background.Draw(gameTime, spriteBatch);
 				parallax3Background.Draw(gameTime, spriteBatch);
-				parallax4Background.Draw(gameTime, spriteBatch);
-
 
 				foreach (PlatformManager pm in platformList)
 				{
 					pm.Draw(gameTime, spriteBatch);
 				}
 
-				firstLine1 = "isColliding=" + player.isColliding + " IsGrounded=" + player.isGrounded + " IsTouchingGround=" + player.isTouchingGround + " IsJumping=" + player.isJumping + " IsFalling=" + player.isFalling + " BleedOff=" + player.BleedOff;
+				firstLine1 = "Top Collision=" + player.isColliding1 + " Right Collision=" + player.isColliding3 + " Left Collision=" + player.isColliding2;
+				firstLine2 = "IsGrounded=" + player.isGrounded + " IsTouchingGround=" + player.isTouchingGround + " IsJumping=" + player.isJumping + " IsFalling=" + player.isFalling + " BleedOff=" + player.BleedOff;
+				firstLine3 = "Tiles Count=" + platformList.Count;
 
-				for (int i = 0; i < platformCircles.Count; i++)
+				for (int i = 0; i < platformTopSegments.Count; i++)
 				{
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformCircles[i].point.X, (int)platformCircles[i].point.Y - (int)platformCircles[i].radius, 1, (int)platformCircles[i].radius), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformTopSegments[i].point1.X, (int)platformTopSegments[i].point1.Y, (int)platformTopSegments[i].point2.X - platformTopSegments[i].point1.X, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
+				}
+				for (int i = 0; i < platformLeftSegments.Count; i++)
+				{
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformLeftSegments[i].point1.X, (int)platformLeftSegments[i].point1.Y, 1, (int)platformLeftSegments[i].point2.Y - (int)platformLeftSegments[i].point1.Y), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
+				}
+				for (int i = 0; i < platformRightSegments.Count; i++)
+				{
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRightSegments[i].point1.X, (int)platformRightSegments[i].point1.Y, 1, (int)platformRightSegments[i].point2.Y - (int)platformRightSegments[i].point1.Y), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
 				}
 
 				// Draw the player.
 				player.Draw(gameTime, spriteBatch);
-
-				// Debug bounding map boxes.
-				spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[0].point1.X, mapSegments[0].point1.Y, mapSegments[0].point2.X + 1, mapSegments[0].point2.Y), Color.Blue);
-				spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[1].point1.X, mapSegments[1].point1.Y, mapSegments[1].point2.X + 1, 1), Color.Green);
-				spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[2].point1.X, mapSegments[2].point1.Y, mapSegments[2].point2.X + 1, mapSegments[2].point2.Y + 1), Color.Red);
-				spriteBatch.Draw(debugDotTexture, new Rectangle(mapSegments[3].point1.X, mapSegments[3].point1.Y, mapSegments[3].point2.X + 1, 1), Color.Gray);
 
 				// Debug bounding player boxes.
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)playerCircle.point.X, (int)playerCircle.point.Y, 1, (int)playerCircle.radius), Color.Red);
@@ -354,7 +340,9 @@ namespace WrathOfJohn
 
 			foreach (PlatformManager pm in platformList)
 			{
-				platformCircles.Add(new Collision.Circle(new Vector2(pm.GetPosition.X + 12.5f, pm.GetPosition.Y + 12.5f), 12.5));
+				platformTopSegments.Add(new Collision.MapSegment(new Point((int)pm.GetPosition.X, (int)pm.GetPosition.Y), new Point((int)pm.GetPosition.X + 25, (int)pm.GetPosition.Y)));
+				platformLeftSegments.Add(new Collision.MapSegment(new Point((int)pm.GetPosition.X, (int)pm.GetPosition.Y), new Point((int)pm.GetPosition.X, (int)pm.GetPosition.Y + 25)));
+				platformRightSegments.Add(new Collision.MapSegment(new Point((int)pm.GetPosition.X + 25, (int)pm.GetPosition.Y), new Point((int)pm.GetPosition.X + 25, (int)pm.GetPosition.Y + 25)));
 			}
 		}
 	}

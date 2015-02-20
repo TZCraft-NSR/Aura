@@ -15,11 +15,6 @@ namespace WrathOfJohn
 {
 	public class Player : Sprite
 	{
-		public enum CollisionState
-		{
-			COLLIDE,
-			NOT
-		}
 
 		/// <summary>
 		/// The mana struct for the player class.
@@ -71,11 +66,7 @@ namespace WrathOfJohn
 		/// </summary>
 		protected Mana _Mana;
 
-		protected CollisionState collisionState;
-
 		protected Collision.Circle playerCircle;
-
-		public bool isColliding = false;
 
 		#region Projectiles
 		/// <summary>
@@ -186,26 +177,47 @@ namespace WrathOfJohn
 			playerCircle.point.Y = Position.Y + (CurrentAnimation.frameSize.Y - 10);
 			playerCircle.radius = 10;
 
-			isColliding = DetectCircleCollision();
+			isColliding1 = DetectTopSegmentCollision(playerCircle, myGame.gameManager.platformTopSegments);
+			isColliding2 = DetectLeftSegmentCollision(playerCircle, myGame.gameManager.platformLeftSegments);
+			isColliding3 = DetectRightSegmentCollision(playerCircle, myGame.gameManager.platformRightSegments);
 
-			if (!DetectCircleCollision())
-			{
-				isGrounded = true;
-				isTouchingGround = true;
-			}
+            if (_KeyboardState.IsKeyDown(MovementKeys[0]) && !DetectLeftSegmentCollision(playerCircle, myGame.gameManager.platformLeftSegments))
+            {
+                Direction.X = -1;
+            }
+            if (_KeyboardState.IsKeyDown(MovementKeys[2]) && !DetectRightSegmentCollision(playerCircle, myGame.gameManager.platformRightSegments))
+            {
+                Direction.X = 1;
+            }
+            if (_KeyboardState.IsKeyDown(MovementKeys[4]) && !DetectTopSegmentCollision(playerCircle, myGame.gameManager.platformTopSegments))
+            {
+                BleedOff = Gravity;
+                isJumping = true;
+                isGrounded = false;
+                isTouchingGround = false;
+            }
+            if (!_KeyboardState.IsKeyDown(MovementKeys[0]) && !_KeyboardState.IsKeyDown(MovementKeys[2]) && !_KeyboardState.IsKeyDown(MovementKeys[4]))
+            {
+                Direction.X = 0;
+            }
 
-			if (DetectCircleCollision() && isGrounded && isTouchingGround)
-			{
-				isGrounded = false;
-				isTouchingGround = false;
-				isFalling = true;
-			}
+            if (!DetectTopSegmentCollision(playerCircle, myGame.gameManager.platformTopSegments))
+            {
+                isGrounded = true;
+                isTouchingGround = true;
+            }
+            if (DetectTopSegmentCollision(playerCircle, myGame.gameManager.platformTopSegments) && isGrounded && isTouchingGround)
+            {
+                isGrounded = false;
+                isTouchingGround = false;
+                isFalling = true;
+            }
 
 			if (ProjectileListCreated == false)
 			{
 				ProjectileAnimationSet.Add(new AnimationSet("IDLE", myGame.gameManager.projectileTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
 				ProjectileListCreated = true;
-			}
+            }
 
 			foreach (Projectile p in ProjectileList)
 			{
@@ -351,44 +363,6 @@ namespace WrathOfJohn
 			{
 				_Mana.mana = 0;
 			}
-		}
-
-		public bool DetectCircleCollision()
-		{
-			bool tempBoolean = true;
-
-			foreach (Collision.Circle cm in myGame.gameManager.platformCircles)
-			{
-				if (collisionState == CollisionState.NOT)
-				{
-					if (Collision.CheckCircleCircleCollision(playerCircle, cm))
-					{
-						collisionState = CollisionState.COLLIDE;
-
-						myGame.gameManager.firstLine10 = (cm.point.X - 10).ToString() + "  " + (playerCircle.point.X + playerCircle.radius).ToString();
-
-						if (playerCircle.point.X + playerCircle.radius == Math.Round(cm.point.X - 10))
-						{
-							Position.X = cm.point.X - ((float)cm.radius * 3);
-						}
-						/*
-						if (playerCircle.point.X + playerCircle.radius >= cm.point.X + (cm.radius * 2) - 5 && playerCircle.point.X + playerCircle.radius <= cm.point.X + (cm.radius * 2))
-						{
-							Position.X = cm.point.X - (float)cm.radius - 5;
-						}
-						 * */
-
-						tempBoolean = true;
-					}
-				}
-				if (collisionState == CollisionState.COLLIDE)
-				{
-					collisionState = CollisionState.NOT;
-					tempBoolean = false;
-				}
-			}
-
-			return tempBoolean;
 		}
 	}
 }

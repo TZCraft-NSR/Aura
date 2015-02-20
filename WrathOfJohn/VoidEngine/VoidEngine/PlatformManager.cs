@@ -31,14 +31,26 @@ namespace VoidEngine
 
 		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 		{
-			if (type == 0)
-			{
-				SetAnimation("IDLE1");
-			}
 			if (type == 1)
 			{
-				SetAnimation("IDLE2");
+				SetAnimation("1");
 			}
+			if (type == 2)
+			{
+				SetAnimation("2");
+			}
+			if (type == 3)
+			{
+				SetAnimation("3");
+			}
+			if (type == 4)
+			{
+				SetAnimation("4");
+            }
+            if (type == 5)
+            {
+                SetAnimation("5");
+            }
 			base.Draw(gameTime, spriteBatch);
 		}
 	}

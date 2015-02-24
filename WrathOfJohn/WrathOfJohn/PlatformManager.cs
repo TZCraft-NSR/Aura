@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VoidEngine;
 
-namespace VoidEngine
+namespace WrathOfJohn
 {
 	public class PlatformManager : Sprite
 	{

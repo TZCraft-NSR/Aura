@@ -100,7 +100,6 @@
     <Compile Include="Maps.cs" />
     <Compile Include="ParallaxBackground.cs" />
     <Compile Include="GUI.cs" />
-    <Compile Include="PlatformManager.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="VoidEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

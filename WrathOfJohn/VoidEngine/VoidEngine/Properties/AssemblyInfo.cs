@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Resources;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -8,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("VoidEngine")]
 [assembly: AssemblyProduct("VoidEngine")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("MSD")]
-[assembly: AssemblyCopyright("Copyright © MSD 2014")]
+[assembly: AssemblyCompany("TZCraft NSR")]
+[assembly: AssemblyCopyright("Copyright © TZCraft NSR 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,4 +32,6 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.0.1.0")]
+[assembly: AssemblyFileVersionAttribute("0.0.0.1")]
+[assembly: NeutralResourcesLanguageAttribute("en-US")]

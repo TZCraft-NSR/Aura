@@ -218,7 +218,7 @@ namespace WrathOfJohn
 
 			Direction = Vector2.Zero;
 
-			playerCollisions = new Rectangle((int)Position.X + 20, (int)Position.Y + 5, 20, 45);
+			playerCollisions = new Rectangle((int)Position.X + 20, (int)Position.Y + 5, 20, 41);
 		}
 
 		/// <summary>
@@ -355,7 +355,7 @@ namespace WrathOfJohn
 			}
 
 			// To set the animation to idle.
-			if ((!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2]) && !myGame.keyboardState.IsKeyDown(MovementKeys[5])) || isFalling)
+			if ((myGame.keyboardState.IsKeyDown(MovementKeys[0]) == false && myGame.keyboardState.IsKeyDown(MovementKeys[2]) == false && !myGame.keyboardState.IsKeyDown(MovementKeys[5]) == false) || isFalling)
 			{
 				SetAnimation("IDLE");
 			}

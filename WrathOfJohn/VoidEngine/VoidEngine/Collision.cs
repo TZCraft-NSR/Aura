@@ -26,7 +26,7 @@ namespace VoidEngine
 
 			public Rectangle CollisionRect()
 			{
-				return new Rectangle(Math.Min(point1.X, point2.X), Math.Min(point1.Y, point2.Y), Math.Abs(point1.X - point2.X), Math.Abs(point1.Y - point2.Y));
+				return new Rectangle(Math.Min(point1.X, point2.X), Math.Min(point1.Y, point2.Y), Math.Abs(point2.X - point1.X), Math.Abs(point2.Y - point1.Y));
 			}
 		}
 
@@ -87,22 +87,22 @@ namespace VoidEngine
 			return r;
 		}
 
-		public static bool CheckSegmentSegmentCollision(MapSegment segemnt1, MapSegment segment2)
+		public static bool CheckSegmentSegmentCollision(MapSegment segment1, MapSegment segment2)
 		{
 			Line2D L1, L2;
-			L1.point = new Vector2(segemnt1.point1.X, segemnt1.point1.Y);
+			L1.point = new Vector2(segment1.point1.X, segment1.point1.Y);
 			L2.point = new Vector2(segment2.point1.X, segment2.point1.Y);
-			L1.vector.X = segemnt1.point2.X - segemnt1.point1.X;
-			L1.vector.Y = segemnt1.point2.Y - segemnt1.point1.X;
+			L1.vector.X = segment1.point2.X - segment1.point1.X;
+			L1.vector.Y = segment1.point2.Y - segment1.point1.X;
 			L2.vector.X = segment2.point2.X - segment2.point1.X;
 			L2.vector.Y = segment2.point2.Y - segment2.point1.Y;
 			Vector2 CollisionPoint;
 			CollisionPoint.X = (L2.YInt() - L1.YInt()) / (L1.Slope() - L2.Slope());
 			CollisionPoint.Y = L1.Slope() * CollisionPoint.X + L1.YInt();
 
-			bool cond1 = (Math.Min(segemnt1.point1.X, segemnt1.point1.X) <= CollisionPoint.X && CollisionPoint.X <= Math.Max(segment2.point1.X, segemnt1.point2.X));
+			bool cond1 = (Math.Min(segment1.point1.X, segment1.point2.X) <= CollisionPoint.X && CollisionPoint.X <= Math.Max(segment1.point1.X, segment1.point2.X));
 			bool cond2 = (Math.Min(segment2.point1.X, segment2.point2.X) <= CollisionPoint.X && CollisionPoint.X <= Math.Max(segment2.point1.X, segment2.point2.X));
-			bool cond3 = (Math.Min(segemnt1.point1.Y, segemnt1.point2.Y) <= CollisionPoint.Y && CollisionPoint.Y <= Math.Max(segemnt1.point1.Y, segemnt1.point2.Y));
+			bool cond3 = (Math.Min(segment1.point1.Y, segment1.point2.Y) <= CollisionPoint.Y && CollisionPoint.Y <= Math.Max(segment1.point1.Y, segment1.point2.Y));
 			bool cond4 = (Math.Min(segment2.point1.Y, segment2.point2.Y) <= CollisionPoint.Y && CollisionPoint.Y <= Math.Max(segment2.point1.Y, segment2.point2.Y));
 
 			return cond1 && cond2 && cond3 && cond4;

@@ -17,72 +17,51 @@ namespace VoidEngine
 	/// </summary>
 	public class Sprite
 	{
-		public enum CollisionState
-		{
-			COLLIDE,
-			NOT
-		}
-		/// <summary>
-		/// The type of AI the sprite or enemy or player will have
-		/// Only PLAYER and NONE are implemented
-		/// </summary>
-		public enum AIType
-		{
-			NONE,
-			ENEMY,
-			AI,
-			PLAYER
-		}
-		/// <summary>
-		/// The type of movement that the player or AI or sprite will have
-		/// </summary>
-		public enum MovementType
-		{
-			NONE,
-			HORIZONTAL,
-			VERTICAL,
-			TOPDOWN,
-			PLATFORMER
-		}
 		/// <summary>
 		/// The animation set for each type of animation in the player sprite sheet.
 		/// </summary>
 		public struct AnimationSet
 		{
-			// <summary>
-			// The name "In all caps" that is used in the animation
-			// </summary>
+			/// <summary>
+			/// The name "In all caps" that is used in the animation
+			/// </summary>
 			public string name;
-			// <summary>
-			// The texture of the sprite sheet
-			// </summary>
+			/// <summary>
+			/// The texture of the sprite sheet
+			/// </summary>
 			public Texture2D texture;
-			// <summary>
-			// The size of each frame, all frames have to be the same size in one animation.
-			// </summary>
+			/// <summary>
+			/// The size of each frame, all frames have to be the same size in one animation.
+			/// </summary>
 			public Point frameSize;
-			// <summary>
-			// The size of that animation in the sheet in frames.
-			// </summary>
+			/// <summary>
+			/// The size of that animation in the sheet in frames.
+			/// </summary>
 			public Point sheetSize;
-			// <summary>
-			// The rate in milliseconds that the frames change
-			// </summary>
+			/// <summary>
+			/// The rate in milliseconds that the frames change
+			/// </summary>
 			public int framesPerMillisecond;
-			// <summary>
-			// The start Position in exact cordinates that the animation starts at.
-			// </summary>
+			/// <summary>
+			/// The start Position in exact cordinates that the animation starts at.
+			/// </summary>
 			public Point startPosition;
 
-			// <summary>
-			// For creating a new animation set.
-			// </summary>
-			// <param name="name2">The name "In all caps" that is used in the animation</param>
-			// <param name="texture2">The texture of the sprite sheet</param>
-			// <param name="frameSize2">The size of each frame, all frames have to be the same size in one animation.</param>
-			// <param name="sheetSize2">The size of that animation in the sheet in frames.</param>
-			// <param name="startPosition2">The rate in milliseconds that the frames change</param>
-			// <param name="framesPerMillisecond2">The start Position in exact cordinates that the animation starts at.</param>
+			/// <summary>
+			/// For creating a new animation set.
+			/// </summary>
+			/// <param name="name2">The name "In all caps" that is used in the animation</param>
+			/// <param name="texture2">The texture of the sprite sheet</param>
+			/// <param name="frameSize2">The size of each frame, all frames have to be the same size in one animation.</param>
+			/// <param name="sheetSize2">The size of that animation in the sheet in frames.</param>
+			/// <param name="startPosition2">The rate in milliseconds that the frames change</param>
+			/// <param name="name2"></param>
+			/// <param name="texture2"></param>
+			/// <param name="frameSize2"></param>
+			/// <param name="sheetSize2"></param>
+			/// <param name="startPosition2"></param>
+			/// <param name="framesPerMillisecond2"></param>
+            /// <param name="framesPerMillisecond2">The start Position in exact cordinates that the animation starts at.</param>
 			public AnimationSet(string name2, Texture2D texture2, Point frameSize2, Point sheetSize2, Point startPosition2, int framesPerMillisecond2)
 			{
 				name = name2;
@@ -94,14 +73,11 @@ namespace VoidEngine
 			}
 		}
 
+		#region Animations
 		/// <summary>
 		/// Gets or sets the sprite's current animation.
 		/// </summary>
-		protected AnimationSet CurrentAnimation
-		{
-			get;
-			set;
-		}
+		protected AnimationSet CurrentAnimation;
 		/// <summary>
 		/// Gets or sets the animation sets.
 		/// </summary>
@@ -127,15 +103,35 @@ namespace VoidEngine
 			set;
 		}
 		/// <summary>
+		/// Gets or sets if the sprite is flipped.
+		/// </summary>
+		public SpriteEffects isFlipped
+		{
+			get;
+			set;
+		}
+		#endregion
+		#region Movement
+		/// <summary>
 		/// Gets or sets the direction that the sprite is moving towards.
 		/// </summary>
 		protected Vector2 Direction;
 		/// <summary>
-		/// The Position that the sprite is at.
+		/// Gets the dirtection of the sprite, publicly.
+		/// </summary>
+		public Vector2 GetDirection
+		{
+			get
+			{
+				return Direction;
+			}
+		}
+		/// <summary>
+		/// Gets or sets the position that the sprite is at.
 		/// </summary>
 		protected Vector2 Position;
 		/// <summary>
-		/// Gets the position that the sprite is at.
+		/// Gets the position that the sprite is at, publicly.
 		/// </summary>
 		public Vector2 GetPosition
 		{
@@ -161,83 +157,10 @@ namespace VoidEngine
 			set;
 		}
 		/// <summary>
-		/// Gets or sets the type of AI the sprite uses.
-		/// </summary>
-		public AIType _AIType
-		{
-			get;
-			set;
-		}
-		/// <summary>
-		/// Gets or sets the type of movement the sprite uses.
-		/// </summary>
-		public MovementType _MovementType
-		{
-			get;
-			set;
-		}
-		/// <summary>
 		/// Gets or sets the list of keys that the sprite uses.
 		/// Indexes: [0]: Left | [1]: Up | [2]: Right | [3]: Down | [4]: Custom1 | [5]: Custom2 | [6]: Custom3 | [?]: etc.
 		/// </summary>
 		protected List<Keys> MovementKeys
-		{
-			get;
-			set;
-		}
-		/// <summary>
-		/// Gets or sets if the sprite is flipped.
-		/// </summary>
-		public SpriteEffects isFlipped
-		{
-			get;
-			set;
-		}
-		/// <summary>
-		/// Gets or sets if the sprite is jumping. (Used for player or enemy classes)
-		/// </summary>
-		public bool isJumping
-		{
-			get;
-			set;
-		}
-		/// <summary>
-		/// Gets or sets if the sprite is on the ground. (Used for player or enemy classes)
-		/// </summary>
-		public bool isGrounded
-		{
-			get;
-			set;
-		}
-		public bool isTouchingGround;
-		/// <summary>
-		/// Gets or sets if the sprite is falling. (Used for player or enemy classes)
-		/// </summary>
-		public bool isFalling
-		{
-			get;
-			set;
-		}
-		/// <summary>
-		/// Gets or sets the sprites bleed off of gravity. (Used for player or enemy classes)
-		/// </summary>
-		public float BleedOff
-		{
-			get;
-			set;
-		}
-		/// <summary>
-		/// Gets or sets the sprites gravity. (Used for player or enemy classes)
-		/// </summary>
-		protected float Gravity
-		{
-			get;
-			set;
-		}
-		/// <summary>
-		/// Gets or sets the sprites color.
-		/// </summary>
-		protected Color _Color
 		{
 			get;
 			set;
@@ -258,14 +181,15 @@ namespace VoidEngine
 			get;
 			private set;
 		}
-
-		protected CollisionState collisionTopState = CollisionState.NOT;
-		protected CollisionState collisionLeftState = CollisionState.NOT;
-		protected CollisionState collisionRightState = CollisionState.NOT;
-
-		public bool isColliding1 = false;
-		public bool isColliding2 = false;
-		public bool isColliding3 = false;
+		#endregion
+		/// <summary>
+		/// Gets or sets the sprites color.
+		/// </summary>
+		protected Color _Color
+		{
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Creates the sprite with custom properties
@@ -280,8 +204,6 @@ namespace VoidEngine
 			Position = position;
 			LastFrameTime = 0;
 			_Color = color;
-			BleedOff = 0;
-			isTouchingGround = false;
 		}
 
 		/// <summary>
@@ -312,8 +234,6 @@ namespace VoidEngine
 
 				LastFrameTime = 0;
 			}
-
-			UpdateMovement();
 
 			_PreviousKeyboardState = _KeyboardState;
 		}
@@ -348,77 +268,12 @@ namespace VoidEngine
 		}
 
 		/// <summary>
-		/// Updates the sprites movement.
-		/// </summary>
-		public virtual void UpdateMovement()
-		{
-			if (_MovementType == MovementType.HORIZONTAL)
-			{
-				if (_AIType == AIType.PLAYER)
-				{
-					if (_KeyboardState.IsKeyDown(MovementKeys[0]))
-					{
-						Position.X -= Speed;
-					}
-					if (_KeyboardState.IsKeyDown(MovementKeys[2]))
-					{
-						Position.X += Speed;
-					}
-				}
-			}
-			if (_MovementType == MovementType.VERTICAL)
-			{
-				if (_AIType == AIType.PLAYER)
-				{
-					if (_KeyboardState.IsKeyDown(MovementKeys[1]))
-					{
-						Position.Y -= Speed;
-					}
-					if (_KeyboardState.IsKeyDown(MovementKeys[3]))
-					{
-						Position.Y += Speed;
-					}
-				}
-			}
-			if (_MovementType == MovementType.TOPDOWN)
-			{
-				if (_AIType == AIType.PLAYER)
-				{
-					if (_KeyboardState.IsKeyDown(MovementKeys[0]))
-					{
-						Position.X -= Speed;
-					}
-					if (_KeyboardState.IsKeyDown(MovementKeys[1]))
-					{
-						Position.Y -= Speed;
-					}
-					if (_KeyboardState.IsKeyDown(MovementKeys[2]))
-					{
-						Position.X += Speed;
-					}
-					if (_KeyboardState.IsKeyDown(MovementKeys[3]))
-					{
-						Position.Y += Speed;
-					}
-				}
-			}
-			if (_MovementType == MovementType.PLATFORMER)
-			{
-				if (_AIType == AIType.PLAYER)
-				{
-				}
-
-				UpdateGravity();
-			}
-		}
-
-		/// <summary>
 		/// Flips the sprite texture based off a bool
 		/// </summary>
-		/// <param name="toFlip">The bool to flip</param>
-		public void flipSprite(bool toFlip)
+		/// <param name="isFlip">The bool to flip</param>
+		protected void flipSprite(bool isFlip)
 		{
-			if (toFlip)
+			if (isFlip)
 			{
 				isFlipped = SpriteEffects.FlipHorizontally;
 			}
@@ -427,143 +282,5 @@ namespace VoidEngine
 				isFlipped = SpriteEffects.None;
 			}
 		}
-
-		/// <summary>
-		/// To update the player's gravity
-		/// </summary>
-		/// <param name="gameTime"></param>
-		public void UpdateGravity()
-		{
-			if (isJumping || isFalling)
-			{
-				if (BleedOff > 0f && isJumping)
-				{
-					Direction = new Vector2(Direction.X, -BleedOff);
-					BleedOff -= 0.03f;
-				}
-
-				if (BleedOff <= 0f)
-				{
-					isFalling = true;
-					isJumping = false;
-				}
-				if (isFalling && !isJumping)
-				{
-					Direction = new Vector2(Direction.X, -BleedOff);
-					BleedOff -= 0.06f;
-				}
-			}
-
-			if (isFalling)
-			{
-				if (isGrounded)
-				{
-					Direction = Vector2.Zero;
-					isJumping = false;
-					isFalling = false;
-				}
-			}
-
-			if (!isTouchingGround)
-			{
-				if (isGrounded)
-				{
-					isFalling = false;
-				}
-			}
-
-			BleedOff = MathHelper.Clamp(BleedOff, -Gravity - 1f, Gravity);
-		}
-
-		/// <summary>
-		/// The check if the sprite collides rectangulary.
-		/// </summary>
-		public Rectangle collisionRectangle()
-		{
-			return new Rectangle((int)Position.X, (int)Position.Y, CurrentAnimation.frameSize.X, CurrentAnimation.frameSize.Y);
-		}
-
-		/// <summary>
-		/// Sets the current sprite Position.
-		/// </summary>
-		/// <param name="newPosition">The Position to set the sprite to.</param>
-		public void SetPosition(Vector2 newPosition)
-		{
-			Position = newPosition;
-		}
-
-		public bool DetectTopSegmentCollision(Collision.Circle spriteCircle, List<Collision.MapSegment> mapSegments)
-		{
-			bool tempBoolean = true;
-
-			foreach (Collision.MapSegment mapSegment in mapSegments)
-			{
-				if (collisionTopState == CollisionState.NOT)
-				{
-					if (Collision.CheckCircleSegmentCollision(spriteCircle, mapSegment))
-					{
-                        collisionTopState = CollisionState.COLLIDE;
-
-						tempBoolean = true;
-					}
-				}
-                if (collisionTopState == CollisionState.COLLIDE)
-				{
-                    collisionTopState = CollisionState.NOT;
-					tempBoolean = false;
-				}
-			}
-
-			return tempBoolean;
-		}
-
-        public bool DetectLeftSegmentCollision(Collision.Circle spriteCircle, List<Collision.MapSegment> mapSegments)
-        {
-            bool tempBoolean = false;
-
-            foreach (Collision.MapSegment mapSegment in mapSegments)
-            {
-                if (collisionLeftState == CollisionState.NOT)
-                {
-                    if (Collision.CheckCircleSegmentCollision(spriteCircle, mapSegment))
-                    {
-                        collisionLeftState = CollisionState.COLLIDE;
-
-                        tempBoolean = false;
-                    }
-                }
-                if (collisionLeftState == CollisionState.COLLIDE)
-                {
-                    collisionLeftState = CollisionState.NOT;
-                    tempBoolean = true;
-                }
-            }
-
-            return tempBoolean;
-        }
-
-        public bool DetectRightSegmentCollision(Collision.Circle spriteCircle, List<Collision.MapSegment> mapSegments)
-        {
-            bool tempBoolean = false;
-
-            foreach (Collision.MapSegment mapSegment in mapSegments)
-            {
-                if (collisionRightState == CollisionState.NOT)
-                {
-                    if (Collision.CheckCircleSegmentCollision(spriteCircle, mapSegment))
-                    {
-                        collisionRightState = CollisionState.COLLIDE;
-                        tempBoolean = false;
-                    }
-                }
-                if (collisionRightState == CollisionState.COLLIDE)
-                {
-                    collisionRightState = CollisionState.NOT;
-                    tempBoolean = true;
-                }
-            }
-
-            return tempBoolean;
-        }
 	}
 }

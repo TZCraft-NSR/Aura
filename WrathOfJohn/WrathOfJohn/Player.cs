@@ -15,7 +15,6 @@ namespace WrathOfJohn
 {
 	public class Player : Sprite
 	{
-
 		/// <summary>
 		/// The mana struct for the player class.
 		/// </summary>
@@ -56,42 +55,108 @@ namespace WrathOfJohn
 		/// <summary>
 		/// Gets or sets the game that the player is running off of.
 		/// </summary>
-		public Game1 myGame
-		{
-			get;
-			private set;
-		}
+		public Game1 myGame;
+
 		/// <summary>
 		/// The mana for the player class.
 		/// </summary>
 		protected Mana _Mana;
 
-		protected Collision.Circle playerCircle;
+		#region Movement and Collision
+		/// <summary>
+		/// The player's collisions.
+		/// </summary>
+		protected Rectangle playerCollisions;
+		/// <summary>
+		/// Gets or sets if the player is jumping. (Used for player or enemy classes)
+		/// </summary>
+		public bool isJumping
+		{
+			get;
+			protected set;
+		}
+		/// <summary>
+		/// Gets or sets if the player is grounded.
+		/// </summary>
+		public bool isGrounded
+		{
+			get;
+			protected set;
+		}
+		/// <summary>
+		/// Gets or sets if the player is touching the ground.
+		/// </summary>
+		public bool isTouchingGround
+		{
+			get;
+			protected set;
+		}
+		/// <summary>
+		/// Gets or sets if the sprite is falling. (Used for player or enemy classes)
+		/// </summary>
+		public bool isFalling
+		{
+			get;
+			protected set;
+		}
+		/// <summary>
+		/// Gets or sets if the player is touching left of a rectangle.
+		/// </summary>
+		public bool isTouchingLeft
+		{
+			get;
+			protected set;
+		}
+		/// <summary>
+		/// Gets or sets if the player is touching right of a rectangle.
+		/// </summary>
+		public bool isTouchingRight
+		{
+			get;
+			protected set;
+		}
+		/// <summary>
+		/// Gets or sets if the player is touching bottom of a rectangle.
+		/// </summary>
+		public bool isTouchingBottom
+		{
+			get;
+			protected set;
+		}
+		/// <summary>
+		/// Gets or sets the sprites bleed off of gravity. (Used for player or enemy classes)
+		/// </summary>
+		public float BleedOff
+		{
+			get;
+			private set;
+		}
+		/// <summary>
+		/// Gets or sets the sprites gravity. (Used for player or enemy classes)
+		/// </summary>
+		protected float Gravity
+		{
+			get;
+			set;
+		}
+		#endregion
 
 		#region Projectiles
 		/// <summary>
 		/// Gets or sets the projectiles animation sets.
 		/// </summary>
-		protected List<Sprite.AnimationSet> ProjectileAnimationSet
-		{
-			get;
-			private set;
-		}
+		protected List<Sprite.AnimationSet> ProjectileAnimationSet;
 		/// <summary>
 		/// Gets or sets the list of projectiles.
 		/// </summary>
-		protected List<Projectile> ProjectileList
-		{
-			get;
-			private set;
-		}
+		protected List<Projectile> ProjectileList;
 		/// <summary>
 		/// Gets or sets if the projectile list is created.
 		/// </summary>
 		public bool ProjectileListCreated
 		{
 			get;
-			set;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets if the player has shot.
@@ -133,7 +198,6 @@ namespace WrathOfJohn
 			: base(position, color, animationSetList)
 		{
 			#region Create Lists
-			//playerSegments = new List<Collision.MapSegment>();
 			ProjectileList = new List<Projectile>();
 			ProjectileAnimationSet = new List<AnimationSet>();
 			#endregion
@@ -143,17 +207,19 @@ namespace WrathOfJohn
 			#endregion
 
 			#region Set Movement Factors
-			_MovementType = MovementType.PLATFORMER;
-			_AIType = AIType.PLAYER;
 			Gravity = gravity;
 			myGame = game;
 			MovementKeys = movementKeys;
 			CanMove = true;
 			Speed = 2;
+			BleedOff = 0;
+			isTouchingGround = false;
 			#endregion
 
 			Direction = Vector2.Zero;
-        }
+
+			playerCollisions = new Rectangle((int)Position.X + 20, (int)Position.Y + 5, 20, 45);
+		}
 
 		/// <summary>
 		/// Creates a minimal player object.
@@ -171,81 +237,85 @@ namespace WrathOfJohn
 		/// <param name="gameTime">To keep track of run time.</param>
 		public override void Update(GameTime gameTime)
 		{
+			#region Updating Player Collision Points.
+			playerCollisions.X = (int)Position.X + 20;
+			playerCollisions.Y = (int)Position.Y + 5;
+			#endregion
+
+			#region Movement
 			Position += Direction * Speed;
 
-			playerCircle.point.X = Position.X + ((CurrentAnimation.frameSize.X) / 2);
-			playerCircle.point.Y = Position.Y + (CurrentAnimation.frameSize.Y - 10);
-			playerCircle.radius = 10;
+			UpdateGravity();
 
-			isColliding1 = DetectTopSegmentCollision(playerCircle, myGame.gameManager.platformTopSegments);
-			isColliding2 = DetectLeftSegmentCollision(playerCircle, myGame.gameManager.platformLeftSegments);
-			isColliding3 = DetectRightSegmentCollision(playerCircle, myGame.gameManager.platformRightSegments);
+			#region Detect Keys
+			if (_KeyboardState.IsKeyDown(MovementKeys[0]))
+			{
+				Direction.X = -1;
+			}
+			if (_KeyboardState.IsKeyDown(MovementKeys[2]))
+			{
+				Direction.X = 1;
+			}
+			if (_KeyboardState.IsKeyDown(MovementKeys[4]) && isTouchingGround && !isJumping && !isFalling)
+			{
+				BleedOff = Gravity;
+				isJumping = true;
+			}
+			if (!_KeyboardState.IsKeyDown(MovementKeys[0]) && !_KeyboardState.IsKeyDown(MovementKeys[2]))
+			{
+				Direction.X = 0;
+			}
+			#endregion
 
-            if (_KeyboardState.IsKeyDown(MovementKeys[0]) && !DetectLeftSegmentCollision(playerCircle, myGame.gameManager.platformLeftSegments))
-            {
-                Direction.X = -1;
-            }
-            if (_KeyboardState.IsKeyDown(MovementKeys[2]) && !DetectRightSegmentCollision(playerCircle, myGame.gameManager.platformRightSegments))
-            {
-                Direction.X = 1;
-            }
-            if (_KeyboardState.IsKeyDown(MovementKeys[4]) && !DetectTopSegmentCollision(playerCircle, myGame.gameManager.platformTopSegments))
-            {
-                BleedOff = Gravity;
-                isJumping = true;
-                isGrounded = false;
-                isTouchingGround = false;
-            }
-            if (!_KeyboardState.IsKeyDown(MovementKeys[0]) && !_KeyboardState.IsKeyDown(MovementKeys[2]) && !_KeyboardState.IsKeyDown(MovementKeys[4]))
-            {
-                Direction.X = 0;
-            }
+			#region Detect Collision
+			isGrounded = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "top");
+			isTouchingLeft = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "left");
+			isTouchingRight = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "right");
+			isTouchingBottom = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "bottom");
 
-            if (!DetectTopSegmentCollision(playerCircle, myGame.gameManager.platformTopSegments))
-            {
-                isGrounded = true;
-                isTouchingGround = true;
-            }
-            if (DetectTopSegmentCollision(playerCircle, myGame.gameManager.platformTopSegments) && isGrounded && isTouchingGround)
-            {
-                isGrounded = false;
-                isTouchingGround = false;
-                isFalling = true;
-            }
+			if (isGrounded)
+			{
+				isTouchingGround = true;
+			}
+			if (!isGrounded)
+			{
+				isTouchingGround = false;
+			}
+			if (isGrounded && isFalling)
+			{
+				isFalling = false;
+				BleedOff = 0;
+				Direction.Y = 0;
+			}
+			if (!isGrounded && isTouchingGround)
+			{
+				isTouchingGround = false;
+			}
+			if (isTouchingLeft)
+		   	{
+		   		Direction.X = -0.0001f;
+		   	}
+		   	if (isTouchingRight)
+		   	{
+		   		Direction.X = 0.0001f;
+		   	}
+			#endregion
+			#endregion
 
-			if (ProjectileListCreated == false)
+			#region Do Projectiles
+			if (!ProjectileListCreated)
 			{
 				ProjectileAnimationSet.Add(new AnimationSet("IDLE", myGame.gameManager.projectileTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
 				ProjectileListCreated = true;
-            }
+			}
 
 			foreach (Projectile p in ProjectileList)
 			{
 				p.Update(gameTime);
 			}
+			#endregion
 
-			base.Update(gameTime);
-		}
-
-		/// <summary>
-		/// To draw the Player class.
-		/// </summary>
-		/// <param name="gameTime">To keep track of run time.</param>
-		/// <param name="spriteBatch">The spriteBatch to draw with.</param>
-		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-		{
-			foreach (Projectile p in ProjectileList)
-			{
-				p.Draw(gameTime, spriteBatch);
-			}
-
-			base.Draw(gameTime, spriteBatch);
-		}
-
-		public override void UpdateMovement()
-		{
-			base.UpdateMovement();
-
+			#region Do Animations
 			// To play the jumping animation.
 			if (isJumping && !isFalling)
 			{
@@ -289,7 +359,9 @@ namespace WrathOfJohn
 			{
 				SetAnimation("IDLE");
 			}
+			#endregion
 
+			#region Mana
 			if (_Mana.mana < _Mana.maxMana)
 			{
 				if (!HasShot)
@@ -327,13 +399,38 @@ namespace WrathOfJohn
 					_Mana.mana = _Mana.maxMana;
 				}
 			}
+			#endregion
+
+			base.Update(gameTime);
 		}
 
-		public Collision.Circle GetPlayerCircle()
+		/// <summary>
+		/// To draw the Player class.
+		/// </summary>
+		/// <param name="gameTime">To keep track of run time.</param>
+		/// <param name="spriteBatch">The spriteBatch to draw with.</param>
+		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 		{
-			return playerCircle;
+			foreach (Projectile p in ProjectileList)
+			{
+				p.Draw(gameTime, spriteBatch);
+			}
+
+			base.Draw(gameTime, spriteBatch);
 		}
 
+		/// <summary>
+		///
+		/// </summary>
+		/// <returns></returns>
+		public Rectangle GetPlayerSegments()
+		{
+			return playerCollisions;
+		}
+
+		/// <summary>
+		///
+		/// </summary>
 		public void ShootBeam()
 		{
 			foreach (Projectile p in ProjectileList)
@@ -364,5 +461,118 @@ namespace WrathOfJohn
 				_Mana.mana = 0;
 			}
 		}
+
+		/// <summary>
+		/// To update the player's gravity
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public void UpdateGravity()
+		{
+			if (isJumping || isFalling)
+			{
+				if (BleedOff > 0f && isJumping)
+				{
+					Direction.Y = -BleedOff;
+					BleedOff -= 0.03f;
+					isFalling = false;
+				}
+
+				if (BleedOff <= 0f)
+				{
+					isFalling = true;
+					isJumping = false;
+				}
+				if (isFalling)
+				{
+					Direction.Y = -BleedOff;
+					BleedOff -= 0.06f;
+				}
+			}
+
+			if (!isTouchingGround)
+			{
+				if (!isGrounded)
+				{
+					isFalling = true;
+				}
+			}
+
+			BleedOff = MathHelper.Clamp(BleedOff, -Gravity - 1f, Gravity);
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="PlayerSegment"></param>
+		/// <param name="ObjectSegments"></param>
+		/// <returns></returns>
+		public bool CheckSegmentCollision(Rectangle PlayerSegment, List<Rectangle> ObjectSegments, string Side)
+		{
+			foreach (Rectangle pts in ObjectSegments)
+			{
+				if (RectangleHelper.TouchTopOf(PlayerSegment, pts) && Side == "top")
+				{
+					//GetProtectedRectangleTop(pts);
+					return true;
+				}
+				if (RectangleHelper.TouchLeftOf(PlayerSegment, pts) && Side == "left")
+				{
+					//GetProtectedRectangleLeft(pts);
+					return true;
+				}
+				if (RectangleHelper.TouchRightOf(PlayerSegment, pts) && Side == "right")
+				{
+					//GetProtectedRectangleRight(pts);
+					return true;
+				}
+				if (RectangleHelper.TouchBottomOf(PlayerSegment, pts) && Side == "bottom")
+				{
+					//GetProtectedRectangleBottom(pts);
+					return true;
+				}
+			}
+
+			return false;
+		}
+		
+		/*
+		#region Detecting the corrisponding rectangle
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="ObjectRectangle"></param>
+		protected void GetCollidingRectangleTop(Rectangle ObjectRectangle)
+		{
+			CollidingTopRectangle = ObjectRectangle;
+		}
+		
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="ObjectRectangle"></param>
+		protected void GetCollidingRectangleLeft(Rectangle ObjectRectangle)
+		{
+			CollidingLeftRectangle = ObjectRectangle;
+		}
+		
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="ObjectRectangle"></param>
+		protected void GetCollidingRectangleBottom(Rectangle ObjectRectangle)
+		{
+			CollidingBottomRectangle = ObjectRectangle;
+		}
+		
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="ObjectRectangle"></param>
+		protected void GetCollidingRectangleRight(Rectangle ObjectRectangle)
+		{
+			CollidingRightRectangle = ObjectRectangle;
+		}
+		#endregion
+		*/
 	}
 }

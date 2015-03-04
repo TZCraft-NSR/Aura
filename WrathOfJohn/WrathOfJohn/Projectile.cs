@@ -41,21 +41,6 @@ namespace WrathOfJohn
 			}
 		}
 
-		public override void Update(GameTime gameTime)
-		{
-			UpdateMovement();
-
-			base.Update(gameTime);
-		}
-
-		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-		{
-			if (visible)
-			{
-				base.Draw(gameTime, spriteBatch);
-			}
-		}
-
 		public Projectile(Vector2 startPosition, Color color, List<AnimationSet> animationSetList, Player player, Game1 game)
 			: base(startPosition, color, animationSetList)
 		{
@@ -73,7 +58,30 @@ namespace WrathOfJohn
 			{
 				Direction = new Vector2(1, 0);
 			}
-		}
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (Vector2.Distance(startPosition, Position) > maxDistance)
+            {
+                visible = false;
+            }
+
+            if (visible == true)
+            {
+                Position += Direction * Speed;
+            }
+
+            base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            if (visible)
+            {
+                base.Draw(gameTime, spriteBatch);
+            }
+        }
 
 		public void Fire()
 		{
@@ -88,21 +96,6 @@ namespace WrathOfJohn
 			projectileSegments.Add(new Collision.MapSegment(new Point((int)Position.X + CurrentAnimation.frameSize.X, (int)Position.Y), new Point((int)Position.X + CurrentAnimation.frameSize.X, (int)Position.Y + CurrentAnimation.frameSize.Y)));
 			projectileSegments.Add(new Collision.MapSegment(new Point((int)Position.X + CurrentAnimation.frameSize.X, (int)Position.Y + CurrentAnimation.frameSize.Y), new Point((int)Position.X, (int)Position.Y + CurrentAnimation.frameSize.Y)));
 			projectileSegments.Add(new Collision.MapSegment(new Point((int)Position.X, (int)Position.Y + CurrentAnimation.frameSize.Y), new Point((int)Position.X, (int)Position.Y)));
-		}
-
-		public override void UpdateMovement()
-		{
-			base.UpdateMovement();
-
-			if (Vector2.Distance(startPosition, Position) > maxDistance)
-			{
-				visible = false;
-			}
-
-			if (visible == true)
-			{
-				Position += Direction * Speed;
-			}
 		}
 	}
 }

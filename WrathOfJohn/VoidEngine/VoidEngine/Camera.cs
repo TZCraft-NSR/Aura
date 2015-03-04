@@ -22,7 +22,7 @@ namespace VoidEngine
 		Vector2 position;
 		Vector2 overallPlayerPosition;
 		float rotation;
-		Vector2 viewportSize;
+		public Vector2 viewportSize;
 		int worldWidth;
 		int worldHeight;
 		Vector2 screenCenter;

@@ -160,11 +160,7 @@ namespace VoidEngine
 		/// Gets or sets the list of keys that the sprite uses.
 		/// Indexes: [0]: Left | [1]: Up | [2]: Right | [3]: Down | [4]: Custom1 | [5]: Custom2 | [6]: Custom3 | [?]: etc.
 		/// </summary>
-		protected List<Keys> MovementKeys
-		{
-			get;
-			set;
-		}
+		protected List<Keys> MovementKeys;
 		/// <summary>
 		/// Gets or sets the keyboard state.
 		/// </summary>
@@ -182,6 +178,7 @@ namespace VoidEngine
 			private set;
 		}
 		#endregion
+
 		/// <summary>
 		/// Gets or sets the sprites color.
 		/// </summary>

@@ -46,15 +46,15 @@ namespace WrathOfJohn
         /// <summary>
         /// The player segment collisions.
         /// </summary>
-        protected Rectangle playerCollisions;
-		/// <summary>
-		/// The players projectile texture
-		/// </summary>
-		public Texture2D projectileTexture;
+        protected Rectangle PlayerCollisions;
 		/// <summary>
 		/// The players list of movement keys.
 		/// </summary>
 		List<Keys> MovementKeys;
+		/// <summary>
+		/// The players projectile texture
+		/// </summary>
+		public Texture2D ProjectileTexture;
 		/// <summary>
 		/// The players mana class.
 		/// </summary>
@@ -69,49 +69,10 @@ namespace WrathOfJohn
 		/// <summary>
 		/// To debug variables.
 		/// </summary>
-		Label debugLabel0;
+		Label debugLabel;
 
 		#region Debug Strings
-		/// <summary>
-		/// The first debug string.
-		/// </summary>
-		string firstLine1 = "";
-		/// <summary>
-		/// The second debug string.
-		/// </summary>
-		string firstLine2 = "";
-		/// <summary>
-		/// The third debug string.
-		/// </summary>
-		string firstLine3 = "";
-		/// <summary>
-		/// The forth debug string.
-		/// </summary>
-		string firstLine4 = "";
-		/// <summary>
-		/// The fifth debug string.
-		/// </summary>
-		string firstLine5 = "";
-		/// <summary>
-		/// The sixth debug string.
-		/// </summary>
-		string firstLine6 = "";
-		/// <summary>
-		/// The seventh debug string.
-		/// </summary>
-		string firstLine7 = "";
-		/// <summary>
-		/// The eighth debug string.
-		/// </summary>
-		string firstLine8 = "";
-		/// <summary>
-		/// The ninth debug string.
-		/// </summary>
-		string firstLine9 = "";
-		/// <summary>
-		/// The tenth debug string.
-		/// </summary>
-		public string firstLine10 = "";
+		public string[] DebugLines = new string[10];
 		#endregion
 		#endregion
 
@@ -128,6 +89,9 @@ namespace WrathOfJohn
 		/// The animation set list of the blocks.
 		/// </summary>
 		List<Sprite.AnimationSet> platformAnimationSetList;
+		/// <summary>
+		/// The collision areas of each platform.
+		/// </summary>
 		public List<Rectangle> platformRectangles;
 		#endregion
 
@@ -176,12 +140,17 @@ namespace WrathOfJohn
 		/// </summary>
 		public override void Initialize()
         {
-            MovementKeys = new List<Keys>();
+			MovementKeys = new List<Keys>();
             playerAnimationSetList = new List<Sprite.AnimationSet>();
 
             platformList = new List<PlatformManager>();
             platformAnimationSetList = new List<Sprite.AnimationSet>();
 			platformRectangles = new List<Rectangle>();
+
+			for (int i = 0; i < DebugLines.Length; i++)
+			{
+				DebugLines[i] = "";
+			}
 
 			base.Initialize();
 		}
@@ -195,7 +164,7 @@ namespace WrathOfJohn
 
 			playerTexture = Game.Content.Load<Texture2D>(@"Images\players\player");
 			debugDotTexture = Game.Content.Load<Texture2D>(@"Images\debugStuff\line");
-			projectileTexture = Game.Content.Load<Texture2D>(@"Images\projectiles\beam1");
+			ProjectileTexture = Game.Content.Load<Texture2D>(@"Images\projectiles\beam1");
 			parallax1 = Game.Content.Load<Texture2D>(@"Images\screens\game\parallax\backgroundFG");
 			parallax2 = Game.Content.Load<Texture2D>(@"Images\screens\game\parallax\backgroundMG");
 			parallax3 = Game.Content.Load<Texture2D>(@"Images\screens\game\parallax\backgroundWOJ");
@@ -217,9 +186,20 @@ namespace WrathOfJohn
 
 			platformAnimationSetList.Add(new Sprite.AnimationSet("1", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
 			platformAnimationSetList.Add(new Sprite.AnimationSet("2", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("3", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0));
-            platformAnimationSetList.Add(new Sprite.AnimationSet("4", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0));
-            platformAnimationSetList.Add(new Sprite.AnimationSet("5", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("3", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("4", platformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 0), 0));
+            platformAnimationSetList.Add(new Sprite.AnimationSet("5", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("6", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("7", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("8", platformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("9", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("10", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("11", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("12", platformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("13", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("14", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("15", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("16", platformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 75), 0));
 
 			MovementKeys.Add(Keys.A);
 			MovementKeys.Add(Keys.W);
@@ -230,9 +210,9 @@ namespace WrathOfJohn
 			MovementKeys.Add(Keys.Q);
 
             _Mana = new Player.Mana(100, 5000, 100);
-			player = new Player(new Vector2(25, myGame.WindowSize.Y - (playerAnimationSetList[0].frameSize.Y + 24)), MovementKeys, 1.25f, _Mana, Color.White, playerAnimationSetList, myGame);
+			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 25), MovementKeys, 1.25f, _Mana, Color.White, playerAnimationSetList, myGame);
 
-			debugLabel0 = new Label(new Vector2(0, 00), myGame.segoeUIMono, 0.54f, Color.Black, "");
+			debugLabel = new Label(new Vector2(0, 00), myGame.segoeUIMonoDebug, 1f, Color.Black, "");
 
 			SpawnBricks();
 
@@ -261,14 +241,20 @@ namespace WrathOfJohn
 			parallax3Background.Update(gameTime);
 			#endregion
 
-            playerCollisions = player.GetPlayerSegments();
+            PlayerCollisions = player.GetPlayerSegments();
 
 			player.Update(gameTime);
 
-			debugLabel0.Update(gameTime, firstLine1 + "\n" + firstLine2 + "\n" + firstLine3 + "\n" + firstLine4 + "\n" + firstLine5 + "\n" + firstLine6 + "\n" + firstLine7 + "\n" + firstLine8 + "\n" + firstLine9 + "\n" + firstLine10);
+			debugLabel.Update(gameTime, DebugLines[0] + "\n" + DebugLines[1] + "\n" + 
+										DebugLines[2] + "\n" + DebugLines[3] + "\n" + 
+										DebugLines[4] + "\n" + DebugLines[5] + "\n" + 
+										DebugLines[6] + "\n" + DebugLines[7] + "\n" + 
+										DebugLines[8] + "\n" + DebugLines[9]);
 
-            firstLine1 = "IsGrounded=" + player.isGrounded + " IsTouchingGround=" + player.isTouchingGround + " IsJumping=" + player.isJumping + " IsFalling=" + player.isFalling + " BleedOff=" + player.BleedOff;
-            firstLine2 = "IsTouchingRight=" + player.isTouchingRight + " IsTouchingLeft=" + player.isTouchingLeft;
+            DebugLines[0] = "IsGrounded=" + player.isGrounded + " IsTouchingGround=" + player.isTouchingGround + " IsJumping=" + player.isJumping + " IsFalling=" + player.isFalling + " BleedOff=" + player.BleedOff;
+            DebugLines[1] = "IsTouchingRight=" + player.isTouchingRight + " IsTouchingLeft=" + player.isTouchingLeft;
+			DebugLines[3] = "mana=" + player._Mana.mana + " maxMana=" + player._Mana.maxMana + " manaRechargeTime=" + player._Mana.manaRechargeTime + " manaInterval=" + player._Mana.manaInterval;
+			DebugLines[4] = "CanShoot=" + player.CanShootProjectile + " CreateNew=" + player.CreateNewProjectile + " HasShot=" + player.HasShotProjectile + " projectileListCreated=" + player.ProjectileListCreated;
 
 			base.Update(gameTime);
 		}
@@ -290,6 +276,7 @@ namespace WrathOfJohn
 					pm.Draw(gameTime, spriteBatch);
 				}
 
+				/*
 				for (int i = 0; i < platformRectangles.Count; i++)
 				{
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
@@ -297,20 +284,21 @@ namespace WrathOfJohn
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y + (int)platformRectangles[i].Height, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, 1, (int)platformRectangles[i].Height), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
 				}
-
+				*/
 				// Draw the player.
 				player.Draw(gameTime, spriteBatch);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)playerCollisions.X, (int)playerCollisions.Y, (int)playerCollisions.Width, 1), Color.Blue);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)playerCollisions.X + (int)playerCollisions.Width, (int)playerCollisions.Y, 1, (int)playerCollisions.Height), Color.Red);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)playerCollisions.X, (int)playerCollisions.Y + (int)playerCollisions.Height, (int)playerCollisions.Width, 1), Color.Green);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)playerCollisions.X, (int)playerCollisions.Y, 1, (int)playerCollisions.Height), Color.Yellow);
+				/*spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, (int)PlayerCollisions.Width, 1), Color.Blue);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X + (int)PlayerCollisions.Width, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Red);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y + (int)PlayerCollisions.Height, (int)PlayerCollisions.Width, 1), Color.Green);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Yellow);
+				*/
 			}
 			spriteBatch.End();
 
 			spriteBatch.Begin();
 			{
 				// To debug variables.
-				debugLabel0.Draw(gameTime, spriteBatch);
+				debugLabel.Draw(gameTime, spriteBatch);
 			}
 			spriteBatch.End();
 

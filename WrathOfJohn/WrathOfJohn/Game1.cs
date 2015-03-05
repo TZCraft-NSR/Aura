@@ -98,6 +98,7 @@ namespace WrathOfJohn
 		public float elapsedTime, previousElapsedTime;
 
 		#region Fonts
+		public SpriteFont segoeUIMonoDebug;
 		public SpriteFont segoeUIMono;
 		public SpriteFont segoeUIRegular;
 		public SpriteFont segoeUIBold;
@@ -143,6 +144,7 @@ namespace WrathOfJohn
 			segoeUIRegular = Content.Load<SpriteFont>(@"Fonts\Segoe UI Regular");
 			segoeUIBold = Content.Load<SpriteFont>(@"Fonts\Segoe UI Bold");
 			segoeUIItalic = Content.Load<SpriteFont>(@"Fonts\Segoe UI Italic");
+			segoeUIMonoDebug = Content.Load<SpriteFont>(@"Fonts\Segoe UI Mono Debug");
 
 			splashScreenManager = new SplashScreenManager(this);
 			menuManager = new MenuManager(this);

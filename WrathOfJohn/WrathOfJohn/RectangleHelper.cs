@@ -12,15 +12,15 @@ namespace WrathOfJohn
         {
             return (r1.Bottom >= r2.Top - 1 &&
                     r1.Bottom <= r2.Top + (r2.Height / 2) &&
-                    r1.Right >= r2.Left + (r2.Width / 5) &&
-                    r1.Left <= r2.Right - (r2.Width / 5));
+                    r1.Right >= r2.Left + (r2.Width / 7) &&
+                    r1.Left <= r2.Right - (r2.Width / 7));
         }
         public static bool TouchBottomOf(this Rectangle r1, Rectangle r2)
         { 
-            return (r1.Top <= r2.Bottom + (r2.Height / 5) &&
+            return (r1.Top <= r2.Bottom + (r2.Height / 6) &&
                     r1.Top >= r2.Bottom - 1 &&
-                    r1.Right >= r2.Left + (r2.Width / 5) &&
-                    r1.Left <= r2.Right - (r2.Width / 5));
+                    r1.Right >= r2.Left + (r2.Width / 7) &&
+                    r1.Left <= r2.Right - (r2.Width / 7));
         }
         public static bool TouchLeftOf(this Rectangle r1, Rectangle r2)
         { 

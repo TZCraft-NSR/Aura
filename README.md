@@ -3,11 +3,11 @@
 ---
 This is a project for the contributor's Video Game Design class for a third quarter project.
 
-**Details:**
-   Code: **C#**   
+**Details:**   
+   Code: **C# XNA**   
    Genre: **Platformer**   
    Engine: **[Void Engine](http://github.com/TZCraft-NSR/VoidEngine)**   
    Graphic Artists: **Animus Mawnstar, Brandy Bigelow, Jan lee**   
-   Coders: **@thakyZ, Cap Crow, BeyondAll Portals, @Braiden Braaten**   
+   Coders: **@thakyZ, Cap Crow, BeyondAll Portals, @braidenbraaten**   
    Producer: **Cap Crow**   
    Team Leader: **Nire Inicana**   

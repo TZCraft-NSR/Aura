@@ -168,13 +168,13 @@ namespace WrathOfJohn
 		{
 			spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
-			playerTexture = Game.Content.Load<Texture2D>(@"Images\players\player");
-			debugDotTexture = Game.Content.Load<Texture2D>(@"Images\debugStuff\line");
-			ProjectileTexture = Game.Content.Load<Texture2D>(@"Images\projectiles\beam1");
-			parallax1 = Game.Content.Load<Texture2D>(@"Images\screens\game\parallax\backgroundFG");
-			parallax2 = Game.Content.Load<Texture2D>(@"Images\screens\game\parallax\backgroundMG");
-			parallax3 = Game.Content.Load<Texture2D>(@"Images\screens\game\parallax\backgroundWOJ");
-			platformTexture = Game.Content.Load<Texture2D>(@"Images\tiles\platforms");
+			playerTexture = Game.Content.Load<Texture2D>(@"images\players\player");
+			debugDotTexture = Game.Content.Load<Texture2D>(@"images\debug\line");
+			ProjectileTexture = Game.Content.Load<Texture2D>(@"images\projectiles\beam");
+			parallax1 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground1");
+			parallax2 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground2");
+			parallax3 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground3");
+			platformTexture = Game.Content.Load<Texture2D>(@"images\tiles\platforms");
 
 			camera = new Camera(GraphicsDevice.Viewport, 6400, 450, 1f);
 			camera.Position = new Vector2(0, 0);

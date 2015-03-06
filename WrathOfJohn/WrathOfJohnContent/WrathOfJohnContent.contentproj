@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{B9E56039-B1BB-4327-88F6-2ACF7EE07641}</ProjectGuid>
@@ -69,8 +69,8 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
-    <Compile Include="Fonts\Segoe UI Mono Debug.spritefont">
-      <Name>Segoe UI Mono Debug</Name>
+    <Compile Include="fonts\segoeuimonodebug.spritefont">
+      <Name>segoeuimonodebug</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
@@ -89,9 +89,9 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="images\enemies\trigore.png">
-    	<Name>trigore</Name>
-    	<Importer>TextureImporter</Importer>
-    	<Processor>TextureProcessor</Processor>
+      <Name>trigore</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -102,32 +102,27 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-  	<Compile Include="images\objects\torch.png">
-  	  <Name>torch</Name>
-  	  <Importer>TextureImporter</Importer>
-  	  <Processor>TextureProcessor</Processor>
-  	</compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="images\parallax\plainsbackrgound1.png">
-      <Name>plainsbackrground1</Name>
+    <Compile Include="images\objects\torch.png">
+      <Name>torch</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="images\parallax\plainsbackground2.png">
       <Name>plainsbackground2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\parallax\plainsbackground3.png">
+    <Compile Include="images\parallax\plainsbackground3.png">
       <Name>plainsbackground3</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="images\projectiles\beam1.png">
-      <Name>beam1</Name>
+    <Compile Include="images\projectiles\beam.png">
+      <Name>beam</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -157,19 +152,26 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-  	<Compile Include="sounds\music\finalboss.mp3">
-  		<Name>finalboss</Name>
-  		<Importer>Mp3Importer</Importer>
-  		<Processor>SongProcessor</Processor>
-  	</Compile>
-  	<Compile Include="sounds\music\forest.mp3">
-  		<Name>forest</Name>
-  		<Importer>Mp3Importer</Importer>
-  		<Processor>SongProcessor</Processor>
-  	</Compile>
+    <Compile Include="sounds\music\finalboss.mp3">
+      <Name>finalboss</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="sounds\music\forest.mp3">
+      <Name>forest</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-  	<Folder Include="sounds\sfx" />
+    <Folder Include="sounds\sfx\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\parallax\plainsbackground1.png">
+      <Name>plainsbackground1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it.

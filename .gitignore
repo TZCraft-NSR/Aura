@@ -18,7 +18,10 @@
 # User-specific files
 *.suo
 *.user
+*.csproj.user
+
 *.sln.docstates
+*.v12.suo
 
 # Build results
 [Bb]in/
@@ -165,3 +168,17 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# =========================
+# Common Files
+# =========================
+
+# Graphics
+*.gif
+*.jpeg
+*.jpg
+
+# Audio/Video
+*.wav
+*.mp4
+*.mpeg

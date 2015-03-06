@@ -8,6 +8,6 @@ This is a project for the contributor's Video Game Design class for a third quar
    Genre: **Platformer**   
    Engine: **[Void Engine](http://github.com/TZCraft-NSR/VoidEngine)**   
    Graphic Artists: **Animus Mawnstar, Brandy Bigelow, Jan lee**   
-   Coders: **@thakyZ, Cap Crow, BeyondAll Portals, @braidenbraaten**   
+   Coders: **[thakyZ](https://github.com/thakyz), Cap Crow, BeyondAll Portals, [Braiden Braaten](https://github.com/braidenbraaten)**   
    Producer: **Cap Crow**   
    Team Leader: **Nire Inicana**   

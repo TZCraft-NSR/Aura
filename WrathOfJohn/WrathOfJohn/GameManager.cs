@@ -178,8 +178,8 @@ namespace WrathOfJohn
 			parallax3Background = new ParallaxBackground(parallax3, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.250f, camera);
 
 			playerAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(60, 50), new Point(1, 1), new Point(0, 0), 1000));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(60, 50), new Point(4, 3), new Point(0, 0), 50));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(60, 50), new Point(4, 1), new Point(0, 150), 350));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(60, 50), new Point(4, 3), new Point(0, 0), 100));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(60, 50), new Point(4, 1), new Point(0, 150), 1000));
 			playerAnimationSetList.Add(new Sprite.AnimationSet("SHOOT", playerTexture, new Point(60, 50), new Point(1, 3), new Point(240, 0), 250));
 			playerAnimationSetList.Add(new Sprite.AnimationSet("SWING", playerTexture, new Point(60, 50), new Point(3, 2), new Point(0, 200), 1000));
 			playerAnimationSetList.Add(new Sprite.AnimationSet("BLOCK", playerTexture, new Point(60, 50), new Point(2, 2), new Point(180, 200), 1000));

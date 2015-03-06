@@ -223,6 +223,7 @@ namespace WrathOfJohn
 			Speed = 2;
 			BleedOff = 0;
 			isTouchingGround = false;
+			SetAnimation("IDLE");
 			#endregion
 
 			Direction = Vector2.Zero;
@@ -261,19 +262,31 @@ namespace WrathOfJohn
 			if (myGame.keyboardState.IsKeyDown(MovementKeys[0]))
 			{
 				Direction.X = -1;
+				SetAnimation("WALK");
+				FlipSprite(true);
 			}
 			if (myGame.keyboardState.IsKeyDown(MovementKeys[2]))
 			{
 				Direction.X = 1;
+				SetAnimation("WALK");
+				FlipSprite(false);
 			}
 			if (myGame.keyboardState.IsKeyDown(MovementKeys[4]) && isTouchingGround && !isJumping && !isFalling)
 			{
 				BleedOff = Gravity;
 				isJumping = true;
 			}
+			if (isJumping || isFalling)
+			{
+				SetAnimation("JUMP");
+			}
 			if (!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2]))
 			{
 				Direction.X = 0;
+			}
+			if (!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2]) && isGrounded)
+			{
+				SetAnimation("IDLE");
 			}
 			if (myGame.CheckKey(MovementKeys[5]))
 			{
@@ -348,35 +361,6 @@ namespace WrathOfJohn
 			#endregion
 
 			#region Do Animations
-			// To play the jumping animation.
-			if (isJumping && !isFalling)
-			{
-				SetAnimation("JUMP");
-			}
-
-			// To do the walking animation.
-			if ((myGame.keyboardState.IsKeyDown(MovementKeys[2]) || myGame.keyboardState.IsKeyDown(MovementKeys[0])) && isGrounded)
-			{
-				SetAnimation("WALK");
-			}
-
-			// To flip the player to the left.
-			if (myGame.keyboardState.IsKeyDown(MovementKeys[0]))
-			{
-				flipSprite(true);
-			}
-
-			// To flip the player back to the right.
-			if (myGame.keyboardState.IsKeyDown(MovementKeys[2]))
-			{
-				flipSprite(false);
-			}
-
-			// To set the animation to idle.
-			if ((myGame.keyboardState.IsKeyDown(MovementKeys[0]) == false && myGame.keyboardState.IsKeyDown(MovementKeys[2]) == false && !myGame.keyboardState.IsKeyDown(MovementKeys[5]) == false) || isFalling)
-			{
-				SetAnimation("IDLE");
-			}
 			#endregion
 
 			#region Mana

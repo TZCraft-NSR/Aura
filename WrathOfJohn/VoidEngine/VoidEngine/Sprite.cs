@@ -77,19 +77,15 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the sprite's current animation.
 		/// </summary>
-		protected AnimationSet CurrentAnimation;
+		public AnimationSet CurrentAnimation;
 		/// <summary>
 		/// Gets or sets the animation sets.
 		/// </summary>
-		protected List<AnimationSet> AnimationSets
+		public List<AnimationSet> AnimationSets
 		{
 			get;
-			set;
+			protected set;
 		}
-		/// <summary>
-		/// The sprites current animation frame.
-		/// </summary>
-		private Point currentFrame;
 		/// <summary>
 		/// Gets or sets the sprites current animation frame.
 		/// </summary>
@@ -97,10 +93,10 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the animations last frame time.
 		/// </summary>
-		protected int LastFrameTime
+		public int LastFrameTime
 		{
 			get;
-			set;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets if the sprite is flipped.
@@ -108,7 +104,7 @@ namespace VoidEngine
 		public SpriteEffects isFlipped
 		{
 			get;
-			set;
+			protected set;
 		}
 		#endregion
 		#region Movement
@@ -203,16 +199,16 @@ namespace VoidEngine
 
 			if (LastFrameTime >= CurrentAnimation.framesPerMillisecond)
 			{
-				currentFrame.X++;
+				CurrentFrame.X++;
 
-				if (currentFrame.X >= CurrentAnimation.sheetSize.X)
+				if (CurrentFrame.X >= CurrentAnimation.sheetSize.X)
 				{
-					currentFrame.Y++;
-					currentFrame.X = 0;
+					CurrentFrame.Y++;
+					CurrentFrame.X = 0;
 
-					if (currentFrame.Y >= CurrentAnimation.sheetSize.Y)
+					if (CurrentFrame.Y >= CurrentAnimation.sheetSize.Y)
 					{
-						currentFrame.Y = 0;
+						CurrentFrame.Y = 0;
 					}
 				}
 
@@ -253,7 +249,7 @@ namespace VoidEngine
 		/// Flips the sprite texture based off a bool
 		/// </summary>
 		/// <param name="isFlip">The bool to flip</param>
-		protected void flipSprite(bool isFlip)
+		protected void FlipSprite(bool isFlip)
 		{
 			if (isFlip)
 			{

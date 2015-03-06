@@ -57,11 +57,6 @@ namespace WrathOfJohn
 		/// </summary>
 		public Game1 myGame;
 
-		/// <summary>
-		/// The mana for the player class.
-		/// </summary>
-		protected Mana _Mana;
-
 		#region Movement and Collision
 		/// <summary>
 		/// The player's collisions.
@@ -143,13 +138,25 @@ namespace WrathOfJohn
 
 		#region Projectiles
 		/// <summary>
+		/// The mana for the player class.
+		/// </summary>
+		public Mana _Mana;
+		/// <summary>
 		/// Gets or sets the projectiles animation sets.
 		/// </summary>
-		protected List<Sprite.AnimationSet> ProjectileAnimationSet;
+		protected List<Sprite.AnimationSet> ProjectileAnimationSet
+		{
+			get;
+			set;
+		}
 		/// <summary>
 		/// Gets or sets the list of projectiles.
 		/// </summary>
-		protected List<Projectile> ProjectileList;
+		protected List<Projectile> ProjectileList
+		{
+			get;
+			set;
+		}
 		/// <summary>
 		/// Gets or sets if the projectile list is created.
 		/// </summary>
@@ -161,26 +168,26 @@ namespace WrathOfJohn
 		/// <summary>
 		/// Gets or sets if the player has shot.
 		/// </summary>
-		protected bool HasShot
+		public bool HasShotProjectile
 		{
 			get;
-			set;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets if the player can shoot.
 		/// </summary>
-		protected bool CanShoot
+		public bool CanShootProjectile
 		{
 			get;
-			set;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets if a new projectile can be created.
 		/// </summary>
-		protected bool CreateNew
+		public bool CreateNewProjectile
 		{
 			get;
-			set;
+			protected set;
 		}
 		#endregion
 
@@ -204,6 +211,8 @@ namespace WrathOfJohn
 
 			#region Set Projectile Factors
 			_Mana = mana;
+			CanShootProjectile = true;
+			CreateNewProjectile = true;
 			#endregion
 
 			#region Set Movement Factors
@@ -214,11 +223,12 @@ namespace WrathOfJohn
 			Speed = 2;
 			BleedOff = 0;
 			isTouchingGround = false;
+			SetAnimation("IDLE");
 			#endregion
 
 			Direction = Vector2.Zero;
 
-			playerCollisions = new Rectangle((int)Position.X + 20, (int)Position.Y + 5, 20, 45);
+			playerCollisions = new Rectangle((int)Position.X + 20, (int)Position.Y + 5, 20, 43);
 		}
 
 		/// <summary>
@@ -227,7 +237,8 @@ namespace WrathOfJohn
 		/// <param name="position">The starting position.</param>
 		/// <param name="color">The color to mask with.</param>
 		/// <param name="animationSetList">The animation set list.</param>
-		public Player(Vector2 position, Color color, List<AnimationSet> animationSetList) : base(position, color, animationSetList)
+		public Player(Vector2 position, Color color, List<AnimationSet> animationSetList)
+			: base(position, color, animationSetList)
 		{
 		}
 
@@ -248,22 +259,46 @@ namespace WrathOfJohn
 			UpdateGravity();
 
 			#region Detect Keys
-			if (_KeyboardState.IsKeyDown(MovementKeys[0]))
+			if (myGame.keyboardState.IsKeyDown(MovementKeys[0]))
 			{
 				Direction.X = -1;
+				SetAnimation("WALK");
+				FlipSprite(true);
 			}
-			if (_KeyboardState.IsKeyDown(MovementKeys[2]))
+			if (myGame.keyboardState.IsKeyDown(MovementKeys[2]))
 			{
 				Direction.X = 1;
+				SetAnimation("WALK");
+				FlipSprite(false);
 			}
-			if (_KeyboardState.IsKeyDown(MovementKeys[4]) && isTouchingGround && !isJumping && !isFalling)
+			if (myGame.keyboardState.IsKeyDown(MovementKeys[4]) && isTouchingGround && !isJumping && !isFalling)
 			{
 				BleedOff = Gravity;
 				isJumping = true;
 			}
-			if (!_KeyboardState.IsKeyDown(MovementKeys[0]) && !_KeyboardState.IsKeyDown(MovementKeys[2]))
+			if (isJumping || isFalling)
+			{
+				SetAnimation("JUMP");
+			}
+			if (!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2]))
 			{
 				Direction.X = 0;
+			}
+			if (!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2]) && isGrounded)
+			{
+				SetAnimation("IDLE");
+			}
+			if (myGame.CheckKey(MovementKeys[5]))
+			{
+				if (CanShootProjectile)
+				{
+					SetAnimation("SHOOT");
+					ShootBeam();
+				}
+			}
+			if (!myGame.CheckKey(MovementKeys[5]))
+			{
+				HasShotProjectile = false;
 			}
 			#endregion
 
@@ -285,28 +320,38 @@ namespace WrathOfJohn
 			{
 				isFalling = false;
 				BleedOff = 0;
-				Direction.Y = 0;
+				Direction.Y = -0.0001f;
 			}
 			if (!isGrounded && isTouchingGround)
 			{
 				isTouchingGround = false;
 			}
 			if (isTouchingLeft)
-		   	{
-		   		Direction.X = -0.0001f;
-		   	}
-		   	if (isTouchingRight)
-		   	{
-		   		Direction.X = 0.0001f;
-		   	}
+			{
+				Direction.X = -0.2f;
+			}
+			if (isTouchingRight)
+			{
+				Direction.X = 0.2f;
+			}
+			if (isTouchingBottom)
+			{
+				Direction.Y = 0.1f;
+				isFalling = true;
+				isJumping = false;
+			}
 			#endregion
 			#endregion
 
 			#region Do Projectiles
 			if (!ProjectileListCreated)
 			{
-				ProjectileAnimationSet.Add(new AnimationSet("IDLE", myGame.gameManager.projectileTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
-				ProjectileListCreated = true;
+				ProjectileAnimationSet.Add(new AnimationSet("IDLE", myGame.gameManager.ProjectileTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
+
+				if (ProjectileAnimationSet != null && ProjectileList != null)
+				{
+					ProjectileListCreated = true;
+				}
 			}
 
 			foreach (Projectile p in ProjectileList)
@@ -316,69 +361,26 @@ namespace WrathOfJohn
 			#endregion
 
 			#region Do Animations
-			// To play the jumping animation.
-			if (isJumping && !isFalling)
-			{
-				SetAnimation("JUMP");
-			}
-
-			// To do the walking animation.
-			if ((myGame.keyboardState.IsKeyDown(MovementKeys[2]) || myGame.keyboardState.IsKeyDown(MovementKeys[0])) && isGrounded)
-			{
-				SetAnimation("WALK");
-			}
-
-			// To flip the player to the left.
-			if (myGame.keyboardState.IsKeyDown(MovementKeys[0]))
-			{
-				flipSprite(true);
-			}
-
-			// To flip the player back to the right.
-			if (myGame.keyboardState.IsKeyDown(MovementKeys[2]))
-			{
-				flipSprite(false);
-			}
-
-			if ((myGame.keyboardState.IsKeyDown(MovementKeys[5]) && !myGame.previousKeyboardState.IsKeyDown(MovementKeys[5])) && (!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2])))
-			{
-				if (CanShoot)
-				{
-					SetAnimation("SHOOT");
-					ShootBeam();
-				}
-			}
-
-			if ((myGame.keyboardState.IsKeyUp(MovementKeys[5]) && !myGame.previousKeyboardState.IsKeyUp(MovementKeys[5])))
-			{
-				HasShot = false;
-			}
-
-			// To set the animation to idle.
-			if ((!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2]) && !myGame.keyboardState.IsKeyDown(MovementKeys[5])) || isFalling)
-			{
-				SetAnimation("IDLE");
-			}
 			#endregion
 
 			#region Mana
 			if (_Mana.mana < _Mana.maxMana)
 			{
-				if (!HasShot)
+				if (!HasShotProjectile)
 				{
 					_Mana.manaRechargeTime -= myGame.elapsedTime;
 				}
 
 				if (_Mana.mana <= 0)
 				{
-					CanShoot = false;
+					CanShootProjectile = false;
 				}
 				else if (_Mana.mana >= 0)
 				{
-					CanShoot = true;
+					CanShootProjectile = true;
 				}
 
-				if (_Mana.manaRechargeTime <= 0 && _Mana.mana < _Mana.maxMana && !HasShot)
+				if (_Mana.manaRechargeTime <= 0 && _Mana.mana < _Mana.maxMana && !HasShotProjectile)
 				{
 					_Mana.manaInterval -= myGame.elapsedTime;
 
@@ -389,7 +391,7 @@ namespace WrathOfJohn
 					}
 				}
 
-				if (_Mana.mana >= _Mana.maxMana || (HasShot && CanShoot))
+				if (_Mana.mana >= _Mana.maxMana || (HasShotProjectile && CanShootProjectile))
 				{
 					_Mana.manaRechargeTime = 5000;
 				}
@@ -437,23 +439,19 @@ namespace WrathOfJohn
 			{
 				if (!p.isVisible)
 				{
-					CreateNew = true;
+					CreateNewProjectile = true;
 					ProjectileList.RemoveAt(0);
 					break;
 				}
 			}
 
-			if (CreateNew == true && CanShoot && _Mana.mana >= _Mana.maxMana / 3)
+			if (CreateNewProjectile && CanShootProjectile && _Mana.mana >= _Mana.maxMana / 3 - 1)
 			{
-				if (CanShoot)
-				{
-					HasShot = true;
-				}
-
 				_Mana.mana -= _Mana.maxMana / 3;
 				Projectile projectile = new Projectile(new Vector2(Position.X + 35, Position.Y + ((ProjectileAnimationSet[0].frameSize.Y - 4) / 2) + 8), Color.White, ProjectileAnimationSet, this, myGame);
-				projectile.Fire();
 				ProjectileList.Add(projectile);
+				projectile.Fire();
+				HasShotProjectile = true;
 			}
 
 			if (_Mana.mana < 0)
@@ -501,10 +499,10 @@ namespace WrathOfJohn
 		}
 
 		/// <summary>
-		///
+		/// This returns true if the player is colliding with the specified object.
 		/// </summary>
-		/// <param name="PlayerSegment"></param>
-		/// <param name="ObjectSegments"></param>
+		/// <param name="PlayerSegment">The player's rectangle collision.</param>
+		/// <param name="ObjectSegments">The object the player is colliding with.</param>
 		/// <returns></returns>
 		public bool CheckSegmentCollision(Rectangle PlayerSegment, List<Rectangle> ObjectSegments, string Side)
 		{
@@ -534,45 +532,5 @@ namespace WrathOfJohn
 
 			return false;
 		}
-		
-		/*
-		#region Detecting the corrisponding rectangle
-		/// <summary>
-		///
-		/// </summary>
-		/// <param name="ObjectRectangle"></param>
-		protected void GetCollidingRectangleTop(Rectangle ObjectRectangle)
-		{
-			CollidingTopRectangle = ObjectRectangle;
-		}
-		
-		/// <summary>
-		///
-		/// </summary>
-		/// <param name="ObjectRectangle"></param>
-		protected void GetCollidingRectangleLeft(Rectangle ObjectRectangle)
-		{
-			CollidingLeftRectangle = ObjectRectangle;
-		}
-		
-		/// <summary>
-		///
-		/// </summary>
-		/// <param name="ObjectRectangle"></param>
-		protected void GetCollidingRectangleBottom(Rectangle ObjectRectangle)
-		{
-			CollidingBottomRectangle = ObjectRectangle;
-		}
-		
-		/// <summary>
-		///
-		/// </summary>
-		/// <param name="ObjectRectangle"></param>
-		protected void GetCollidingRectangleRight(Rectangle ObjectRectangle)
-		{
-			CollidingRightRectangle = ObjectRectangle;
-		}
-		#endregion
-		*/
 	}
 }

@@ -61,7 +61,7 @@ namespace VoidEngine
 			/// <param name="sheetSize2"></param>
 			/// <param name="startPosition2"></param>
 			/// <param name="framesPerMillisecond2"></param>
-            /// <param name="framesPerMillisecond2">The start Position in exact cordinates that the animation starts at.</param>
+			/// <param name="framesPerMillisecond2">The start Position in exact cordinates that the animation starts at.</param>
 			public AnimationSet(string name2, Texture2D texture2, Point frameSize2, Point sheetSize2, Point startPosition2, int framesPerMillisecond2)
 			{
 				name = name2;
@@ -77,19 +77,15 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the sprite's current animation.
 		/// </summary>
-		protected AnimationSet CurrentAnimation;
+		public AnimationSet CurrentAnimation;
 		/// <summary>
 		/// Gets or sets the animation sets.
 		/// </summary>
-		protected List<AnimationSet> AnimationSets
+		public List<AnimationSet> AnimationSets
 		{
 			get;
-			set;
+			protected set;
 		}
-		/// <summary>
-		/// The sprites current animation frame.
-		/// </summary>
-		private Point currentFrame;
 		/// <summary>
 		/// Gets or sets the sprites current animation frame.
 		/// </summary>
@@ -97,10 +93,10 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the animations last frame time.
 		/// </summary>
-		protected int LastFrameTime
+		public int LastFrameTime
 		{
 			get;
-			set;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets if the sprite is flipped.
@@ -108,7 +104,7 @@ namespace VoidEngine
 		public SpriteEffects isFlipped
 		{
 			get;
-			set;
+			protected set;
 		}
 		#endregion
 		#region Movement
@@ -143,52 +139,39 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the Speed that the sprite moves at.
 		/// <summary>
-		protected float Speed
+		public float Speed
 		{
 			get;
-			set;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets weither the spite can move or not.
 		/// </summary>
-		protected bool CanMove
+		public bool CanMove
 		{
 			get;
-			set;
+			protected set;
+		}
+
+		public bool isMoving
+		{
+			get;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets the list of keys that the sprite uses.
 		/// Indexes: [0]: Left | [1]: Up | [2]: Right | [3]: Down | [4]: Custom1 | [5]: Custom2 | [6]: Custom3 | [?]: etc.
 		/// </summary>
-		protected List<Keys> MovementKeys
-		{
-			get;
-			set;
-		}
-		/// <summary>
-		/// Gets or sets the keyboard state.
-		/// </summary>
-		protected KeyboardState _KeyboardState
-		{
-			get;
-			private set;
-		}
-		/// <summary>
-		/// Gets or sets the previous keyboard state.
-		/// </summary>
-		protected KeyboardState _PreviousKeyboardState
-		{
-			get;
-			private set;
-		}
+		protected List<Keys> MovementKeys;
 		#endregion
+
 		/// <summary>
 		/// Gets or sets the sprites color.
 		/// </summary>
-		protected Color _Color
+		public Color _Color
 		{
 			get;
-			set;
+			protected set;
 		}
 
 		/// <summary>
@@ -212,30 +195,25 @@ namespace VoidEngine
 		/// <param name="gameTime">The main GameTime</param>
 		public virtual void Update(GameTime gameTime)
 		{
-			_KeyboardState = Keyboard.GetState();
-			_PreviousKeyboardState = _KeyboardState;
-
 			LastFrameTime += gameTime.ElapsedGameTime.Milliseconds;
 
 			if (LastFrameTime >= CurrentAnimation.framesPerMillisecond)
 			{
-				currentFrame.X++;
+				CurrentFrame.X++;
 
-				if (currentFrame.X >= CurrentAnimation.sheetSize.X)
+				if (CurrentFrame.X >= CurrentAnimation.sheetSize.X)
 				{
-					currentFrame.Y++;
-					currentFrame.X = 0;
+					CurrentFrame.Y++;
+					CurrentFrame.X = 0;
 
-					if (currentFrame.Y >= CurrentAnimation.sheetSize.Y)
+					if (CurrentFrame.Y >= CurrentAnimation.sheetSize.Y)
 					{
-						currentFrame.Y = 0;
+						CurrentFrame.Y = 0;
 					}
 				}
 
 				LastFrameTime = 0;
 			}
-
-			_PreviousKeyboardState = _KeyboardState;
 		}
 
 		/// <summary>
@@ -271,7 +249,7 @@ namespace VoidEngine
 		/// Flips the sprite texture based off a bool
 		/// </summary>
 		/// <param name="isFlip">The bool to flip</param>
-		protected void flipSprite(bool isFlip)
+		protected void FlipSprite(bool isFlip)
 		{
 			if (isFlip)
 			{

@@ -236,7 +236,8 @@ namespace WrathOfJohn
 		/// <param name="position">The starting position.</param>
 		/// <param name="color">The color to mask with.</param>
 		/// <param name="animationSetList">The animation set list.</param>
-		public Player(Vector2 position, Color color, List<AnimationSet> animationSetList) : base(position, color, animationSetList)
+		public Player(Vector2 position, Color color, List<AnimationSet> animationSetList)
+			: base(position, color, animationSetList)
 		{
 		}
 
@@ -313,13 +314,13 @@ namespace WrathOfJohn
 				isTouchingGround = false;
 			}
 			if (isTouchingLeft)
-		   	{
-		   		Direction.X = -0.2f;
-		   	}
-		   	if (isTouchingRight)
-		   	{
-		   		Direction.X = 0.2f;
-		   	}
+			{
+				Direction.X = -0.2f;
+			}
+			if (isTouchingRight)
+			{
+				Direction.X = 0.2f;
+			}
 			if (isTouchingBottom)
 			{
 				Direction.Y = 0.1f;
@@ -333,7 +334,7 @@ namespace WrathOfJohn
 			if (!ProjectileListCreated)
 			{
 				ProjectileAnimationSet.Add(new AnimationSet("IDLE", myGame.gameManager.ProjectileTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
-				
+
 				if (ProjectileAnimationSet != null && ProjectileList != null)
 				{
 					ProjectileListCreated = true;

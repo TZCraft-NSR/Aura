@@ -43,10 +43,10 @@ namespace WrathOfJohn
 		/// The player class' texture.
 		/// </summary>
 		Texture2D playerTexture;
-        /// <summary>
-        /// The player segment collisions.
-        /// </summary>
-        protected Rectangle PlayerCollisions;
+		/// <summary>
+		/// The player segment collisions.
+		/// </summary>
+		protected Rectangle PlayerCollisions;
 		/// <summary>
 		/// The players list of movement keys.
 		/// </summary>
@@ -130,7 +130,7 @@ namespace WrathOfJohn
 			: base(game)
 		{
 			myGame = game;
-			
+
 			// This is to fix the Initalize() function.
 			this.Initialize();
 		}
@@ -139,12 +139,12 @@ namespace WrathOfJohn
 		/// This is to initalize the Game Manager
 		/// </summary>
 		public override void Initialize()
-        {
+		{
 			MovementKeys = new List<Keys>();
-            playerAnimationSetList = new List<Sprite.AnimationSet>();
+			playerAnimationSetList = new List<Sprite.AnimationSet>();
 
-            platformList = new List<PlatformManager>();
-            platformAnimationSetList = new List<Sprite.AnimationSet>();
+			platformList = new List<PlatformManager>();
+			platformAnimationSetList = new List<Sprite.AnimationSet>();
 			platformRectangles = new List<Rectangle>();
 
 			for (int i = 0; i < DebugLines.Length; i++)
@@ -188,7 +188,7 @@ namespace WrathOfJohn
 			platformAnimationSetList.Add(new Sprite.AnimationSet("2", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
 			platformAnimationSetList.Add(new Sprite.AnimationSet("3", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0));
 			platformAnimationSetList.Add(new Sprite.AnimationSet("4", platformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 0), 0));
-            platformAnimationSetList.Add(new Sprite.AnimationSet("5", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("5", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0));
 			platformAnimationSetList.Add(new Sprite.AnimationSet("6", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0));
 			platformAnimationSetList.Add(new Sprite.AnimationSet("7", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 25), 0));
 			platformAnimationSetList.Add(new Sprite.AnimationSet("8", platformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 25), 0));
@@ -209,7 +209,7 @@ namespace WrathOfJohn
 			MovementKeys.Add(Keys.E);
 			MovementKeys.Add(Keys.Q);
 
-            _Mana = new Player.Mana(100, 5000, 100);
+			_Mana = new Player.Mana(100, 5000, 100);
 			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 25), MovementKeys, 1.25f, _Mana, Color.White, playerAnimationSetList, myGame);
 
 			debugLabel = new Label(new Vector2(0, 00), myGame.segoeUIMonoDebug, 1f, Color.Black, "");
@@ -241,18 +241,18 @@ namespace WrathOfJohn
 			parallax3Background.Update(gameTime);
 			#endregion
 
-            PlayerCollisions = player.GetPlayerSegments();
+			PlayerCollisions = player.GetPlayerSegments();
 
 			player.Update(gameTime);
 
-			debugLabel.Update(gameTime, DebugLines[0] + "\n" + DebugLines[1] + "\n" + 
-										DebugLines[2] + "\n" + DebugLines[3] + "\n" + 
-										DebugLines[4] + "\n" + DebugLines[5] + "\n" + 
-										DebugLines[6] + "\n" + DebugLines[7] + "\n" + 
+			debugLabel.Update(gameTime, DebugLines[0] + "\n" + DebugLines[1] + "\n" +
+										DebugLines[2] + "\n" + DebugLines[3] + "\n" +
+										DebugLines[4] + "\n" + DebugLines[5] + "\n" +
+										DebugLines[6] + "\n" + DebugLines[7] + "\n" +
 										DebugLines[8] + "\n" + DebugLines[9]);
 
-            DebugLines[0] = "IsGrounded=" + player.isGrounded + " IsTouchingGround=" + player.isTouchingGround + " IsJumping=" + player.isJumping + " IsFalling=" + player.isFalling + " BleedOff=" + player.BleedOff;
-            DebugLines[1] = "IsTouchingRight=" + player.isTouchingRight + " IsTouchingLeft=" + player.isTouchingLeft;
+			DebugLines[0] = "IsGrounded=" + player.isGrounded + " IsTouchingGround=" + player.isTouchingGround + " IsJumping=" + player.isJumping + " IsFalling=" + player.isFalling + " BleedOff=" + player.BleedOff;
+			DebugLines[1] = "IsTouchingRight=" + player.isTouchingRight + " IsTouchingLeft=" + player.isTouchingLeft;
 			DebugLines[3] = "mana=" + player._Mana.mana + " maxMana=" + player._Mana.maxMana + " manaRechargeTime=" + player._Mana.manaRechargeTime + " manaInterval=" + player._Mana.manaInterval;
 			DebugLines[4] = "CanShoot=" + player.CanShootProjectile + " CreateNew=" + player.CreateNewProjectile + " HasShot=" + player.HasShotProjectile + " projectileListCreated=" + player.ProjectileListCreated;
 

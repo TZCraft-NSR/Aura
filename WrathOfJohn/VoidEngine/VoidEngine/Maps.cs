@@ -27,12 +27,12 @@ namespace VoidEngine
 							break;
 						case '3':
 							brickArray[i, j] = 3;
-                            break;
-                        case '4':
-                            brickArray[i, j] = 4;
-                            break;
-                        case '5':
-                            brickArray[i, j] = 5;
+							break;
+						case '4':
+							brickArray[i, j] = 4;
+							break;
+						case '5':
+							brickArray[i, j] = 5;
 							break;
 						case '6':
 							brickArray[i, j] = 6;

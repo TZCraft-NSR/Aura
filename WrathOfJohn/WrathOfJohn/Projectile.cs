@@ -67,37 +67,37 @@ namespace WrathOfJohn
 			{
 				Direction = new Vector2(1, 0);
 			}
-        }
+		}
 
-        public override void Update(GameTime gameTime)
+		public override void Update(GameTime gameTime)
 		{
 			projectileRectangle.X = (int)Position.X;
 			projectileRectangle.Y = (int)Position.Y;
 
-            if (Vector2.Distance(startPosition, Position) > maxDistance)
-            {
-                visible = false;
-            }
+			if (Vector2.Distance(startPosition, Position) > maxDistance)
+			{
+				visible = false;
+			}
 			if (player.CheckSegmentCollision(projectileRectangle, myGame.gameManager.platformRectangles, "left") || player.CheckSegmentCollision(projectileRectangle, myGame.gameManager.platformRectangles, "right") || player.CheckSegmentCollision(projectileRectangle, myGame.gameManager.platformRectangles, "top") || player.CheckSegmentCollision(projectileRectangle, myGame.gameManager.platformRectangles, "bottom"))
 			{
 				visible = false;
 			}
 
-            if (visible == true)
-            {
-                Position += Direction * Speed;
-            }
+			if (visible)
+			{
+				Position += Direction * Speed + (player.GetDirection * player.Speed);
+			}
 
-            base.Update(gameTime);
-        }
+			base.Update(gameTime);
+		}
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            if (visible)
-            {
-                base.Draw(gameTime, spriteBatch);
-            }
-        }
+		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+		{
+			if (visible)
+			{
+				base.Draw(gameTime, spriteBatch);
+			}
+		}
 
 		public void Fire()
 		{

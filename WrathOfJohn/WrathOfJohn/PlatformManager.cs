@@ -46,10 +46,10 @@ namespace WrathOfJohn
 			if (type == 4)
 			{
 				SetAnimation("4");
-            }
-            if (type == 5)
-            {
-                SetAnimation("5");
+			}
+			if (type == 5)
+			{
+				SetAnimation("5");
 			}
 			if (type == 6)
 			{

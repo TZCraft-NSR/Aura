@@ -61,7 +61,7 @@ namespace VoidEngine
 			/// <param name="sheetSize2"></param>
 			/// <param name="startPosition2"></param>
 			/// <param name="framesPerMillisecond2"></param>
-            /// <param name="framesPerMillisecond2">The start Position in exact cordinates that the animation starts at.</param>
+			/// <param name="framesPerMillisecond2">The start Position in exact cordinates that the animation starts at.</param>
 			public AnimationSet(string name2, Texture2D texture2, Point frameSize2, Point sheetSize2, Point startPosition2, int framesPerMillisecond2)
 			{
 				name = name2;
@@ -143,49 +143,39 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the Speed that the sprite moves at.
 		/// <summary>
-		protected float Speed
+		public float Speed
 		{
 			get;
-			set;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets weither the spite can move or not.
 		/// </summary>
-		protected bool CanMove
+		public bool CanMove
 		{
 			get;
-			set;
+			protected set;
+		}
+
+		public bool isMoving
+		{
+			get;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets the list of keys that the sprite uses.
 		/// Indexes: [0]: Left | [1]: Up | [2]: Right | [3]: Down | [4]: Custom1 | [5]: Custom2 | [6]: Custom3 | [?]: etc.
 		/// </summary>
 		protected List<Keys> MovementKeys;
-		/// <summary>
-		/// Gets or sets the keyboard state.
-		/// </summary>
-		protected KeyboardState _KeyboardState
-		{
-			get;
-			private set;
-		}
-		/// <summary>
-		/// Gets or sets the previous keyboard state.
-		/// </summary>
-		protected KeyboardState _PreviousKeyboardState
-		{
-			get;
-			private set;
-		}
 		#endregion
 
 		/// <summary>
 		/// Gets or sets the sprites color.
 		/// </summary>
-		protected Color _Color
+		public Color _Color
 		{
 			get;
-			set;
+			protected set;
 		}
 
 		/// <summary>
@@ -209,9 +199,6 @@ namespace VoidEngine
 		/// <param name="gameTime">The main GameTime</param>
 		public virtual void Update(GameTime gameTime)
 		{
-			_KeyboardState = Keyboard.GetState();
-			_PreviousKeyboardState = _KeyboardState;
-
 			LastFrameTime += gameTime.ElapsedGameTime.Milliseconds;
 
 			if (LastFrameTime >= CurrentAnimation.framesPerMillisecond)
@@ -231,8 +218,6 @@ namespace VoidEngine
 
 				LastFrameTime = 0;
 			}
-
-			_PreviousKeyboardState = _KeyboardState;
 		}
 
 		/// <summary>

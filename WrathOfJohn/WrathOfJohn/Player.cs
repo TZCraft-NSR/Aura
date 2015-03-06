@@ -129,11 +129,27 @@ namespace WrathOfJohn
 		/// <summary>
 		/// Gets or sets the sprites gravity. (Used for player or enemy classes)
 		/// </summary>
-		protected float Gravity
+		public float Gravity
 		{
 			get;
-			set;
+			protected set;
 		}
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool isTouchingLeftWall
+        {
+            get;
+            protected set;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool isTouchingRightWall
+        {
+            get;
+            protected set;
+        }
 		#endregion
 
 		#region Projectiles
@@ -307,6 +323,8 @@ namespace WrathOfJohn
 			isTouchingLeft = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "left");
 			isTouchingRight = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "right");
 			isTouchingBottom = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "bottom");
+            isTouchingLeftWall = CheckSegmentCollision(playerCollisions, myGame.gameManager.mapSegments, "left");
+            isTouchingRightWall = CheckSegmentCollision(playerCollisions, myGame.gameManager.mapSegments, "right");
 
 			if (isGrounded)
 			{
@@ -340,6 +358,14 @@ namespace WrathOfJohn
 				isFalling = true;
 				isJumping = false;
 			}
+            if (isTouchingLeftWall)
+            {
+                Direction.X = -0.2f;
+            }
+            if (isTouchingRightWall)
+            {
+                Direction.X = 0.2f;
+            }
 			#endregion
 			#endregion
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{B9E56039-B1BB-4327-88F6-2ACF7EE07641}</ProjectGuid>
@@ -42,123 +42,134 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\screens\splash1.png">
-      <Name>splash1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\screens\splash2.png">
-      <Name>splash2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\screens\menu.png">
-      <Name>menu</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\gui\button.png">
-      <Name>button</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\npcs\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\enemies\enemy.png">
-      <Name>enemy</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\players\player.png">
+    <Compile Include="images\players\player.png">
       <Name>player</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\debugStuff\line.png">
+    <Compile Include="fonts\segoeuibold.spritefont">
+      <Name>segoeuibold</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <Compile Include="fonts\segoeuiitalic.spritefont">
+      <Name>segoeuiitalic</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <Compile Include="fonts\segoeuimono.spritefont">
+      <Name>segoeuimono</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <Compile Include="fonts\segoeuiregular.spritefont">
+      <Name>segoeuiregular</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <Compile Include="Fonts\Segoe UI Mono Debug.spritefont">
+      <Name>Segoe UI Mono Debug</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\debug\line.png">
       <Name>line</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\projectiles\beam1.png">
+    <Compile Include="images\enemies\bob.png">
+      <Name>bob</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="images\enemies\trigore.png">
+    	<Name>trigore</Name>
+    	<Importer>TextureImporter</Importer>
+    	<Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\gui\button.png">
+      <Name>button</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+  	<Compile Include="images\objects\torch.png">
+  	  <Name>torch</Name>
+  	  <Importer>TextureImporter</Importer>
+  	  <Processor>TextureProcessor</Processor>
+  	</compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\parallax\plainsbackrgound1.png">
+      <Name>plainsbackrground1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="images\parallax\plainsbackground2.png">
+      <Name>plainsbackground2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\parallax\plainsbackground3.png">
+      <Name>plainsbackground3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\projectiles\beam1.png">
       <Name>beam1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\screens\splash3.png">
-      <Name>splash3</Name>
+    <Compile Include="images\screens\menu.png">
+      <Name>menu</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="images\screens\splash1.png">
+      <Name>splash1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="images\screens\splash2.png">
+      <Name>splash2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\Segoe UI Bold.spritefont">
-      <Name>Segoe UI Bold</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-    <Compile Include="Fonts\Segoe UI Italic.spritefont">
-      <Name>Segoe UI Italic</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-    <Compile Include="Fonts\Segoe UI Mono.spritefont">
-      <Name>Segoe UI Mono</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-    <Compile Include="Fonts\Segoe UI Regular.spritefont">
-      <Name>Segoe UI Regular</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\screens\game\parallax\backgroundFG.png">
-      <Name>backgroundFG</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Images\screens\game\parallax\backgroundMG.png">
-      <Name>backgroundMG</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Images\screens\game\parallax\backgroundWOJ.png">
-      <Name>backgroundWOJ</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\tiles\platforms.png">
+    <Compile Include="images\tiles\platforms.png">
       <Name>platforms</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\Segoe UI Mono Debug.spritefont">
-      <Name>Segoe UI Mono Debug</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
+  	<Compile Include="sounds\music\finalboss.mp3">
+  		<Name>finalboss</Name>
+  		<Importer>Mp3Importer</Importer>
+  		<Processor>SongProcessor</Processor>
+  	</Compile>
+  	<Compile Include="sounds\music\forest.mp3">
+  		<Name>forest</Name>
+  		<Importer>Mp3Importer</Importer>
+  		<Processor>SongProcessor</Processor>
+  	</Compile>
+  </ItemGroup>
+  <ItemGroup>
+  	<Folder Include="sounds\sfx" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it.

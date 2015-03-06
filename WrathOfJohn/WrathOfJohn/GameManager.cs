@@ -93,6 +93,10 @@ namespace WrathOfJohn
 		/// The collision areas of each platform.
 		/// </summary>
 		public List<Rectangle> platformRectangles;
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Rectangle> mapSegments;
 		#endregion
 
 		#region Background Variables
@@ -147,6 +151,8 @@ namespace WrathOfJohn
 			platformAnimationSetList = new List<Sprite.AnimationSet>();
 			platformRectangles = new List<Rectangle>();
 
+            mapSegments = new List<Rectangle>();
+
 			for (int i = 0; i < DebugLines.Length; i++)
 			{
 				DebugLines[i] = "";
@@ -173,6 +179,9 @@ namespace WrathOfJohn
 			camera = new Camera(GraphicsDevice.Viewport, 6400, 450, 1f);
 			camera.Position = new Vector2(0, 0);
 
+            mapSegments.Add(new Rectangle(-5, 0, 0, (int)camera.Size.Y));
+            mapSegments.Add(new Rectangle((int)camera.Size.X + 5, 0, (int)camera.Size.X, (int)camera.Size.Y));
+            
 			parallax1Background = new ParallaxBackground(parallax1, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
 			parallax2Background = new ParallaxBackground(parallax2, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
 			parallax3Background = new ParallaxBackground(parallax3, new Vector2(camera.OverallPlayerPosition.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.250f, camera);

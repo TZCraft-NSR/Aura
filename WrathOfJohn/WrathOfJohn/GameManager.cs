@@ -320,7 +320,7 @@ namespace WrathOfJohn
 			int height = (int)camera.Size.Y / 25;
 			uint[,] brickspawn;
 
-			brickspawn = Maps.GetBrickArray(Maps.HappyFace());
+			brickspawn = MapHelper.GetBrickArray(Maps.HappyFace());
 
 			for (int x = 0; x < width; x++)
 			{

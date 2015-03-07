@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace WrathOfJohn
+namespace VoidEngine
 {
-	static class RectangleHelper
+	public static class RectangleHelper
 	{
 		public static bool TouchTopOf(this Rectangle r1, Rectangle r2)
 		{

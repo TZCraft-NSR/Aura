@@ -240,8 +240,6 @@ namespace WrathOfJohn
 				camera.Position = new Vector2(player.GetPosition.X + 200f, 0);
 			}
 
-			camera.OverallPlayerPosition = new Vector2(player.GetPosition.X + 200f, 0);
-
 			parallax1Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
 			parallax1Background.Update(gameTime);
 			parallax2Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
@@ -285,7 +283,6 @@ namespace WrathOfJohn
 					pm.Draw(gameTime, spriteBatch);
 				}
 
-				/*
 				for (int i = 0; i < platformRectangles.Count; i++)
 				{
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
@@ -293,14 +290,12 @@ namespace WrathOfJohn
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y + (int)platformRectangles[i].Height, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, 1, (int)platformRectangles[i].Height), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
 				}
-				*/
 				// Draw the player.
 				player.Draw(gameTime, spriteBatch);
-				/*spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, (int)PlayerCollisions.Width, 1), Color.Blue);
+                spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, (int)PlayerCollisions.Width, 1), Color.Blue);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X + (int)PlayerCollisions.Width, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Red);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y + (int)PlayerCollisions.Height, (int)PlayerCollisions.Width, 1), Color.Green);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Yellow);
-				*/
 			}
 			spriteBatch.End();
 

@@ -83,18 +83,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="images\enemies\bob.png">
-      <Name>bob</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="images\enemies\trigore.png">
-      <Name>trigore</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="images\gui\button.png">
       <Name>button</Name>
       <Importer>TextureImporter</Importer>
@@ -169,6 +157,41 @@
   <ItemGroup>
     <Compile Include="images\parallax\plainsbackground1.png">
       <Name>plainsbackground1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\players\mage.png">
+      <Name>mage</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\boss\bossfistleft.png">
+      <Name>bossfistleft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\boss\bossfistright.png">
+      <Name>bossfistright</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\boss\bosshead.png">
+      <Name>bosshead</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\enemies\enemies.png">
+      <Name>enemies</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

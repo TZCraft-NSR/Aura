@@ -326,45 +326,49 @@ namespace WrathOfJohn
             isTouchingLeftWall = CheckSegmentCollision(playerCollisions, myGame.gameManager.mapSegments, "left");
             isTouchingRightWall = CheckSegmentCollision(playerCollisions, myGame.gameManager.mapSegments, "right");
 
-			if (isGrounded)
-			{
-				isTouchingGround = true;
-			}
-			if (!isGrounded)
-			{
-				isTouchingGround = false;
-			}
-			if (isGrounded && isFalling)
-			{
-				isFalling = false;
-				BleedOff = 0;
-				Direction.Y = -0.0001f;
-			}
-			if (!isGrounded && isTouchingGround)
-			{
-				isTouchingGround = false;
-			}
-			if (isTouchingLeft)
-			{
-				Direction.X = -0.2f;
-			}
-			if (isTouchingRight)
-			{
-				Direction.X = 0.2f;
-			}
-			if (isTouchingBottom)
-			{
-				Direction.Y = 0.1f;
-				isFalling = true;
-				isJumping = false;
-			}
-            if (isTouchingLeftWall)
+            if (isGrounded)
             {
-                Direction.X = -0.2f;
+                isTouchingGround = true;
             }
-            if (isTouchingRightWall)
+            if (!isGrounded)
             {
-                Direction.X = 0.2f;
+                isTouchingGround = false;
+            }
+            if (isGrounded && isFalling)
+            {
+                isFalling = false;
+                BleedOff = 0;
+                Direction.Y = 0;
+            }
+            if (!isGrounded && isTouchingGround)
+            {
+                isTouchingGround = false;
+            }
+            if (isTouchingLeft)
+            {
+                Position.X -= 2;
+            }
+            if (isTouchingRight)
+            {
+                Position.X += 7;
+            }
+            if (isTouchingBottom)
+            {
+                Position.Y += 0;
+
+                isFalling = true;
+                isJumping = false;
+            }
+            foreach (Rectangle r in myGame.gameManager.mapSegments)
+            {
+                if (RectangleHelper.TouchLeftOf(playerCollisions, r))
+                {
+                    Position.X = r.Left;
+                }
+                if (RectangleHelper.TouchRightOf(playerCollisions, r))
+                {
+                    Position.X = r.Right;
+                }
             }
 			#endregion
 			#endregion

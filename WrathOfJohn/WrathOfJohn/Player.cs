@@ -346,15 +346,15 @@ namespace WrathOfJohn
             }
             if (isTouchingLeft)
             {
-                Position.X -= 2;
+                Direction.X = -0.01f;
             }
             if (isTouchingRight)
             {
-                Position.X += 7;
+                Direction.X = 0.01f;
             }
             if (isTouchingBottom)
             {
-                Position.Y += 0;
+                Direction.Y = 0.4f;
 
                 isFalling = true;
                 isJumping = false;

@@ -219,7 +219,7 @@ namespace WrathOfJohn
 			MovementKeys.Add(Keys.Q);
 
 			_Mana = new Player.Mana(100, 5000, 100);
-			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 25), MovementKeys, 1.25f, _Mana, Color.White, playerAnimationSetList, myGame);
+			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 75), MovementKeys, 1.25f, _Mana, Color.White, playerAnimationSetList, myGame);
 
 			debugLabel = new Label(new Vector2(0, 00), myGame.segoeUIMonoDebug, 1f, Color.Black, "");
 
@@ -283,6 +283,11 @@ namespace WrathOfJohn
 					pm.Draw(gameTime, spriteBatch);
 				}
 
+                // Draw the player.
+                player.Draw(gameTime, spriteBatch);
+
+                // Debug stuff.
+                /*
 				for (int i = 0; i < platformRectangles.Count; i++)
 				{
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
@@ -290,13 +295,12 @@ namespace WrathOfJohn
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y + (int)platformRectangles[i].Height, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, 1, (int)platformRectangles[i].Height), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
 				}
-				// Draw the player.
-				player.Draw(gameTime, spriteBatch);
                 spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, (int)PlayerCollisions.Width, 1), Color.Blue);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X + (int)PlayerCollisions.Width, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Red);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y + (int)PlayerCollisions.Height, (int)PlayerCollisions.Width, 1), Color.Green);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Yellow);
-			}
+			    */
+            }
 			spriteBatch.End();
 
 			spriteBatch.Begin();

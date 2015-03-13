@@ -261,7 +261,7 @@ namespace WrathOfJohn
 			MovementKeys.Add(Keys.Q);
 
 			_Mana = new Player.Mana(100, 5000, 100);
-			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 75), MovementKeys, 1.05f, _Mana, Color.White, playerAnimationSetList, myGame);
+			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 75), MovementKeys, 2f, _Mana, Color.White, playerAnimationSetList, myGame);
 
 			debugLabel = new Label(new Vector2(0, 00), myGame.segoeUIMonoDebug, 1f, Color.Black, "");
 

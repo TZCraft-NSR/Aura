@@ -16,11 +16,6 @@ namespace WrathOfJohn
 	public class Player : Sprite
 	{
 		/// <summary>
-		/// An enum to detect which side the player is touching.
-		/// </summary>
-		public enum Side { TOP, BOTTOM, LEFT, RIGHT, BACKGROUND, NONE }
-
-		/// <summary>
 		/// The mana struct for the player class.
 		/// </summary>
 		public struct Mana
@@ -90,6 +85,11 @@ namespace WrathOfJohn
 		{
 			get;
 			protected set;
+		}
+		public bool canFall
+		{
+			get;
+			set;
 		}
 		/// <summary>
 		/// Gets or sets the sprites gravity. (Used for player or enemy classes)
@@ -369,7 +369,7 @@ namespace WrathOfJohn
 		/// <param name="keyList"></param>
 		protected virtual void InputMethod(List<Keys>keyList)
 		{
-			if (myGame.keyboardState.IsKeyDown(keyList[4]) && isGrounded)
+			if (myGame.keyboardState.IsKeyDown(keyList[4]) && (!isJumping && !canFall))
 			{
 				isJumping = true;
 				isFalling = false;
@@ -418,6 +418,7 @@ namespace WrathOfJohn
 				Position.Y = rectangle2.Top - rectangle1.Height - 5;
 				Direction.Y = 0f;
 				isGrounded = true;
+				canFall = false;
 				GravityForce = DefaultGravityForce;
 			}
 			if (rectangle1.TouchLeftOf(rectangle2))
@@ -450,6 +451,7 @@ namespace WrathOfJohn
 				{
 					isJumping = false;
 					isFalling = true;
+					canFall = true;
 				}
 			}
 

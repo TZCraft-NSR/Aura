@@ -48,7 +48,7 @@ namespace WrathOfJohn
 			background = Game.Content.Load<Texture2D>(@"images\screens\menu");
 			buttonTexture = Game.Content.Load<Texture2D>(@"images\gui\button");
 
-			animationSpriteList.Add(new Sprite.AnimationSet("REG", buttonTexture, new Point(170, 46), new Point(0, 0), new Point(0, 0), 0));
+			animationSpriteList.Add(new Sprite.AnimationSet("IDLE", buttonTexture, new Point(170, 46), new Point(0, 0), new Point(0, 0), 0));
 			animationSpriteList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 0), new Point(170, 0), 0));
 			animationSpriteList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(2, 0), new Point(340, 0), 0));
 

@@ -16,6 +16,11 @@ namespace WrathOfJohn
 	public class Player : Sprite
 	{
 		/// <summary>
+		/// An enum to detect which side the player is touching.
+		/// </summary>
+		public enum Side { TOP, BOTTOM, LEFT, RIGHT, BACKGROUND, NONE }
+
+		/// <summary>
 		/// The mana struct for the player class.
 		/// </summary>
 		public struct Mana
@@ -61,7 +66,7 @@ namespace WrathOfJohn
 		/// <summary>
 		/// The player's collisions.
 		/// </summary>
-		protected Rectangle playerCollisions;
+		public Rectangle playerCollisions;
 		/// <summary>
 		/// Gets or sets if the player is jumping. (Used for player or enemy classes)
 		/// </summary>
@@ -79,14 +84,6 @@ namespace WrathOfJohn
 			protected set;
 		}
 		/// <summary>
-		/// Gets or sets if the player is touching the ground.
-		/// </summary>
-		public bool isTouchingGround
-		{
-			get;
-			protected set;
-		}
-		/// <summary>
 		/// Gets or sets if the sprite is falling. (Used for player or enemy classes)
 		/// </summary>
 		public bool isFalling
@@ -95,61 +92,18 @@ namespace WrathOfJohn
 			protected set;
 		}
 		/// <summary>
-		/// Gets or sets if the player is touching left of a rectangle.
-		/// </summary>
-		public bool isTouchingLeft
-		{
-			get;
-			protected set;
-		}
-		/// <summary>
-		/// Gets or sets if the player is touching right of a rectangle.
-		/// </summary>
-		public bool isTouchingRight
-		{
-			get;
-			protected set;
-		}
-		/// <summary>
-		/// Gets or sets if the player is touching bottom of a rectangle.
-		/// </summary>
-		public bool isTouchingBottom
-		{
-			get;
-			protected set;
-		}
-		/// <summary>
-		/// Gets or sets the sprites bleed off of gravity. (Used for player or enemy classes)
-		/// </summary>
-		public float BleedOff
-		{
-			get;
-			private set;
-		}
-		/// <summary>
 		/// Gets or sets the sprites gravity. (Used for player or enemy classes)
 		/// </summary>
-		public float Gravity
+		public float GravityForce
 		{
 			get;
 			protected set;
 		}
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool isTouchingLeftWall
-        {
-            get;
-            protected set;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool isTouchingRightWall
-        {
-            get;
-            protected set;
-        }
+		public float DefaultGravityForce
+		{
+			get;
+			set;
+		}
 		#endregion
 
 		#region Projectiles
@@ -208,15 +162,15 @@ namespace WrathOfJohn
 		#endregion
 
 		/// <summary>
-		/// This is to create the Player class.
+		/// 
 		/// </summary>
-		/// <param name="texture">This is the player's texture</param>
-		/// <param name="position">This sets the player's position</param>
-		/// <param name="movementKeys">The list of keys the player uses.</param>
-		/// <param name="gravity">The force of gravity.</param>
-		/// <param name="color">The color to mask the sprite.</param>
-		/// <param name="animationSetList">The set of animations the player has.</param>
-		/// <param name="game">This is the Game class that the player runs on.</param>
+		/// <param name="position"></param>
+		/// <param name="movementKeys"></param>
+		/// <param name="gravity"></param>
+		/// <param name="mana"></param>
+		/// <param name="color"></param>
+		/// <param name="animationSetList"></param>
+		/// <param name="game"></param>
 		public Player(Vector2 position, List<Keys> movementKeys, float gravity, Mana mana, Color color, List<AnimationSet> animationSetList, Game1 game)
 			: base(position, color, animationSetList)
 		{
@@ -232,27 +186,24 @@ namespace WrathOfJohn
 			#endregion
 
 			#region Set Movement Factors
-			Gravity = gravity;
 			myGame = game;
 			MovementKeys = movementKeys;
-			CanMove = true;
 			Speed = 2;
-			BleedOff = 0;
-			isTouchingGround = false;
+			GravityForce = gravity;
+			DefaultGravityForce = gravity;
 			SetAnimation("IDLE");
+			isFalling = true;
 			#endregion
-
-			Direction = Vector2.Zero;
 
 			playerCollisions = new Rectangle((int)Position.X + 20, (int)Position.Y + 5, 20, 43);
 		}
 
 		/// <summary>
-		/// Creates a minimal player object.
+		/// 
 		/// </summary>
-		/// <param name="position">The starting position.</param>
-		/// <param name="color">The color to mask with.</param>
-		/// <param name="animationSetList">The animation set list.</param>
+		/// <param name="position"></param>
+		/// <param name="color"></param>
+		/// <param name="animationSetList"></param>
 		public Player(Vector2 position, Color color, List<AnimationSet> animationSetList)
 			: base(position, color, animationSetList)
 		{
@@ -270,107 +221,23 @@ namespace WrathOfJohn
 			#endregion
 
 			#region Movement
-			Position += Direction * Speed;
-
-			UpdateGravity();
 
 			#region Detect Keys
-			if (myGame.keyboardState.IsKeyDown(MovementKeys[0]))
-			{
-				Direction.X = -1;
-				SetAnimation("WALK");
-				FlipSprite(true);
-			}
-			if (myGame.keyboardState.IsKeyDown(MovementKeys[2]))
-			{
-				Direction.X = 1;
-				SetAnimation("WALK");
-				FlipSprite(false);
-			}
-			if (myGame.keyboardState.IsKeyDown(MovementKeys[4]) && isTouchingGround && !isJumping && !isFalling)
-			{
-				BleedOff = Gravity;
-				isJumping = true;
-			}
-			if (isJumping || isFalling)
-			{
-				SetAnimation("JUMP");
-			}
-			if (!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2]))
-			{
-				Direction.X = 0;
-			}
-			if (!myGame.keyboardState.IsKeyDown(MovementKeys[0]) && !myGame.keyboardState.IsKeyDown(MovementKeys[2]) && isGrounded)
-			{
-				SetAnimation("IDLE");
-			}
-			if (myGame.CheckKey(MovementKeys[5]))
-			{
-				if (CanShootProjectile)
-				{
-					SetAnimation("SHOOT");
-					ShootBeam();
-				}
-			}
-			if (!myGame.CheckKey(MovementKeys[5]))
-			{
-				HasShotProjectile = false;
-			}
+			InputMethod(MovementKeys);
 			#endregion
 
 			#region Detect Collision
-			isGrounded = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "top");
-			isTouchingLeft = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "left");
-			isTouchingRight = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "right");
-			isTouchingBottom = CheckSegmentCollision(playerCollisions, myGame.gameManager.platformRectangles, "bottom");
-            isTouchingLeftWall = CheckSegmentCollision(playerCollisions, myGame.gameManager.mapSegments, "left");
-            isTouchingRightWall = CheckSegmentCollision(playerCollisions, myGame.gameManager.mapSegments, "right");
-
-            if (isGrounded)
-            {
-                isTouchingGround = true;
-            }
-            if (!isGrounded)
-            {
-                isTouchingGround = false;
-            }
-            if (isGrounded && isFalling)
-            {
-                isFalling = false;
-                BleedOff = 0;
-                Direction.Y = 0;
-            }
-            if (!isGrounded && isTouchingGround)
-            {
-                isTouchingGround = false;
-            }
-            if (isTouchingLeft)
-            {
-                Direction.X = -0.01f;
-            }
-            if (isTouchingRight)
-            {
-                Direction.X = 0.01f;
-            }
-            if (isTouchingBottom)
-            {
-                Direction.Y = 0.4f;
-
-                isFalling = true;
-                isJumping = false;
-            }
-            foreach (Rectangle r in myGame.gameManager.mapSegments)
-            {
-                if (RectangleHelper.TouchLeftOf(playerCollisions, r))
-                {
-                    Position.X = r.Left;
-                }
-                if (RectangleHelper.TouchRightOf(playerCollisions, r))
-                {
-                    Position.X = r.Right;
-                }
-            }
+			foreach (Rectangle r in myGame.gameManager.platformRectangles)
+			{
+				CheckCollision(playerCollisions, r);
+			}
+			foreach (Rectangle r in myGame.gameManager.mapSegments)
+			{
+				CheckCollision(playerCollisions, r);
+			}
 			#endregion
+
+			UpdateGravity();
 			#endregion
 
 			#region Do Projectiles
@@ -391,6 +258,10 @@ namespace WrathOfJohn
 			#endregion
 
 			#region Do Animations
+			if (isJumping || isFalling)
+			{
+				SetAnimation("JUMP");
+			}
 			#endregion
 
 			#region Mana
@@ -434,6 +305,8 @@ namespace WrathOfJohn
 			#endregion
 
 			base.Update(gameTime);
+
+			Position += Direction;
 		}
 
 		/// <summary>
@@ -452,16 +325,16 @@ namespace WrathOfJohn
 		}
 
 		/// <summary>
-		///
+		/// Returns the player collision rectangle
 		/// </summary>
-		/// <returns></returns>
-		public Rectangle GetPlayerSegments()
+		/// <returns>Rectangle</returns>
+		public Rectangle GetPlayerRectangles()
 		{
 			return playerCollisions;
 		}
 
 		/// <summary>
-		///
+		/// Makes the player shoot a projectile.
 		/// </summary>
 		public void ShootBeam()
 		{
@@ -491,76 +364,102 @@ namespace WrathOfJohn
 		}
 
 		/// <summary>
-		/// To update the player's gravity
+		/// 
 		/// </summary>
-		/// <param name="gameTime"></param>
-		public void UpdateGravity()
+		/// <param name="keyList"></param>
+		protected virtual void InputMethod(List<Keys>keyList)
 		{
-			if (isJumping || isFalling)
+			if (myGame.keyboardState.IsKeyDown(keyList[4]) && isGrounded)
 			{
-				if (BleedOff > 0f && isJumping)
-				{
-					Direction.Y = -BleedOff;
-					BleedOff -= 0.03f;
-					isFalling = false;
-				}
+				isJumping = true;
+				isFalling = false;
+				Direction.Y = 0;
+				Position.Y -= GravityForce * 1.5f;
+			}
+			if (myGame.keyboardState.IsKeyDown(keyList[0]))
+			{
+				Direction.X = -Speed;
+				SetAnimation("WALK");
+				FlipSprite(true, Axis.Y);
+			}
+			if (myGame.keyboardState.IsKeyDown(keyList[2]))
+			{
+				Direction.X = Speed;
+				SetAnimation("WALK");
+				FlipSprite();
+			}
+			if (!myGame.keyboardState.IsKeyDown(keyList[0]) && !myGame.keyboardState.IsKeyDown(keyList[2]))
+			{
+				Direction.X = 0f;
 
-				if (BleedOff <= 0f)
+				if (isGrounded)
 				{
-					isFalling = true;
-					isJumping = false;
-				}
-				if (isFalling)
-				{
-					Direction.Y = -BleedOff;
-					BleedOff -= 0.06f;
+					SetAnimation("IDLE");
 				}
 			}
-
-			if (!isTouchingGround)
+			if (!myGame.CheckKey(keyList[5]))
 			{
-				if (!isGrounded)
+				HasShotProjectile = false;
+			}
+			if (myGame.CheckKey(MovementKeys[5]))
+			{
+				if (CanShootProjectile)
 				{
-					isFalling = true;
+					SetAnimation("SHOOT");
+					ShootBeam();
 				}
 			}
-
-			BleedOff = MathHelper.Clamp(BleedOff, -Gravity - 1f, Gravity);
 		}
 
-		/// <summary>
-		/// This returns true if the player is colliding with the specified object.
-		/// </summary>
-		/// <param name="PlayerSegment">The player's rectangle collision.</param>
-		/// <param name="ObjectSegments">The object the player is colliding with.</param>
-		/// <returns></returns>
-		public bool CheckSegmentCollision(Rectangle PlayerSegment, List<Rectangle> ObjectSegments, string Side)
+		protected virtual void CheckCollision(Rectangle rectangle1, Rectangle rectangle2)
 		{
-			foreach (Rectangle pts in ObjectSegments)
+			if (rectangle1.TouchTopOf(rectangle2))
 			{
-				if (RectangleHelper.TouchTopOf(PlayerSegment, pts) && Side == "top")
+				Position.Y = rectangle2.Top - rectangle1.Height - 5;
+				Direction.Y = 0f;
+				isGrounded = true;
+				GravityForce = DefaultGravityForce;
+			}
+			if (rectangle1.TouchLeftOf(rectangle2))
+			{
+				Position.X = rectangle2.Left - rectangle2.Width - 16;
+			}
+			if (rectangle1.TouchRightOf(rectangle2))
+			{
+				Position.X = rectangle2.Left + 6;
+			}
+			if (rectangle1.TouchBottomOf(rectangle2))
+			{
+				Direction.Y = 1;
+				Position.Y = rectangle2.Bottom;
+				isJumping = false;
+				isFalling = true;
+			}
+		}
+
+		protected virtual void UpdateGravity()
+		{
+			if (isJumping)
+			{
+				if (GravityForce > 0f)
 				{
-					//GetProtectedRectangleTop(pts);
-					return true;
+					Direction.Y = -GravityForce;
+					GravityForce -= 0.03f;
 				}
-				if (RectangleHelper.TouchLeftOf(PlayerSegment, pts) && Side == "left")
+				if (GravityForce <= 0f)
 				{
-					//GetProtectedRectangleLeft(pts);
-					return true;
-				}
-				if (RectangleHelper.TouchRightOf(PlayerSegment, pts) && Side == "right")
-				{
-					//GetProtectedRectangleRight(pts);
-					return true;
-				}
-				if (RectangleHelper.TouchBottomOf(PlayerSegment, pts) && Side == "bottom")
-				{
-					//GetProtectedRectangleBottom(pts);
-					return true;
+					isJumping = false;
+					isFalling = true;
 				}
 			}
 
-			return false;
+			if (isFalling)
+			{
+				Direction.Y = GravityForce;
+				GravityForce += 0.06f;
+			}
+
+			GravityForce = MathHelper.Clamp(GravityForce, -GravityForce - 1f, GravityForce);
 		}
 	}
 }

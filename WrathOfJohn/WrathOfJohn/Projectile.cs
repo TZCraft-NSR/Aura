@@ -58,7 +58,7 @@ namespace WrathOfJohn
 			this.player = player;
 			this.myGame = game;
 
-			if (player.isFlipped == SpriteEffects.FlipHorizontally)
+			if (player.isFlipped)
 			{
 				Position.X = this.Position.X - 25;
 				Direction = new Vector2(-1, 0);
@@ -71,18 +71,19 @@ namespace WrathOfJohn
 
 		public override void Update(GameTime gameTime)
 		{
-			projectileRectangle.X = (int)Position.X;
-			projectileRectangle.Y = (int)Position.Y;
+			projectileRectangle = new Rectangle((int)Position.X, (int)Position.Y, 25, 3);
 
 			if (Vector2.Distance(startPosition, Position) > maxDistance)
 			{
 				visible = false;
 			}
-			if (player.CheckSegmentCollision(projectileRectangle, myGame.gameManager.platformRectangles, "left") || player.CheckSegmentCollision(projectileRectangle, myGame.gameManager.platformRectangles, "right") || player.CheckSegmentCollision(projectileRectangle, myGame.gameManager.platformRectangles, "top") || player.CheckSegmentCollision(projectileRectangle, myGame.gameManager.platformRectangles, "bottom"))
+			foreach (Rectangle r in myGame.gameManager.platformRectangles)
 			{
-				visible = false;
+				if (projectileRectangle.TouchLeftOf(r) ||  projectileRectangle.TouchTopOf(r) || projectileRectangle.TouchBottomOf(r) || projectileRectangle.TouchRightOf(r))
+				{
+					visible = false;
+				}
 			}
-
 			if (visible)
 			{
 				Position += Direction * Speed + (player.GetDirection * player.Speed);
@@ -107,8 +108,6 @@ namespace WrathOfJohn
 			visible = true;
 
 			SetAnimation("IDLE");
-
-			projectileRectangle = new Rectangle((int)Position.X, (int)Position.Y, 25, 3);
 		}
 	}
 }

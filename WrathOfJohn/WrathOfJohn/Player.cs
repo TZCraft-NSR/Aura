@@ -258,7 +258,7 @@ namespace WrathOfJohn
 			#endregion
 
 			#region Do Animations
-			if (isJumping || isFalling)
+			if (isJumping || (isFalling && Direction.Y < 2))
 			{
 				SetAnimation("JUMP");
 			}
@@ -367,7 +367,7 @@ namespace WrathOfJohn
 		/// 
 		/// </summary>
 		/// <param name="keyList"></param>
-		protected virtual void InputMethod(List<Keys>keyList)
+		protected virtual void InputMethod(List<Keys> keyList)
 		{
 			if (myGame.keyboardState.IsKeyDown(keyList[4]) && (!isJumping && !canFall))
 			{

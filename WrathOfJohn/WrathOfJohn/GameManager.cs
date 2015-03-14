@@ -105,9 +105,9 @@ namespace WrathOfJohn
 			get;
 			set;
 		}
-        /// <summary>
-        /// The bounding boxes of the map.
-        /// </summary>
+		/// <summary>
+		/// The bounding boxes of the map.
+		/// </summary>
 		public List<Rectangle> mapSegments
 		{
 			get;
@@ -191,7 +191,7 @@ namespace WrathOfJohn
 			platformAnimationSetList = new List<Sprite.AnimationSet>();
 			platformRectangles = new List<Rectangle>();
 
-            mapSegments = new List<Rectangle>();
+			mapSegments = new List<Rectangle>();
 
 			level = 1;
 
@@ -221,9 +221,9 @@ namespace WrathOfJohn
 			camera = new Camera(GraphicsDevice.Viewport, new Point(6400, 450), 1f);
 			camera.Position = new Vector2(0, 0);
 
-            mapSegments.Add(new Rectangle(-5, 0, 0, (int)camera.Size.Y));
-            mapSegments.Add(new Rectangle((int)camera.Size.X + 5, 0, (int)camera.Size.X, (int)camera.Size.Y));
-            
+			mapSegments.Add(new Rectangle(-5, 0, 0, (int)camera.Size.Y));
+			mapSegments.Add(new Rectangle((int)camera.Size.X + 5, 0, (int)camera.Size.X, (int)camera.Size.Y));
+
 			parallax1Background = new ParallaxBackground(parallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
 			parallax2Background = new ParallaxBackground(parallax2, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
 			parallax3Background = new ParallaxBackground(parallax3, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.250f, camera);
@@ -354,10 +354,11 @@ namespace WrathOfJohn
 					pm.Draw(gameTime, spriteBatch);
 				}
 
-                // Draw the player.
-                player.Draw(gameTime, spriteBatch);
+				// Draw the player.
+				player.Draw(gameTime, spriteBatch);
 
-                // Debug stuff.
+				/*
+				// Debug stuff.
 				for (int i = 0; i < platformRectangles.Count; i++)
 				{
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
@@ -365,11 +366,12 @@ namespace WrathOfJohn
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y + (int)platformRectangles[i].Height, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, 1, (int)platformRectangles[i].Height), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
 				}
-                spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, (int)PlayerCollisions.Width, 1), Color.Blue);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, (int)PlayerCollisions.Width, 1), Color.Blue);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X + (int)PlayerCollisions.Width, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Red);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y + (int)PlayerCollisions.Height, (int)PlayerCollisions.Width, 1), Color.Green);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Yellow);
-            }
+				*/
+			}
 			spriteBatch.End();
 
 			spriteBatch.Begin();
@@ -437,7 +439,7 @@ namespace WrathOfJohn
 
 			foreach (PlatformManager pm in platformList)
 			{
-				platformRectangles.Add(new Rectangle((int)pm.GetPosition.X, (int)pm.GetPosition.Y, 25, 25));
+				platformRectangles.Add(new Rectangle((int)pm.GetPosition.X, (int)pm.GetPosition.Y + 3, 25, 25));
 			}
 		}
 	}

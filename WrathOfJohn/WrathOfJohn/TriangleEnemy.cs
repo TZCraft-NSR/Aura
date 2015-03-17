@@ -9,7 +9,7 @@ using VoidEngine;
 
 namespace WrathOfJohn
 {
-	public class TriangleEnemy : Enemy
+	public class TriangleEnemy : Player
 	{
 		public TriangleEnemy(Vector2 position, Color color, List<AnimationSet> animationSetList, Game1 myGame)
 			: base(position, color, animationSetList)

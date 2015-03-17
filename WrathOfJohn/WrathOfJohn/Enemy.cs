@@ -23,6 +23,8 @@ namespace WrathOfJohn
 
 		public MovementType _MovementType;
 
+		public Player _Player;
+
 		public List<Rectangle> MapTiles;
 		public List<Rectangle> MapSides;
 
@@ -38,6 +40,7 @@ namespace WrathOfJohn
 			DefaultGravityForce = gravity;
 			MapSides = mapSides;
 			MapTiles = mapTiles;
+			_Player = player;
 			GravityForce = gravity;
 			isFalling = true;
 			ProjectileList = new List<Projectile>();
@@ -53,18 +56,18 @@ namespace WrathOfJohn
 
 			if (_MovementType == MovementType.FLY)
 			{
-				Direction = new Vector2(myGame.gameManager.player.GetPosition.X - Position.X, myGame.gameManager.player.GetPosition.Y - Position.Y);
+				Direction = new Vector2(_Player.GetPosition.X - Position.X, _Player.GetPosition.Y - Position.Y);
 			}
 			if (_MovementType == MovementType.HORIZONTAL || _MovementType == MovementType.BOUNCE)
 			{
-				Direction = new Vector2(myGame.gameManager.player.GetPosition.X - Position.X, Direction.Y);
+				Direction = new Vector2(_Player.GetPosition.X - Position.X, Direction.Y);
 			}
 
 			if (Collision.Magnitude(Direction) <= 200)
 			{
 				Direction = Collision.UnitVector(Direction);
 
-				if (myGame.gameManager.player.GetPosition.X == Position.X)
+				if (_Player.GetPosition.X == Position.X)
 				{
 					if (_MovementType == MovementType.FLY)
 					{

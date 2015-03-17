@@ -213,11 +213,11 @@ namespace WrathOfJohn
 			MovementKeys = new List<Keys>();
 			playerAnimationSetList = new List<Sprite.AnimationSet>();
 
-			cEnemyList = new List<Enemy>();
+			cEnemyList = new List<CircleEnemy>();
 			cEnemyAnimationSetList = new List<Sprite.AnimationSet>();
-			sEnemyList = new List<Enemy>();
+			sEnemyList = new List<SquareEnemy>();
 			sEnemyAnimationSetList = new List<Sprite.AnimationSet>();
-			tEnemyList = new List<Enemy>();
+			tEnemyList = new List<TriangleEnemy>();
 			tEnemyAnimationSetList = new List<Sprite.AnimationSet>();
 
 			platformList = new List<PlatformManager>();
@@ -357,15 +357,15 @@ namespace WrathOfJohn
 
 			player.Update(gameTime);
 
-			foreach (Enemy ce in cEnemyList)
+			foreach (CircleEnemy ce in cEnemyList)
 			{
 				ce.Update(gameTime);
 			}
-			foreach (Enemy se in sEnemyList)
+			foreach (SquareEnemy se in sEnemyList)
 			{
 				se.Update(gameTime);
 			}
-			foreach (Enemy te in tEnemyList)
+			foreach (TriangleEnemy te in tEnemyList)
 			{
 				te.Update(gameTime);
 			}
@@ -417,15 +417,15 @@ namespace WrathOfJohn
 			{
 				player.Draw(gameTime, spriteBatch);
 
-				foreach (Enemy ce in cEnemyList)
+				foreach (CircleEnemy ce in cEnemyList)
 				{
 					ce.Draw(gameTime, spriteBatch);
 				}
-				foreach (Enemy se in sEnemyList)
+				foreach (SquareEnemy se in sEnemyList)
 				{
 					se.Draw(gameTime, spriteBatch);
 				}
-				foreach (Enemy te in tEnemyList)
+				foreach (TriangleEnemy te in tEnemyList)
 				{
 					te.Draw(gameTime, spriteBatch);
 				}

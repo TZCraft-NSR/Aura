@@ -181,7 +181,8 @@ namespace WrathOfJohn
 			: base(position, color, animationSetList)
 		{
 			myGame = game;
-			
+			Scale = 0.34482758620689655172413793103448f;
+
 			#region Set Animation Factors
 			Offset = new Vector2(20, 5);
 			#endregion
@@ -201,7 +202,7 @@ namespace WrathOfJohn
 			DefaultGravityForce = gravity;
 			SetAnimation("IDLE");
 			isFalling = true;
-			playerCollisions = new Rectangle((int)Position.X, (int)Position.Y, 58, 130);
+			playerCollisions = new Rectangle((int)Position.X, (int)Position.Y, 20, 43);
 			#endregion
 		}
 
@@ -274,19 +275,19 @@ namespace WrathOfJohn
 			}
 			if (CurrentAnimation.name == "IDLE")
 			{
-				Offset = new Vector2(32, 17);
+				Offset = new Vector2(20, 5);
 			}
 			if (CurrentAnimation.name == "SHOOT")
 			{
-				Offset = new Vector2(32, 17);
+				Offset = new Vector2(20, 5);
 			}
 			if (CurrentAnimation.name == "JUMP")
 			{
-				Offset = new Vector2(65, 23);
+				Offset = new Vector2(20, 5);
 			}
 			if (CurrentAnimation.name == "WALK")
 			{
-				Offset = new Vector2(32, 17);
+				Offset = new Vector2(20, 5);
 			}
 			#endregion
 
@@ -362,7 +363,7 @@ namespace WrathOfJohn
 		/// <summary>
 		/// Makes the player shoot a projectile.
 		/// </summary>
-		public void ShootBeam()
+		public void ShootBeam(float shootFactor)
 		{
 			foreach (Projectile p in ProjectileList)
 			{
@@ -374,9 +375,9 @@ namespace WrathOfJohn
 				}
 			}
 
-			if (CreateNewProjectile && CanShootProjectile && _Mana.mana >= _Mana.maxMana / 3 - 1)
+			if (CreateNewProjectile && CanShootProjectile && _Mana.mana >= _Mana.maxMana / shootFactor - 1)
 			{
-				_Mana.mana -= _Mana.maxMana / 3;
+				_Mana.mana -= _Mana.maxMana / shootFactor;
 				Projectile projectile = new Projectile(new Vector2(Position.X + 35, Position.Y + ((ProjectileAnimationSet[0].frameSize.Y - 4) / 2) + 8), Color.White, ProjectileAnimationSet, this, myGame);
 				ProjectileList.Add(projectile);
 				projectile.Fire();

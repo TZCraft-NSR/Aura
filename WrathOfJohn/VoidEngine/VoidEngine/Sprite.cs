@@ -125,6 +125,7 @@ namespace VoidEngine
 				return false;
 			}
 		}
+		public Vector2 Offset;
 		#endregion
 		#region Movement
 		/// <summary>
@@ -280,7 +281,7 @@ namespace VoidEngine
 		/// <param name="spriteBatch">The sprite batch to draw from.</param>
 		public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 		{
-			spriteBatch.Draw(CurrentAnimation.texture, this.Position, new Rectangle((int)RotationCenter.X + CurrentAnimation.startPosition.X + (CurrentFrame.X * CurrentAnimation.frameSize.X), (int)RotationCenter.Y + CurrentAnimation.startPosition.Y + (CurrentFrame.Y * CurrentAnimation.frameSize.Y), CurrentAnimation.frameSize.X, CurrentAnimation.frameSize.Y), _Color, Rotation, RotationCenter, 1f, flipEffect, 0);
+			spriteBatch.Draw(CurrentAnimation.texture, new Vector2(Position.X - Offset.X, Position.Y - Offset.Y), new Rectangle((int)RotationCenter.X + CurrentAnimation.startPosition.X + (CurrentFrame.X * CurrentAnimation.frameSize.X), (int)RotationCenter.Y + CurrentAnimation.startPosition.Y + (CurrentFrame.Y * CurrentAnimation.frameSize.Y), CurrentAnimation.frameSize.X, CurrentAnimation.frameSize.Y), _Color, Rotation, RotationCenter, 1f, flipEffect, 0);
 		}
 
 		/// <summary>

@@ -79,26 +79,32 @@ namespace WrathOfJohn
 			protected set;
 		}
 		/// <summary>
-		/// Gets or sets if the sprite is falling. (Used for player or enemy classes)
+		/// Gets or sets if the sprite is falling.
 		/// </summary>
 		public bool isFalling
 		{
 			get;
 			protected set;
 		}
+		/// <summary>
+		/// Gets or sets if the sprite can fall.
+		/// </summary>
 		public bool canFall
 		{
 			get;
 			set;
 		}
 		/// <summary>
-		/// Gets or sets the sprites gravity. (Used for player or enemy classes)
+		/// Gets or sets the players gravity.
 		/// </summary>
 		public float GravityForce
 		{
 			get;
 			protected set;
 		}
+		/// <summary>
+		/// Gets or sets the default players gravity.
+		/// </summary>
 		public float DefaultGravityForce
 		{
 			get;
@@ -162,51 +168,56 @@ namespace WrathOfJohn
 		#endregion
 
 		/// <summary>
-		/// 
+		/// Creates the player.
 		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="movementKeys"></param>
-		/// <param name="gravity"></param>
-		/// <param name="mana"></param>
-		/// <param name="color"></param>
-		/// <param name="animationSetList"></param>
-		/// <param name="game"></param>
+		/// <param name="position">The position the player starts at.</param>
+		/// <param name="movementKeys">The keys to control the player.</param>
+		/// <param name="gravity">The gravity of tha player.</param>
+		/// <param name="mana">The maximum mana for the players projectiles.</param>
+		/// <param name="color">The color to mask the player sprite with.</param>
+		/// <param name="animationSetList">The animation set list for the player.</param>
+		/// <param name="game">The game that the player runs off of.</param>
 		public Player(Vector2 position, List<Keys> movementKeys, float gravity, Mana mana, Color color, List<AnimationSet> animationSetList, Game1 game)
 			: base(position, color, animationSetList)
 		{
-			#region Create Lists
-			ProjectileList = new List<Projectile>();
-			ProjectileAnimationSet = new List<AnimationSet>();
+			myGame = game;
+			
+			#region Set Animation Factors
+			Offset = new Vector2(20, 5);
 			#endregion
 
 			#region Set Projectile Factors
+			ProjectileList = new List<Projectile>();
+			ProjectileAnimationSet = new List<AnimationSet>();
 			_Mana = mana;
 			CanShootProjectile = true;
 			CreateNewProjectile = true;
 			#endregion
 
-			#region Set Movement Factors
-			myGame = game;
+			#region Set Movement and Collision Factors
 			MovementKeys = movementKeys;
 			Speed = 2;
 			GravityForce = gravity;
 			DefaultGravityForce = gravity;
 			SetAnimation("IDLE");
 			isFalling = true;
+			playerCollisions = new Rectangle((int)Position.X, (int)Position.Y, 58, 130);
 			#endregion
-
-			playerCollisions = new Rectangle((int)Position.X + 20, (int)Position.Y + 5, 20, 43);
 		}
 
 		/// <summary>
-		/// 
+		/// Creates the player class with the bare minimum.
+		/// Used for making child class for the player.
+		/// Projectile lists created already.
 		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="color"></param>
-		/// <param name="animationSetList"></param>
+		/// <param name="position">The position to start the player at.</param>
+		/// <param name="color">The color to mask the player with.</param>
+		/// <param name="animationSetList">The animation set list for the player.</param>
 		public Player(Vector2 position, Color color, List<AnimationSet> animationSetList)
 			: base(position, color, animationSetList)
 		{
+			ProjectileList = new List<Projectile>();
+			ProjectileAnimationSet = new List<AnimationSet>();
 		}
 
 		/// <summary>
@@ -216,12 +227,11 @@ namespace WrathOfJohn
 		public override void Update(GameTime gameTime)
 		{
 			#region Updating Player Collision Points.
-			playerCollisions.X = (int)Position.X + 20;
-			playerCollisions.Y = (int)Position.Y + 5;
+			playerCollisions.X = (int)Position.X;
+			playerCollisions.Y = (int)Position.Y;
 			#endregion
 
 			#region Movement
-
 			#region Detect Keys
 			InputMethod(MovementKeys);
 			#endregion
@@ -261,6 +271,22 @@ namespace WrathOfJohn
 			if (isJumping || (isFalling && Direction.Y < 2))
 			{
 				SetAnimation("JUMP");
+			}
+			if (CurrentAnimation.name == "IDLE")
+			{
+				Offset = new Vector2(32, 17);
+			}
+			if (CurrentAnimation.name == "SHOOT")
+			{
+				Offset = new Vector2(32, 17);
+			}
+			if (CurrentAnimation.name == "JUMP")
+			{
+				Offset = new Vector2(65, 23);
+			}
+			if (CurrentAnimation.name == "WALK")
+			{
+				Offset = new Vector2(32, 17);
 			}
 			#endregion
 
@@ -328,7 +354,7 @@ namespace WrathOfJohn
 		/// Returns the player collision rectangle
 		/// </summary>
 		/// <returns>Rectangle</returns>
-		public Rectangle GetPlayerRectangles()
+		public virtual Rectangle GetPlayerRectangles()
 		{
 			return playerCollisions;
 		}
@@ -364,9 +390,9 @@ namespace WrathOfJohn
 		}
 
 		/// <summary>
-		/// 
+		/// Updates the inputs for the player class.
 		/// </summary>
-		/// <param name="keyList"></param>
+		/// <param name="keyList">The key list to update the input method with, (for custom lists)</param>
 		protected virtual void InputMethod(List<Keys> keyList)
 		{
 			if (myGame.keyboardState.IsKeyDown(keyList[4]) && (!isJumping && !canFall))
@@ -411,11 +437,16 @@ namespace WrathOfJohn
 			}
 		}
 
+		/// <summary>
+		/// To update the collision of the player against areas.
+		/// </summary>
+		/// <param name="rectangle1">Use this with only the players collision area.</param>
+		/// <param name="rectangle2">Use this with what the player will collide with.</param>
 		protected virtual void CheckCollision(Rectangle rectangle1, Rectangle rectangle2)
 		{
 			if (rectangle1.TouchTopOf(rectangle2))
 			{
-				Position.Y = rectangle2.Top - rectangle1.Height - 5;
+				Position.Y = rectangle2.Top - rectangle1.Height;
 				Direction.Y = 0f;
 				isGrounded = true;
 				canFall = false;
@@ -423,21 +454,23 @@ namespace WrathOfJohn
 			}
 			if (rectangle1.TouchLeftOf(rectangle2))
 			{
-				Position.X = rectangle2.Left - rectangle2.Width - 16;
+				Position.X = rectangle2.Left - rectangle2.Width;
 			}
 			if (rectangle1.TouchRightOf(rectangle2))
 			{
-				Position.X = rectangle2.Left + 6;
+				Position.X = rectangle2.Right;
 			}
 			if (rectangle1.TouchBottomOf(rectangle2))
 			{
 				Direction.Y = 1;
-				Position.Y = rectangle2.Bottom;
+				Position.Y += 2 * 1.5f;
 				isJumping = false;
-				isFalling = true;
 			}
 		}
 
+		/// <summary>
+		/// Updates gravity of the player.
+		/// </summary>
 		protected virtual void UpdateGravity()
 		{
 			if (isJumping)

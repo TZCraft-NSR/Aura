@@ -34,7 +34,7 @@ namespace WrathOfJohn
 		/// <summary>
 		/// The player class.
 		/// </summary>
-		Player player;
+		public Player player;
 		/// <summary>
 		/// The animation list for the player.
 		/// </summary>
@@ -166,6 +166,32 @@ namespace WrathOfJohn
 		ParallaxBackground parallax3Background;
 		#endregion
 
+		#region Enemy Variables
+		/// <summary>
+		/// The player class.
+		/// </summary>
+		// CircleEnemy cEnemy;
+		/// <summary>
+		/// The animation list for the player.
+		/// </summary>
+		List<Sprite.AnimationSet> cEnemyAnimationSetList;
+		List<Sprite.AnimationSet> sEnemyAnimationSetList;
+		List<Sprite.AnimationSet> tEnemyAnimationSetList;
+		/// <summary>
+		/// The player class' texture.
+		/// </summary>
+		Texture2D cEnemyTexture;
+		Texture2D sEnemyTexture;
+		Texture2D tEnemyTexture;
+		/// <summary>
+		/// The player segment collisions.
+		/// </summary>
+		//protected Rectangle PlayerCollisions;
+		public List<Enemy> cEnemyList;
+		public List<Enemy> sEnemyList;
+		public List<Enemy> tEnemyList;
+		#endregion
+
 		/// <summary>
 		/// This is to create the Game Manager.
 		/// </summary>
@@ -186,6 +212,13 @@ namespace WrathOfJohn
 		{
 			MovementKeys = new List<Keys>();
 			playerAnimationSetList = new List<Sprite.AnimationSet>();
+
+			cEnemyList = new List<CircleEnemy>();
+			cEnemyAnimationSetList = new List<Sprite.AnimationSet>();
+			sEnemyList = new List<SquareEnemy>();
+			sEnemyAnimationSetList = new List<Sprite.AnimationSet>();
+			tEnemyList = new List<TriangleEnemy>();
+			tEnemyAnimationSetList = new List<Sprite.AnimationSet>();
 
 			platformList = new List<PlatformManager>();
 			platformAnimationSetList = new List<Sprite.AnimationSet>();
@@ -210,30 +243,38 @@ namespace WrathOfJohn
 		{
 			spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
-			playerTexture = Game.Content.Load<Texture2D>(@"images\players\player");
+			playerTexture = Game.Content.Load<Texture2D>(@"images\players\mage");
 			debugDotTexture = Game.Content.Load<Texture2D>(@"images\debug\line");
 			ProjectileTexture = Game.Content.Load<Texture2D>(@"images\projectiles\beam");
 			parallax1 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground1");
 			parallax2 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground2");
 			parallax3 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground3");
+			cEnemyTexture = Game.Content.Load<Texture2D>(@"images\enemies\CircleEnemy");
+			sEnemyTexture = Game.Content.Load<Texture2D>(@"images\enemies\SquareEnemy");
+			tEnemyTexture = Game.Content.Load<Texture2D>(@"images\enemies\TriangleEnemy");
 			platformTexture = Game.Content.Load<Texture2D>(@"images\tiles\platforms");
 
 			camera = new Camera(GraphicsDevice.Viewport, new Point(6400, 450), 1f);
 			camera.Position = new Vector2(0, 0);
 
-			mapSegments.Add(new Rectangle(-5, 0, 0, (int)camera.Size.Y));
-			mapSegments.Add(new Rectangle((int)camera.Size.X + 5, 0, (int)camera.Size.X, (int)camera.Size.Y));
+			mapSegments.Add(new Rectangle(-5, 0, 5, (int)camera.Size.Y));
+			mapSegments.Add(new Rectangle((int)camera.Size.X, 0, 5, (int)camera.Size.Y));
 
 			parallax1Background = new ParallaxBackground(parallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
 			parallax2Background = new ParallaxBackground(parallax2, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
 			parallax3Background = new ParallaxBackground(parallax3, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.250f, camera);
 
-			playerAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(60, 50), new Point(1, 1), new Point(0, 0), 1000));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(60, 50), new Point(4, 3), new Point(0, 0), 100));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(60, 50), new Point(4, 1), new Point(0, 150), 1000));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("SHOOT", playerTexture, new Point(60, 50), new Point(1, 3), new Point(240, 0), 250));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("SWING", playerTexture, new Point(60, 50), new Point(3, 2), new Point(0, 200), 1000));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("BLOCK", playerTexture, new Point(60, 50), new Point(2, 2), new Point(180, 200), 1000));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(124, 148), new Point(4, 1), new Point(0, 2), 1000));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(100, 140), new Point(8, 1), new Point(0, 476), 100));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(187, 174), new Point(4, 1), new Point(0, 302), 1000));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("SHOOT", playerTexture, new Point(124, 148), new Point(5, 1), new Point(0, 154), 250));
+
+			cEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", cEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1000));
+			//Needs rest of animations ^
+			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", sEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1000));
+			//Needs edit ^
+			tEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", tEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1000));
+			//Needs edit ^
 
 			platformAnimationSetList.Add(new Sprite.AnimationSet("1", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
 			platformAnimationSetList.Add(new Sprite.AnimationSet("2", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
@@ -289,6 +330,8 @@ namespace WrathOfJohn
 			parallax3Background.Update(gameTime);
 			#endregion
 
+			mapSegments[1] = new Rectangle(camera.Size.X - 5, mapSegments[1].Y, mapSegments[1].Width, mapSegments[1].Height);
+
 			if (myGame.CheckKey(Keys.G) && !wonLevel)
 			{
 				wonLevel = true;
@@ -313,6 +356,19 @@ namespace WrathOfJohn
 			PlayerCollisions = player.GetPlayerRectangles();
 
 			player.Update(gameTime);
+
+			foreach (CircleEnemy ce in cEnemyList)
+			{
+				ce.Update(gameTime);
+			}
+			foreach (SquareEnemy se in sEnemyList)
+			{
+				se.Update(gameTime);
+			}
+			foreach (TriangleEnemy te in tEnemyList)
+			{
+				te.Update(gameTime);
+			}
 
 			debugLabel.Update(gameTime, DebugLines[0] + "\n" + DebugLines[1] + "\n" +
 										DebugLines[2] + "\n" + DebugLines[3] + "\n" +
@@ -353,12 +409,32 @@ namespace WrathOfJohn
 				{
 					pm.Draw(gameTime, spriteBatch);
 				}
-
-				// Draw the player.
+			}
+			spriteBatch.End();
+			
+			// Draw the player and enemies.
+			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, camera.GetTransformation());
+			{
 				player.Draw(gameTime, spriteBatch);
 
-				/*
-				// Debug stuff.
+				foreach (CircleEnemy ce in cEnemyList)
+				{
+					ce.Draw(gameTime, spriteBatch);
+				}
+				foreach (SquareEnemy se in sEnemyList)
+				{
+					se.Draw(gameTime, spriteBatch);
+				}
+				foreach (TriangleEnemy te in tEnemyList)
+				{
+					te.Draw(gameTime, spriteBatch);
+				}
+			}
+			spriteBatch.End();
+			
+			// Debug Rectangles
+			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
+			{
 				for (int i = 0; i < platformRectangles.Count; i++)
 				{
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
@@ -370,7 +446,34 @@ namespace WrathOfJohn
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X + (int)PlayerCollisions.Width, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Red);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y + (int)PlayerCollisions.Height, (int)PlayerCollisions.Width, 1), Color.Green);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Yellow);
-				*/
+				for (int i = 0; i < cEnemyList.Count; i++)
+				{
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y, (int)cEnemyList[i].playerCollisions.Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X + (int)cEnemyList[i].playerCollisions.Width, (int)cEnemyList[i].playerCollisions.Y, 1, (int)cEnemyList[i].playerCollisions.Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y + (int)cEnemyList[i].playerCollisions.Height, (int)cEnemyList[i].playerCollisions.Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y, 1, (int)cEnemyList[i].playerCollisions.Height), Color.Yellow);
+				}
+				for (int i = 0; i < tEnemyList.Count; i++)
+				{
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y, (int)tEnemyList[i].playerCollisions.Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X + (int)tEnemyList[i].playerCollisions.Width, (int)tEnemyList[i].playerCollisions.Y, 1, (int)tEnemyList[i].playerCollisions.Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y + (int)tEnemyList[i].playerCollisions.Height, (int)tEnemyList[i].playerCollisions.Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y, 1, (int)tEnemyList[i].playerCollisions.Height), Color.Yellow);
+				}
+				for (int i = 0; i < sEnemyList.Count; i++)
+				{
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y, (int)sEnemyList[i].playerCollisions.Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X + (int)sEnemyList[i].playerCollisions.Width, (int)sEnemyList[i].playerCollisions.Y, 1, (int)sEnemyList[i].playerCollisions.Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y + (int)sEnemyList[i].playerCollisions.Height, (int)sEnemyList[i].playerCollisions.Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y, 1, (int)sEnemyList[i].playerCollisions.Height), Color.Yellow);
+				}
+				for (int i = 0; i < mapSegments.Count; i++)
+				{
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y, (int)mapSegments[i].Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X + (int)mapSegments[i].Width, (int)mapSegments[i].Y, 1, (int)mapSegments[i].Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y + (int)mapSegments[i].Height, (int)mapSegments[i].Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y, 1, (int)mapSegments[i].Height), Color.Yellow);
+				}
 			}
 			spriteBatch.End();
 
@@ -430,16 +533,28 @@ namespace WrathOfJohn
 			{
 				for (int y = 0; y < height; y++)
 				{
-					if (brickspawn[x, y] > 0)
+					if (brickspawn[x, y] > 0 && brickspawn[x, y] < 80)
 					{
 						platformList.Add(new PlatformManager(new Vector2(x * 25, y * 25), myGame, (int)brickspawn[x, y], platformAnimationSetList));
 					}
+                    if (brickspawn[x, y] == 80)
+                    {
+						cEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), Color.White, 1.25f, 0.96f, Enemy.MovementType.HORIZONTAL, cEnemyAnimationSetList, player, platformRectangles, mapSegments));
+                    }
+                    if (brickspawn[x, y] == 81)
+                    {
+						sEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), Color.White, 1.25f, 0.96f, Enemy.MovementType.BOUNCE, sEnemyAnimationSetList, player, platformRectangles, mapSegments));
+                    }
+                    if (brickspawn[x, y] == 82)
+                    {
+						tEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), Color.White, 1.25f, 0.96f, Enemy.MovementType.FLY, tEnemyAnimationSetList, player, platformRectangles, mapSegments));
+                    }
 				}
 			}
 
 			foreach (PlatformManager pm in platformList)
 			{
-				platformRectangles.Add(new Rectangle((int)pm.GetPosition.X, (int)pm.GetPosition.Y + 3, 25, 25));
+				platformRectangles.Add(new Rectangle((int)pm.GetPosition.X, (int)pm.GetPosition.Y + 3, 25, 22));
 			}
 		}
 	}

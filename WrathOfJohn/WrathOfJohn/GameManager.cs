@@ -403,6 +403,10 @@ namespace WrathOfJohn
 				{
 					platformRectangles.RemoveRange(0, platformRectangles.Count);
 					platformList.RemoveRange(0, platformList.Count);
+					cEnemyList.RemoveRange(0, cEnemyList.Count);
+					sEnemyList.RemoveRange(0, sEnemyList.Count);
+					tEnemyList.RemoveRange(0, tEnemyList.Count);
+
 
 					SpawnBricks(level);
 

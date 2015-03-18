@@ -21,7 +21,6 @@ namespace WrathOfJohn
 		Player player;
 
 		Vector2 startPosition;
-
 		public Vector2 GetStartPosition
 		{
 			get
@@ -30,22 +29,16 @@ namespace WrathOfJohn
 			}
 		}
 
-		float maxDistance = 0f;
-		public float GetMaxDistance
+		public float maxDistance
 		{
-			get
-			{
-				return maxDistance;
-			}
+			get;
+			protected set;
 		}
 
-		bool visible = false;
-		public bool isVisible
+		public bool visible
 		{
-			get
-			{
-				return visible;
-			}
+			get;
+			set;
 		}
 
 		public Projectile(Vector2 startPosition, Color color, List<AnimationSet> animationSetList, Player player, Game1 game)
@@ -60,7 +53,7 @@ namespace WrathOfJohn
 
 			if (player.isFlipped)
 			{
-				Position.X = this.Position.X - 25;
+				Position.X = Position.X - 25;
 				Direction = new Vector2(-1, 0);
 			}
 			else
@@ -84,9 +77,30 @@ namespace WrathOfJohn
 					visible = false;
 				}
 			}
+			foreach (Enemy er in myGame.gameManager.cEnemyList)
+			{
+				if (projectileRectangle.TouchLeftOf(er.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(er.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(er.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(er.GetPlayerRectangles()))
+				{
+					visible = false;
+				}
+			}
+			foreach (Enemy er in myGame.gameManager.sEnemyList)
+			{
+				if (projectileRectangle.TouchLeftOf(er.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(er.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(er.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(er.GetPlayerRectangles()))
+				{
+					visible = false;
+				}
+			}
+			foreach (Enemy er in myGame.gameManager.tEnemyList)
+			{
+				if (projectileRectangle.TouchLeftOf(er.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(er.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(er.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(er.GetPlayerRectangles()))
+				{
+					visible = false;
+				}
+			}
 			if (visible)
 			{
-				Position += Direction * Speed + (player.GetDirection * player.Speed);
+				Position.X += Direction.X * Speed + (player.GetDirection.X * player.Speed);
 			}
 
 			base.Update(gameTime);
@@ -103,7 +117,7 @@ namespace WrathOfJohn
 		public void Fire()
 		{
 			Speed = 3;
-			maxDistance = 75;
+			maxDistance = 125;
 
 			visible = true;
 

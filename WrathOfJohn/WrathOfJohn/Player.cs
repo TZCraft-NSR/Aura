@@ -181,7 +181,7 @@ namespace WrathOfJohn
 			: base(position, color, animationSetList)
 		{
 			myGame = game;
-			Scale = 0.34482758620689655172413793103448f;
+			Scale = 0.34f;
 
 			#region Set Animation Factors
 			Offset = new Vector2(20, 5);
@@ -269,25 +269,39 @@ namespace WrathOfJohn
 			#endregion
 
 			#region Do Animations
-			if (isJumping || (isFalling && Direction.Y < 2))
+			if (isJumping || (isFalling && Direction.Y < DefaultGravityForce))
 			{
 				SetAnimation("JUMP");
 			}
 			if (CurrentAnimation.name == "IDLE")
 			{
-				Offset = new Vector2(20, 5);
+				Offset = new Vector2(10, 5);
 			}
 			if (CurrentAnimation.name == "SHOOT")
 			{
-				Offset = new Vector2(20, 5);
+				Offset = new Vector2(10, 5);
 			}
 			if (CurrentAnimation.name == "JUMP")
 			{
-				Offset = new Vector2(20, 5);
+				if (isFlipped)
+				{
+					Offset = new Vector2(15, 5);
+				}
+				else
+				{
+					Offset = new Vector2(25, 5);
+				}
 			}
 			if (CurrentAnimation.name == "WALK")
 			{
-				Offset = new Vector2(20, 5);
+				if (isFlipped)
+				{
+					Offset = new Vector2(0, 5);
+				}
+				else
+				{
+					Offset = new Vector2(13, 5);
+				}
 			}
 			#endregion
 
@@ -363,11 +377,12 @@ namespace WrathOfJohn
 		/// <summary>
 		/// Makes the player shoot a projectile.
 		/// </summary>
+		/// <param name="shootFactor">The number of projectiles the player can shoot.</param>
 		public void ShootBeam(float shootFactor)
 		{
 			foreach (Projectile p in ProjectileList)
 			{
-				if (!p.isVisible)
+				if (!p.visible)
 				{
 					CreateNewProjectile = true;
 					ProjectileList.RemoveAt(0);
@@ -378,7 +393,7 @@ namespace WrathOfJohn
 			if (CreateNewProjectile && CanShootProjectile && _Mana.mana >= _Mana.maxMana / shootFactor - 1)
 			{
 				_Mana.mana -= _Mana.maxMana / shootFactor;
-				Projectile projectile = new Projectile(new Vector2(Position.X + 35, Position.Y + ((ProjectileAnimationSet[0].frameSize.Y - 4) / 2) + 8), Color.White, ProjectileAnimationSet, this, myGame);
+				Projectile projectile = new Projectile(new Vector2(Position.X - 5, Position.Y - 10), Color.White, ProjectileAnimationSet, this, myGame);
 				ProjectileList.Add(projectile);
 				projectile.Fire();
 				HasShotProjectile = true;
@@ -407,19 +422,22 @@ namespace WrathOfJohn
 			{
 				Direction.X = -Speed;
 				SetAnimation("WALK");
-				FlipSprite(true, Axis.Y);
+				FlipSprite(Axis.Y);
+				isMoving = true;
 			}
 			if (myGame.keyboardState.IsKeyDown(keyList[2]))
 			{
 				Direction.X = Speed;
 				SetAnimation("WALK");
-				FlipSprite();
+				FlipSprite(Axis.NONE);
+				isMoving = true;
 			}
 			if (!myGame.keyboardState.IsKeyDown(keyList[0]) && !myGame.keyboardState.IsKeyDown(keyList[2]))
 			{
 				Direction.X = 0f;
+				isMoving = false;
 
-				if (isGrounded)
+				if (isGrounded && (CurrentAnimation.name != "SHOOT"))
 				{
 					SetAnimation("IDLE");
 				}
@@ -430,10 +448,10 @@ namespace WrathOfJohn
 			}
 			if (myGame.CheckKey(MovementKeys[5]))
 			{
-				if (CanShootProjectile)
+				if (CanShootProjectile && !isMoving && !isJumping && !canFall)
 				{
 					SetAnimation("SHOOT");
-					ShootBeam();
+					ShootBeam(3);
 				}
 			}
 		}
@@ -455,7 +473,7 @@ namespace WrathOfJohn
 			}
 			if (rectangle1.TouchLeftOf(rectangle2))
 			{
-				Position.X = rectangle2.Left - rectangle2.Width;
+				Position.X = rectangle2.Left - rectangle1.Width;
 			}
 			if (rectangle1.TouchRightOf(rectangle2))
 			{
@@ -463,9 +481,10 @@ namespace WrathOfJohn
 			}
 			if (rectangle1.TouchBottomOf(rectangle2))
 			{
-				Direction.Y = 1;
-				Position.Y += 2 * 1.5f;
+				Direction.Y = 0f;
 				isJumping = false;
+				canFall = true;
+				isFalling = true;
 			}
 		}
 

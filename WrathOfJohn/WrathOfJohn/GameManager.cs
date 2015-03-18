@@ -213,11 +213,11 @@ namespace WrathOfJohn
 			MovementKeys = new List<Keys>();
 			playerAnimationSetList = new List<Sprite.AnimationSet>();
 
-			cEnemyList = new List<CircleEnemy>();
+			cEnemyList = new List<Enemy>();
 			cEnemyAnimationSetList = new List<Sprite.AnimationSet>();
-			sEnemyList = new List<SquareEnemy>();
+			sEnemyList = new List<Enemy>();
 			sEnemyAnimationSetList = new List<Sprite.AnimationSet>();
-			tEnemyList = new List<TriangleEnemy>();
+			tEnemyList = new List<Enemy>();
 			tEnemyAnimationSetList = new List<Sprite.AnimationSet>();
 
 			platformList = new List<PlatformManager>();
@@ -302,7 +302,7 @@ namespace WrathOfJohn
 			MovementKeys.Add(Keys.Q);
 
 			_Mana = new Player.Mana(100, 5000, 100);
-			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 75), MovementKeys, 2f, _Mana, Color.White, playerAnimationSetList, myGame);
+			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 75), MovementKeys, 1.75f, _Mana, Color.White, playerAnimationSetList, myGame);
 
 			debugLabel = new Label(new Vector2(0, 00), myGame.segoeUIMonoDebug, 1f, Color.Black, "");
 
@@ -357,15 +357,15 @@ namespace WrathOfJohn
 
 			player.Update(gameTime);
 
-			foreach (CircleEnemy ce in cEnemyList)
+			foreach (Enemy ce in cEnemyList)
 			{
 				ce.Update(gameTime);
 			}
-			foreach (SquareEnemy se in sEnemyList)
+			foreach (Enemy se in sEnemyList)
 			{
 				se.Update(gameTime);
 			}
-			foreach (TriangleEnemy te in tEnemyList)
+			foreach (Enemy te in tEnemyList)
 			{
 				te.Update(gameTime);
 			}
@@ -417,15 +417,15 @@ namespace WrathOfJohn
 			{
 				player.Draw(gameTime, spriteBatch);
 
-				foreach (CircleEnemy ce in cEnemyList)
+				foreach (Enemy ce in cEnemyList)
 				{
 					ce.Draw(gameTime, spriteBatch);
 				}
-				foreach (SquareEnemy se in sEnemyList)
+				foreach (Enemy se in sEnemyList)
 				{
 					se.Draw(gameTime, spriteBatch);
 				}
-				foreach (TriangleEnemy te in tEnemyList)
+				foreach (Enemy te in tEnemyList)
 				{
 					te.Draw(gameTime, spriteBatch);
 				}
@@ -539,15 +539,15 @@ namespace WrathOfJohn
 					}
                     if (brickspawn[x, y] == 80)
                     {
-						cEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), Color.White, 1.25f, 0.96f, Enemy.MovementType.HORIZONTAL, cEnemyAnimationSetList, player, platformRectangles, mapSegments));
+						cEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.25f, Enemy.MovementType.HORIZONTAL, Color.White, cEnemyAnimationSetList, player, platformRectangles, mapSegments));
                     }
                     if (brickspawn[x, y] == 81)
                     {
-						sEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), Color.White, 1.25f, 0.96f, Enemy.MovementType.BOUNCE, sEnemyAnimationSetList, player, platformRectangles, mapSegments));
+						sEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.25f, Enemy.MovementType.BOUNCE, Color.White, sEnemyAnimationSetList, player, platformRectangles, mapSegments));
                     }
                     if (brickspawn[x, y] == 82)
                     {
-						tEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), Color.White, 1.25f, 0.96f, Enemy.MovementType.FLY, tEnemyAnimationSetList, player, platformRectangles, mapSegments));
+						tEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.25f, Enemy.MovementType.FLY, Color.White, tEnemyAnimationSetList, player, platformRectangles, mapSegments));
                     }
 				}
 			}

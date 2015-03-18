@@ -202,6 +202,7 @@ namespace WrathOfJohn
 			DefaultGravityForce = gravity;
 			SetAnimation("IDLE");
 			isFalling = true;
+			canFall = true;
 			playerCollisions = new Rectangle((int)Position.X, (int)Position.Y, 20, 43);
 			#endregion
 		}
@@ -414,8 +415,6 @@ namespace WrathOfJohn
 			if (myGame.keyboardState.IsKeyDown(keyList[4]) && (!isJumping && !canFall))
 			{
 				isJumping = true;
-				isFalling = false;
-				Direction.Y = 0;
 				Position.Y -= GravityForce * 1.5f;
 			}
 			if (myGame.keyboardState.IsKeyDown(keyList[0]))
@@ -448,7 +447,7 @@ namespace WrathOfJohn
 			}
 			if (myGame.CheckKey(MovementKeys[5]))
 			{
-				if (CanShootProjectile && !isMoving && !isJumping && !canFall)
+				if (CanShootProjectile && !isJumping && !canFall)
 				{
 					SetAnimation("SHOOT");
 					ShootBeam(3);
@@ -495,7 +494,7 @@ namespace WrathOfJohn
 		{
 			if (isJumping)
 			{
-				if (GravityForce > 0f)
+				if (GravityForce > -DefaultGravityForce)
 				{
 					Direction.Y = -GravityForce;
 					GravityForce -= 0.03f;
@@ -503,18 +502,17 @@ namespace WrathOfJohn
 				if (GravityForce <= 0f)
 				{
 					isJumping = false;
-					isFalling = true;
 					canFall = true;
 				}
 			}
 
-			if (isFalling)
+			if (!isJumping)
 			{
 				Direction.Y = GravityForce;
 				GravityForce += 0.06f;
 			}
 
-			GravityForce = MathHelper.Clamp(GravityForce, -GravityForce - 1f, GravityForce);
+			Direction.Y = MathHelper.Clamp(Direction.Y, -GravityForce - 1f, GravityForce);
 		}
 	}
 }

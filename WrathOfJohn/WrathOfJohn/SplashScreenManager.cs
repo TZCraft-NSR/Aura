@@ -81,6 +81,9 @@ namespace WrathOfJohn
 			base.Initialize();
 		}
 
+		/// <summary>
+		/// Loads the content of the splash screen.
+		/// </summary>
 		protected override void LoadContent()
 		{
 			spriteBatch = new SpriteBatch(Game.GraphicsDevice);
@@ -138,7 +141,7 @@ namespace WrathOfJohn
 
 			spriteBatch.Begin();
 			{
-				debugLabel.Draw(gameTime, spriteBatch);
+				//debugLabel.Draw(gameTime, spriteBatch);
 			}
 			spriteBatch.End();
 

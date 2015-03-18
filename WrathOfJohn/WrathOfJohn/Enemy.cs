@@ -37,15 +37,28 @@ namespace WrathOfJohn
 		{
 			this.myGame = myGame;
 			SetAnimation("IDLE");
+
+			if (movementType == MovementType.FLY)
+			{
+				RotationCenter = new Vector2(animationSetList[0].frameSize.X / 2, animationSetList[0].frameSize.Y / 2);
+			}
+
+			#region Reset Gravity
 			DefaultGravityForce = gravity;
+			GravityForce = gravity;
+			isFalling = true;
+			canFall = true;
+			Direction = Vector2.Zero;
+			#endregion
+
+			#region Set default variables
 			MapSides = mapSides;
 			MapTiles = mapTiles;
 			_Player = player;
-			GravityForce = gravity;
-			isFalling = true;
-			ProjectileList = new List<Projectile>();
 			_MovementType = movementType;
-			Direction = Vector2.Zero;
+			#endregion
+
+			ProjectileList = new List<Projectile>();
 			playerCollisions = new Rectangle((int)Position.X, (int)Position.Y, animationSetList[0].frameSize.X, animationSetList[0].frameSize.Y);
 		}
 
@@ -58,14 +71,21 @@ namespace WrathOfJohn
 			{
 				Direction = new Vector2(_Player.GetPosition.X - Position.X, _Player.GetPosition.Y - Position.Y);
 			}
-			if (_MovementType == MovementType.HORIZONTAL || _MovementType == MovementType.BOUNCE)
+			else if (_MovementType == MovementType.HORIZONTAL || _MovementType == MovementType.BOUNCE)
 			{
-				Direction = new Vector2(_Player.GetPosition.X - Position.X, Direction.Y);
+				Direction.X = _Player.GetPosition.X - Position.X;
 			}
 
 			if (Collision.Magnitude(Direction) <= 200)
 			{
-				Direction = Collision.UnitVector(Direction);
+				if (_MovementType != MovementType.FLY)
+				{
+					Direction.X = Collision.UnitVector(Direction).X;
+				}
+				else
+				{
+					Direction = Collision.UnitVector(Direction);
+				}
 
 				if (_Player.GetPosition.X == Position.X)
 				{
@@ -73,42 +93,52 @@ namespace WrathOfJohn
 					{
 						Direction = new Vector2(0, 0);
 					}
-					if (_MovementType == MovementType.HORIZONTAL || _MovementType == MovementType.BOUNCE)
+					else if (_MovementType == MovementType.HORIZONTAL || _MovementType == MovementType.BOUNCE)
 					{
-						Direction = new Vector2(0, Direction.Y);
-					}
-				}
-				foreach (Rectangle r in MapTiles)
-				{
-					CheckCollision(playerCollisions, r);
-				}
-				foreach (Rectangle r in MapSides)
-				{
-					CheckCollision(playerCollisions, r);
-				}
-				if (_MovementType == MovementType.BOUNCE)
-				{
-					if (!isJumping && !canFall)
-					{
-						isJumping = true;
-						isFalling = false;
-						Direction.Y = 0;
-						isJumping = true;
-						Position.Y -= GravityForce * 1.5f;
+						Direction.X = 0;
 					}
 				}
 
 				SetAnimation("CHASE");
 
 				Position += Direction;
+
+				if (_MovementType == MovementType.FLY)
+				{
+					Rotation += 0.05f;
+				}
 			}
+
+			foreach (Rectangle r in MapTiles)
+			{
+				CheckCollision(playerCollisions, r);
+			}
+			foreach (Rectangle r in MapSides)
+			{
+				CheckCollision(playerCollisions, r);
+			}
+			if (_MovementType == MovementType.BOUNCE)
+			{
+				if (!isJumping && !canFall)
+				{
+					isJumping = true;
+					Position.Y -= GravityForce * 1.03f;
+				}
+			}
+
+			if (_MovementType != MovementType.FLY)
+			{
+				Position.Y += Direction.Y;
+			}
+
+			UpdateGravity();
 
 			SetAnimation("IDLE");
+		}
 
-			if (_MovementType == MovementType.BOUNCE || _MovementType == MovementType.HORIZONTAL)
-			{
-				UpdateGravity();
-			}
+		protected override void UpdateGravity()
+		{
+			base.UpdateGravity();
 		}
 	}
 }

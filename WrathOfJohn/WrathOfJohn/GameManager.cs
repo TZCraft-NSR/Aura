@@ -379,6 +379,14 @@ namespace WrathOfJohn
 			DebugLines[0] = "IsGrounded=" + player.isGrounded + " IsJumping=" + player.isJumping + " IsFalling=" + player.isFalling + " Direction=(" + player.GetDirection.X + "," + player.GetDirection.Y + ")";
 			DebugLines[3] = "mana=" + player._Mana.mana + " maxMana=" + player._Mana.maxMana + " manaRechargeTime=" + player._Mana.manaRechargeTime + " manaInterval=" + player._Mana.manaInterval;
 			DebugLines[4] = "CanShoot=" + player.CanShootProjectile + " CreateNew=" + player.CreateNewProjectile + " HasShot=" + player.HasShotProjectile + " projectileListCreated=" + player.ProjectileListCreated;
+			if (sEnemyList.Count > 0)
+			{
+				DebugLines[6] = "sEnemy Direction=(" + (int)sEnemyList[0].GetDirection.X + "," + (int)sEnemyList[0].GetDirection.Y + ") sEnemy Position=(" + (int)sEnemyList[0].GetPosition.X + "," + (int)sEnemyList[0].GetPosition.Y + ") sEnemy Gravity=" + sEnemyList[0].GravityForce + " isJumping=" + sEnemyList[0].isJumping + " isFalling=" + sEnemyList[0].isFalling + " canFall=" + sEnemyList[0].canFall;
+			}
+			if (cEnemyList.Count > 0)
+			{
+				DebugLines[7] = "cEnemy Direction=(" + cEnemyList[0].GetDirection.X + "," + cEnemyList[0].GetDirection.Y + ") cEnemy Position=(" + cEnemyList[0].GetPosition.X + "," + cEnemyList[0].GetPosition.Y + ")";
+			}
 
 			base.Update(gameTime);
 		}
@@ -433,6 +441,7 @@ namespace WrathOfJohn
 			spriteBatch.End();
 			
 			// Debug Rectangles
+			/*
 			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
 			{
 				for (int i = 0; i < platformRectangles.Count; i++)
@@ -476,6 +485,7 @@ namespace WrathOfJohn
 				}
 			}
 			spriteBatch.End();
+			*/
 
 			spriteBatch.Begin();
 			{
@@ -539,15 +549,15 @@ namespace WrathOfJohn
 					}
                     if (brickspawn[x, y] == 80)
                     {
-						cEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.25f, Enemy.MovementType.HORIZONTAL, Color.White, cEnemyAnimationSetList, player, platformRectangles, mapSegments));
+						cEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.75f, Enemy.MovementType.HORIZONTAL, Color.White, cEnemyAnimationSetList, player, platformRectangles, mapSegments));
                     }
                     if (brickspawn[x, y] == 81)
                     {
-						sEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.25f, Enemy.MovementType.BOUNCE, Color.White, sEnemyAnimationSetList, player, platformRectangles, mapSegments));
+						sEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.75f, Enemy.MovementType.BOUNCE, Color.White, sEnemyAnimationSetList, player, platformRectangles, mapSegments));
                     }
                     if (brickspawn[x, y] == 82)
                     {
-						tEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.25f, Enemy.MovementType.FLY, Color.White, tEnemyAnimationSetList, player, platformRectangles, mapSegments));
+						tEnemyList.Add(new Enemy(new Vector2(x * 25 + 12.5f, y * 25 + 12.5f), 1.75f, Enemy.MovementType.FLY, Color.White, tEnemyAnimationSetList, player, platformRectangles, mapSegments));
                     }
 				}
 			}

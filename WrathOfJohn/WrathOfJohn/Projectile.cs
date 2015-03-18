@@ -35,6 +35,12 @@ namespace WrathOfJohn
 			protected set;
 		}
 
+		public float DirectionX
+		{
+			get;
+			protected set;
+		}
+
 		public bool visible
 		{
 			get;
@@ -100,7 +106,7 @@ namespace WrathOfJohn
 			}
 			if (visible)
 			{
-				Position.X += Direction.X * Speed + (player.GetDirection.X * player.Speed);
+				Position.X += Direction.X * Speed + 0.5f * (DirectionX) * (Speed * Speed);
 			}
 
 			base.Update(gameTime);
@@ -118,6 +124,8 @@ namespace WrathOfJohn
 		{
 			Speed = 3;
 			maxDistance = 125;
+
+			DirectionX = player.GetDirection.X;
 
 			visible = true;
 

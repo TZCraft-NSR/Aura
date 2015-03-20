@@ -15,7 +15,7 @@ namespace WrathOfJohn
 {
 	public class Projectile : Sprite
 	{
-		Rectangle projectileRectangle;
+		public Rectangle projectileRectangle;
 
 		Game1 myGame;
 		Player player;

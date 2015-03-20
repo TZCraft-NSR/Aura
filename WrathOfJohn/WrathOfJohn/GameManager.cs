@@ -30,6 +30,10 @@ namespace WrathOfJohn
 		/// </summary>
 		Camera camera;
 
+		Song forestSong;
+		Song finalBoss;
+		bool musicStarted;
+
 		#region Player Variables
 		/// <summary>
 		/// The player class.
@@ -88,7 +92,19 @@ namespace WrathOfJohn
 		/// <summary>
 		/// The texture sheet of blocks.
 		/// </summary>
-		Texture2D platformTexture;
+		Texture2D plainsPlatformTexture;
+		/// <summary>
+		/// 
+		/// </summary>
+		Texture2D forestPlatformTexture;
+		/// <summary>
+		/// 
+		/// </summary>
+		Texture2D cavePlatformTexture;
+		/// <summary>
+		/// 
+		/// </summary>
+		Texture2D villagePlatformTexture;
 		/// <summary>
 		/// The animation set list of the blocks.
 		/// </summary>
@@ -135,7 +151,7 @@ namespace WrathOfJohn
 		public bool wonLevel
 		{
 			get;
-			protected set;
+			set;
 		}
 		#endregion
 
@@ -143,27 +159,83 @@ namespace WrathOfJohn
 		/// <summary>
 		/// The first parallax texture.
 		/// </summary>
-		Texture2D parallax1;
+		Texture2D plainsParallax1;
 		/// <summary>
 		/// The second parallax texture.
 		/// </summary>
-		Texture2D parallax2;
+		Texture2D plainsParallax2;
 		/// <summary>
 		/// The third parallax texture.
 		/// </summary>
-		Texture2D parallax3;
+		Texture2D plainsParallax3;
 		/// <summary>
 		/// The first parallax background class.
 		/// </summary>
-		ParallaxBackground parallax1Background;
+		ParallaxBackground plainsParallax1Background;
 		/// <summary>
 		/// The second parallax background class.
 		/// </summary>
-		ParallaxBackground parallax2Background;
+		ParallaxBackground plainsParallax2Background;
 		/// <summary>
 		/// The third parallax background class.
 		/// </summary>
-		ParallaxBackground parallax3Background;
+		ParallaxBackground plainsParallax3Background;
+		/// <summary>
+		/// The first parallax texture.
+		/// </summary>
+		Texture2D forestParallax1;
+		/// <summary>
+		/// The second parallax texture.
+		/// </summary>
+		Texture2D forestParallax2;
+		/// <summary>
+		/// The third parallax texture.
+		/// </summary>
+		Texture2D forestParallax3;
+		/// <summary>
+		/// The first parallax background class.
+		/// </summary>
+		ParallaxBackground forestParallax1Background;
+		/// <summary>
+		/// The second parallax background class.
+		/// </summary>
+		ParallaxBackground forestParallax2Background;
+		/// <summary>
+		/// The third parallax background class.
+		/// </summary>
+		ParallaxBackground forestParallax3Background;
+		/// <summary>
+		/// The first parallax texture.
+		/// </summary>
+		Texture2D caveParallax1;
+		/// <summary>
+		/// The second parallax texture.
+		/// </summary>
+		Texture2D caveParallax2;
+		/// <summary>
+		/// The third parallax texture.
+		/// </summary>
+		Texture2D caveParallax3;
+		/// <summary>
+		/// The first parallax background class.
+		/// </summary>
+		ParallaxBackground caveParallax1Background;
+		/// <summary>
+		/// The second parallax background class.
+		/// </summary>
+		ParallaxBackground caveParallax2Background;
+		/// <summary>
+		/// The third parallax background class.
+		/// </summary>
+		ParallaxBackground caveParallax3Background;
+		/// <summary>
+		/// The first parallax texture.
+		/// </summary>
+		Texture2D villageParallax1;
+		/// <summary>
+		/// The first parallax background class.
+		/// </summary>
+		ParallaxBackground villageParallax1Background;
 		#endregion
 
 		#region Enemy Variables
@@ -226,7 +298,7 @@ namespace WrathOfJohn
 
 			mapSegments = new List<Rectangle>();
 
-			level = 1;
+			level = 2;
 
 			for (int i = 0; i < DebugLines.Length; i++)
 			{
@@ -246,13 +318,25 @@ namespace WrathOfJohn
 			playerTexture = Game.Content.Load<Texture2D>(@"images\players\mage");
 			debugDotTexture = Game.Content.Load<Texture2D>(@"images\debug\line");
 			ProjectileTexture = Game.Content.Load<Texture2D>(@"images\projectiles\beam");
-			parallax1 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground1");
-			parallax2 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground2");
-			parallax3 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground3");
+			plainsParallax1 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground1");
+			plainsParallax2 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground2");
+			plainsParallax3 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground3");
+			forestParallax1 = Game.Content.Load<Texture2D>(@"images\parallax\forestbackground1");
+			forestParallax2 = Game.Content.Load<Texture2D>(@"images\parallax\forestbackground2");
+			forestParallax3 = Game.Content.Load<Texture2D>(@"images\parallax\forestbackground3");
+			caveParallax1 = Game.Content.Load<Texture2D>(@"images\parallax\cavebackground1");
+			caveParallax2 = Game.Content.Load<Texture2D>(@"images\parallax\cavebackground2");
+			caveParallax3 = Game.Content.Load<Texture2D>(@"images\parallax\cavebackground3");
+			villageParallax1 = Game.Content.Load<Texture2D>(@"images\parallax\village");
 			cEnemyTexture = Game.Content.Load<Texture2D>(@"images\enemies\CircleEnemy");
 			sEnemyTexture = Game.Content.Load<Texture2D>(@"images\enemies\SquareEnemy");
 			tEnemyTexture = Game.Content.Load<Texture2D>(@"images\enemies\TriangleEnemy");
-			platformTexture = Game.Content.Load<Texture2D>(@"images\tiles\platforms");
+			plainsPlatformTexture = Game.Content.Load<Texture2D>(@"images\tiles\plainsTiles");
+			forestPlatformTexture = Game.Content.Load<Texture2D>(@"images\tiles\forestTiles");
+			cavePlatformTexture = Game.Content.Load<Texture2D>(@"images\tiles\caveTiles");
+			villagePlatformTexture = Game.Content.Load<Texture2D>(@"images\tiles\villageTiles");
+			forestSong = Game.Content.Load<Song>(@"sounds\music\forest");
+			finalBoss = Game.Content.Load<Song>(@"sounds\music\finalboss");
 
 			camera = new Camera(GraphicsDevice.Viewport, new Point(6400, 450), 1f);
 			camera.Position = new Vector2(0, 0);
@@ -260,38 +344,69 @@ namespace WrathOfJohn
 			mapSegments.Add(new Rectangle(-5, 0, 5, (int)camera.Size.Y));
 			mapSegments.Add(new Rectangle((int)camera.Size.X, 0, 5, (int)camera.Size.Y));
 
-			parallax1Background = new ParallaxBackground(parallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
-			parallax2Background = new ParallaxBackground(parallax2, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
-			parallax3Background = new ParallaxBackground(parallax3, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.250f, camera);
+			plainsParallax1Background = new ParallaxBackground(plainsParallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
+			plainsParallax2Background = new ParallaxBackground(plainsParallax2, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
+			plainsParallax3Background = new ParallaxBackground(plainsParallax3, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.250f, camera);
 
-			playerAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(124, 148), new Point(4, 1), new Point(0, 2), 1000));
+			villageParallax1Background = new ParallaxBackground(villageParallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
+
+			forestParallax1Background = new ParallaxBackground(forestParallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
+			forestParallax2Background = new ParallaxBackground(forestParallax2, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
+			forestParallax3Background = new ParallaxBackground(forestParallax3, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.250f, camera);
+
+			caveParallax1Background = new ParallaxBackground(caveParallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
+			caveParallax2Background = new ParallaxBackground(caveParallax2, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
+			caveParallax3Background = new ParallaxBackground(caveParallax3, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.250f, camera);
+
+			playerAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(124, 148), new Point(4, 1), new Point(0, 2), 1600));
 			playerAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(100, 140), new Point(8, 1), new Point(0, 476), 100));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(187, 174), new Point(4, 1), new Point(0, 302), 1000));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("SHOOT", playerTexture, new Point(124, 148), new Point(5, 1), new Point(0, 154), 250));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(187, 174), new Point(4, 1), new Point(0, 302), 1600));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("SHOOT", playerTexture, new Point(124, 148), new Point(5, 1), new Point(0, 154), 1600));
 
-			cEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", cEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1000));
+			cEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", cEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1600));
+			cEnemyAnimationSetList.Add(new Sprite.AnimationSet("CHASE", cEnemyTexture, new Point(25, 25), new Point(9, 1), new Point(25, 0), 100));
 			//Needs rest of animations ^
-			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", sEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1000));
+			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", sEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1600));
+			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("CHASE", sEnemyTexture, new Point(25, 25), new Point(5, 1), new Point(0, 0), 100));
+			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("FALLING", sEnemyTexture, new Point(25, 25), new Point(4, 1), new Point(150, 0), 100));
 			//Needs edit ^
 			tEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", tEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1000));
 			//Needs edit ^
 
-			platformAnimationSetList.Add(new Sprite.AnimationSet("1", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("2", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("3", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("4", platformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("5", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("6", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("7", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("8", platformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("9", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("10", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("11", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("12", platformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("13", platformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("14", platformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("15", platformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("16", platformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("1", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("2", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("3", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("4", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("5", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("6", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("7", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("8", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("9", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("10", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("11", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("12", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("13", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("14", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("15", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("16", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("17", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("18", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("19", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("20", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("21", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("22", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("23", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("24", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 25), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("25", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("26", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("27", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("28", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 50), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("29", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("30", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("31", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("32", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 75), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("33", cavePlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
+			platformAnimationSetList.Add(new Sprite.AnimationSet("34", villagePlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
 
 			MovementKeys.Add(Keys.A);
 			MovementKeys.Add(Keys.W);
@@ -321,24 +436,37 @@ namespace WrathOfJohn
 				DebugLines[5] = "true";
 				camera.Position = new Vector2(player.GetPosition.X + 200f, 0);
 			}
+			//
+			plainsParallax1Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			plainsParallax1Background.Update(gameTime);
+			plainsParallax2Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			plainsParallax2Background.Update(gameTime);
+			plainsParallax3Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			plainsParallax3Background.Update(gameTime);
 
-			parallax1Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
-			parallax1Background.Update(gameTime);
-			parallax2Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
-			parallax2Background.Update(gameTime);
-			parallax3Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
-			parallax3Background.Update(gameTime);
+			villageParallax1Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			villageParallax1Background.Update(gameTime);
+
+			forestParallax1Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			forestParallax1Background.Update(gameTime);
+			forestParallax2Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			forestParallax2Background.Update(gameTime);
+			forestParallax3Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			forestParallax3Background.Update(gameTime);
+
+			caveParallax1Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			caveParallax1Background.Update(gameTime);
+			caveParallax2Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			caveParallax2Background.Update(gameTime);
+			caveParallax3Background.position = new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0);
+			caveParallax3Background.Update(gameTime);
 			#endregion
 
-			mapSegments[1] = new Rectangle(camera.Size.X - 5, mapSegments[1].Y, mapSegments[1].Width, mapSegments[1].Height);
+			mapSegments[1] = new Rectangle(camera.Size.X, mapSegments[1].Y, mapSegments[1].Width, mapSegments[1].Height);
 
 			if (myGame.CheckKey(Keys.G) && !wonLevel)
 			{
 				wonLevel = true;
-			}
-			if (!myGame.CheckKey(Keys.G) && wonLevel)
-			{
-				wonLevel = false;
 			}
 
 			if (wonLevel)
@@ -347,27 +475,67 @@ namespace WrathOfJohn
 
 				if (level > 6)
 				{
-					level = 0;
+					level = 1;
 				}
 
 				levelLoaded = false;
+
+				wonLevel = false;
+
+				if (musicStarted)
+				{
+					MediaPlayer.Stop();
+				}
+
+				musicStarted = false;
 			}
 
 			PlayerCollisions = player.GetPlayerRectangles();
 
 			player.Update(gameTime);
 
-			foreach (Enemy ce in cEnemyList)
+			for (int i = 0; i < cEnemyList.Count; i++)
 			{
-				ce.Update(gameTime);
+				if (cEnemyList[i].DeleteMe)
+				{
+					cEnemyList.RemoveAt(i);
+					i--;
+				}
+				else
+				{
+					cEnemyList[i].Update(gameTime);
+				}
 			}
-			foreach (Enemy se in sEnemyList)
+			for (int i = 0; i < sEnemyList.Count; i++)
 			{
-				se.Update(gameTime);
+				if (sEnemyList[i].DeleteMe)
+				{
+					sEnemyList.RemoveAt(i);
+					i--;
+				}
+				else
+				{
+					sEnemyList[i].Update(gameTime);
+				}
 			}
-			foreach (Enemy te in tEnemyList)
+			for (int i = 0; i < tEnemyList.Count; i++)
 			{
-				te.Update(gameTime);
+				if (tEnemyList[i].DeleteMe)
+				{
+					tEnemyList.RemoveAt(i);
+					i--;
+				}
+				else
+				{
+					tEnemyList[i].Update(gameTime);
+				}
+			}
+			if (player.Dead)
+			{
+				level = 1;
+				levelLoaded = false;
+				wonLevel = false;
+				player.Dead = false;
 			}
 
 			debugLabel.Update(gameTime, DebugLines[0] + "\n" + DebugLines[1] + "\n" +
@@ -379,14 +547,7 @@ namespace WrathOfJohn
 			DebugLines[0] = "IsGrounded=" + player.isGrounded + " IsJumping=" + player.isJumping + " IsFalling=" + player.isFalling + " Direction=(" + player.GetDirection.X + "," + player.GetDirection.Y + ")";
 			DebugLines[3] = "mana=" + player._Mana.mana + " maxMana=" + player._Mana.maxMana + " manaRechargeTime=" + player._Mana.manaRechargeTime + " manaInterval=" + player._Mana.manaInterval;
 			DebugLines[4] = "CanShoot=" + player.CanShootProjectile + " CreateNew=" + player.CreateNewProjectile + " HasShot=" + player.HasShotProjectile + " projectileListCreated=" + player.ProjectileListCreated;
-			if (sEnemyList.Count > 0)
-			{
-				DebugLines[6] = "sEnemy Direction=(" + (int)sEnemyList[0].GetDirection.X + "," + (int)sEnemyList[0].GetDirection.Y + ") sEnemy Position=(" + (int)sEnemyList[0].GetPosition.X + "," + (int)sEnemyList[0].GetPosition.Y + ") sEnemy Gravity=" + sEnemyList[0].GravityForce + " isJumping=" + sEnemyList[0].isJumping + " isFalling=" + sEnemyList[0].isFalling + " canFall=" + sEnemyList[0].canFall;
-			}
-			if (cEnemyList.Count > 0)
-			{
-				DebugLines[7] = "cEnemy Direction=(" + cEnemyList[0].GetDirection.X + "," + cEnemyList[0].GetDirection.Y + ") cEnemy Position=(" + cEnemyList[0].GetPosition.X + "," + cEnemyList[0].GetPosition.Y + ")";
-			}
+			DebugLines[6] = "Player Dead=" + player.Dead + " Player Lives=" + player.Lives;
 
 			base.Update(gameTime);
 		}
@@ -413,9 +574,43 @@ namespace WrathOfJohn
 					levelLoaded = true;
 				}
 
-				parallax1Background.Draw(gameTime, spriteBatch);
-				parallax2Background.Draw(gameTime, spriteBatch);
-				parallax3Background.Draw(gameTime, spriteBatch);
+				if (level <= 2)
+				{
+					plainsParallax1Background.Draw(gameTime, spriteBatch);
+					plainsParallax2Background.Draw(gameTime, spriteBatch);
+					plainsParallax3Background.Draw(gameTime, spriteBatch);
+				}
+				if (level == 3)
+				{
+					plainsParallax1Background.Draw(gameTime, spriteBatch);
+					plainsParallax2Background.Draw(gameTime, spriteBatch);
+					plainsParallax3Background.Draw(gameTime, spriteBatch);
+					villageParallax1Background.Draw(gameTime, spriteBatch);
+				}
+				if (level == 4)
+				{
+					forestParallax1Background.Draw(gameTime, spriteBatch);
+					forestParallax2Background.Draw(gameTime, spriteBatch);
+					forestParallax3Background.Draw(gameTime, spriteBatch);
+				}
+				if (level >= 5)
+				{
+					caveParallax1Background.Draw(gameTime, spriteBatch);
+					caveParallax2Background.Draw(gameTime, spriteBatch);
+					caveParallax3Background.Draw(gameTime, spriteBatch);
+				}
+				if (level == 4 && !musicStarted)
+				{
+					MediaPlayer.Stop();
+					MediaPlayer.Play(forestSong);
+					musicStarted = true;
+				}
+				if (level == 6 && !musicStarted)
+				{
+					MediaPlayer.Stop();
+					MediaPlayer.Play(finalBoss);
+					musicStarted = true;
+				}
 
 				foreach (PlatformManager pm in platformList)
 				{
@@ -445,7 +640,7 @@ namespace WrathOfJohn
 			spriteBatch.End();
 			
 			// Debug Rectangles
-			/*
+			
 			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
 			{
 				for (int i = 0; i < platformRectangles.Count; i++)
@@ -489,7 +684,7 @@ namespace WrathOfJohn
 				}
 			}
 			spriteBatch.End();
-			*/
+			
 
 			spriteBatch.Begin();
 			{
@@ -547,9 +742,14 @@ namespace WrathOfJohn
 			{
 				for (int y = 0; y < height; y++)
 				{
-					if (brickspawn[x, y] > 0 && brickspawn[x, y] < 80)
+					if (brickspawn[x, y] > 0 && brickspawn[x, y] < 79)
 					{
 						platformList.Add(new PlatformManager(new Vector2(x * 25, y * 25), myGame, (int)brickspawn[x, y], platformAnimationSetList));
+					}
+					if (brickspawn[x, y] == 79)
+					{
+						player.SetPosition(new Vector2(x * 25, y * 25));
+						camera.Position = new Vector2(player.GetPosition.X + 200f, player.GetPosition.Y);
 					}
                     if (brickspawn[x, y] == 80)
                     {

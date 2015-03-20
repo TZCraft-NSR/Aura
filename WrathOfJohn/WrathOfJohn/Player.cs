@@ -57,6 +57,9 @@ namespace WrathOfJohn
 		/// </summary>
 		public Game1 myGame;
 
+		public bool Dead = false;
+		public float Lives = 3;
+
 		#region Movement and Collision
 		/// <summary>
 		/// The player's collisions.
@@ -110,6 +113,10 @@ namespace WrathOfJohn
 			get;
 			set;
 		}
+		/// <summary>
+		/// The center of the player;
+		/// </summary>
+		public Vector2 PositionCenter;
 		#endregion
 
 		#region Projectiles
@@ -128,10 +135,10 @@ namespace WrathOfJohn
 		/// <summary>
 		/// Gets or sets the list of projectiles.
 		/// </summary>
-		protected List<Projectile> ProjectileList
+		public List<Projectile> ProjectileList
 		{
 			get;
-			set;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets if the projectile list is created.
@@ -247,6 +254,40 @@ namespace WrathOfJohn
 			{
 				CheckCollision(playerCollisions, r);
 			}
+			if (playerCollisions.TouchLeftOf(myGame.gameManager.mapSegments[1]) || playerCollisions.TouchTopOf(myGame.gameManager.mapSegments[1]) || playerCollisions.TouchRightOf(myGame.gameManager.mapSegments[1]) || playerCollisions.TouchBottomOf(myGame.gameManager.mapSegments[1]))
+			{
+				myGame.gameManager.wonLevel = true;
+				Position = Vector2.Zero;
+			}
+			foreach (Enemy e in myGame.gameManager.cEnemyList)
+			{
+				if (playerCollisions.TouchLeftOf(e.playerCollisions) || playerCollisions.TouchTopOf(e.playerCollisions) || playerCollisions.TouchRightOf(e.playerCollisions) || playerCollisions.TouchBottomOf(e.playerCollisions))
+				{
+					Dead = true;
+					Lives -= 1;
+				}
+			}
+			foreach (Enemy e in myGame.gameManager.sEnemyList)
+			{
+				if (playerCollisions.TouchLeftOf(e.playerCollisions) || playerCollisions.TouchTopOf(e.playerCollisions) || playerCollisions.TouchRightOf(e.playerCollisions) || playerCollisions.TouchBottomOf(e.playerCollisions))
+				{
+					Dead = true;
+					Lives -= 1;
+				}
+			}
+			foreach (Enemy e in myGame.gameManager.tEnemyList)
+			{
+				if (playerCollisions.TouchLeftOf(e.playerCollisions) || playerCollisions.TouchTopOf(e.playerCollisions) || playerCollisions.TouchRightOf(e.playerCollisions) || playerCollisions.TouchBottomOf(e.playerCollisions))
+				{
+					Dead = true;
+					Lives -= 1;
+				}
+			}
+			if (Dead == true)
+			{
+				ProjectileList.RemoveRange(0, ProjectileList.Count);
+			}
+			Lives = MathHelper.Clamp(Lives, 0, 3);
 			#endregion
 
 			UpdateGravity();
@@ -349,6 +390,8 @@ namespace WrathOfJohn
 			base.Update(gameTime);
 
 			Position += Direction;
+
+			PositionCenter = new Vector2(Position.X, Position.Y + 21);
 		}
 
 		/// <summary>
@@ -412,7 +455,7 @@ namespace WrathOfJohn
 		/// <param name="keyList">The key list to update the input method with, (for custom lists)</param>
 		protected virtual void InputMethod(List<Keys> keyList)
 		{
-			if (myGame.keyboardState.IsKeyDown(keyList[4]) && (!isJumping && !canFall))
+			if ((myGame.keyboardState.IsKeyDown(keyList[4]) || myGame.keyboardState.IsKeyDown(keyList[1])) && (!isJumping && !canFall))
 			{
 				isJumping = true;
 				Position.Y -= GravityForce * 1.5f;
@@ -447,10 +490,10 @@ namespace WrathOfJohn
 			}
 			if (myGame.CheckKey(MovementKeys[5]))
 			{
-				if (CanShootProjectile && !isJumping && !canFall)
+				if (CanShootProjectile)
 				{
 					SetAnimation("SHOOT");
-					ShootBeam(3);
+					ShootBeam(5);
 				}
 			}
 		}
@@ -513,6 +556,15 @@ namespace WrathOfJohn
 			}
 
 			Direction.Y = MathHelper.Clamp(Direction.Y, -GravityForce - 1f, GravityForce);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="newPosition"></param>
+		public void SetPosition(Vector2 newPosition)
+		{
+			Position = newPosition;
 		}
 	}
 }

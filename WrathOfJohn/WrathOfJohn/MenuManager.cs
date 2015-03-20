@@ -53,8 +53,8 @@ namespace WrathOfJohn
 			animationSpriteList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(2, 0), new Point(340, 0), 0));
 
 			exitButton = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 366), myGame.segoeUIRegular, 1f, Color.Black, "EXIT", Color.White, animationSpriteList);
-			playButton = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 190), myGame.segoeUIRegular, 1f, Color.Black, "PLAY", Color.White, animationSpriteList);
-			optionsButton = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 275), myGame.segoeUIRegular, 1f, Color.Black, "OPTIONS", Color.White, animationSpriteList);
+			playButton = new Button(new Vector2(100, 190), myGame.segoeUIRegular, 1f, Color.Black, "PLAY", Color.White, animationSpriteList);
+			optionsButton = new Button(new Vector2((myGame.WindowSize.X - 170) - 100, 190), myGame.segoeUIRegular, 1f, Color.Black, "OPTIONS", Color.White, animationSpriteList);
 
 			base.LoadContent();
 		}
@@ -83,9 +83,10 @@ namespace WrathOfJohn
 
 		public override void Draw(GameTime gameTime)
 		{
+			GraphicsDevice.Clear(new Color(25, 25, 25));
 			spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointWrap, null, null);
 			{
-				spriteBatch.Draw(background, new Rectangle(0, 0, (int)myGame.WindowSize.X, (int)myGame.WindowSize.Y), Color.White);
+				spriteBatch.Draw(background, new Rectangle((int)(background.Width - myGame.WindowSize.X) / 4, 0, (int)(((myGame.WindowSize.Y / myGame.WindowSize.X) / 1.25) * background.Width), (int)myGame.WindowSize.Y), Color.White);
 			}
 			spriteBatch.End();
 

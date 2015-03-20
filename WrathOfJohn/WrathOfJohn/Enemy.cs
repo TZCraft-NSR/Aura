@@ -41,6 +41,7 @@ namespace WrathOfJohn
 			if (movementType == MovementType.FLY)
 			{
 				RotationCenter = new Vector2(animationSetList[0].frameSize.X / 2, animationSetList[0].frameSize.Y / 2);
+				Offset = new Vector2(-(animationSetList[0].frameSize.X / 2), -(animationSetList[0].frameSize.Y / 2));
 			}
 
 			#region Reset Gravity
@@ -69,11 +70,11 @@ namespace WrathOfJohn
 
 			if (_MovementType == MovementType.FLY)
 			{
-				Direction = new Vector2(_Player.GetPosition.X - Position.X, _Player.GetPosition.Y - Position.Y);
+				Direction = new Vector2(_Player.PositionCenter.X - 10 - Position.X, _Player.PositionCenter.Y - Position.Y);
 			}
 			else if (_MovementType == MovementType.HORIZONTAL || _MovementType == MovementType.BOUNCE)
 			{
-				Direction.X = _Player.GetPosition.X - Position.X;
+				Direction.X = _Player.PositionCenter.X - Position.X;
 			}
 
 			if (Collision.Magnitude(Direction) <= 200)
@@ -99,13 +100,31 @@ namespace WrathOfJohn
 					}
 				}
 
-				SetAnimation("CHASE");
+				if (_MovementType != MovementType.BOUNCE)
+				{
+					SetAnimation("CHASE");
+				}
 
 				Position += Direction;
 
 				if (_MovementType == MovementType.FLY)
 				{
 					Rotation += 0.05f;
+				}
+			}
+			else
+			{
+				if (_MovementType != MovementType.BOUNCE)
+				{
+					SetAnimation("IDLE");
+				}
+			}
+
+			foreach (Projectile p in _Player.ProjectileList)
+			{
+				if (playerCollisions.TouchLeftOf(p.projectileRectangle) || playerCollisions.TouchTopOf(p.projectileRectangle) || playerCollisions.TouchRightOf(p.projectileRectangle) || playerCollisions.TouchBottomOf(p.projectileRectangle))
+				{
+					DeleteMe = true;
 				}
 			}
 
@@ -123,6 +142,11 @@ namespace WrathOfJohn
 				{
 					isJumping = true;
 					Position.Y -= GravityForce * 1.03f;
+					SetAnimation("CHASE");
+				}
+				if (canFall)
+				{
+					SetAnimation("FALLING");
 				}
 			}
 
@@ -132,8 +156,32 @@ namespace WrathOfJohn
 			}
 
 			UpdateGravity();
+			LastFrameTime += gameTime.ElapsedGameTime.Milliseconds;
 
-			SetAnimation("IDLE");
+			if (LastFrameTime >= CurrentAnimation.framesPerMillisecond)
+			{
+				CurrentFrame.X++;
+
+				if (CurrentFrame.X >= CurrentAnimation.sheetSize.X)
+				{
+					CurrentFrame.Y++;
+					if (_MovementType != MovementType.BOUNCE)
+					{
+						CurrentFrame.X = 0;
+					}
+					else
+					{
+						CurrentFrame.X = CurrentAnimation.sheetSize.X;
+					}
+
+					if (CurrentFrame.Y >= CurrentAnimation.sheetSize.Y)
+					{
+						CurrentFrame.Y = 0;
+					}
+				}
+
+				LastFrameTime = 0;
+			}
 		}
 
 		protected override void UpdateGravity()

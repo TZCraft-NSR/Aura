@@ -98,7 +98,7 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the animations frame tick time.
 		/// </summary>
-		private int LastFrameTime
+		protected int LastFrameTime
 		{
 			get;
 			set;
@@ -106,7 +106,7 @@ namespace VoidEngine
 		/// <summary>
 		/// Gets or sets the SpriteEffects value of the sprite.
 		/// </summary>
-		private SpriteEffects flipEffect
+		protected SpriteEffects flipEffect
 		{
 			get;
 			set;

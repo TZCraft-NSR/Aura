@@ -21,7 +21,7 @@ namespace WrathOfJohn
 		{
 			myGame = mygame;
 			this.type = type;
-			SetAnimation("IDLE1");
+			SetAnimation("1");
 		}
 
 		public override void Update(GameTime gameTime)
@@ -94,6 +94,78 @@ namespace WrathOfJohn
 			if (type == 16)
 			{
 				SetAnimation("16");
+			}
+			if (type == 17)
+			{
+				SetAnimation("17");
+			}
+			if (type == 18)
+			{
+				SetAnimation("18");
+			}
+			if (type == 19)
+			{
+				SetAnimation("19");
+			}
+			if (type == 20)
+			{
+				SetAnimation("20");
+			}
+			if (type == 21)
+			{
+				SetAnimation("21");
+			}
+			if (type == 22)
+			{
+				SetAnimation("22");
+			}
+			if (type == 23)
+			{
+				SetAnimation("23");
+			}
+			if (type == 24)
+			{
+				SetAnimation("24");
+			}
+			if (type == 25)
+			{
+				SetAnimation("25");
+			}
+			if (type == 26)
+			{
+				SetAnimation("26");
+			}
+			if (type == 27)
+			{
+				SetAnimation("27");
+			}
+			if (type == 28)
+			{
+				SetAnimation("28");
+			}
+			if (type == 29)
+			{
+				SetAnimation("29");
+			}
+			if (type == 30)
+			{
+				SetAnimation("30");
+			}
+			if (type == 31)
+			{
+				SetAnimation("31");
+			}
+			if (type == 32)
+			{
+				SetAnimation("32");
+			}
+			if (type == 33)
+			{
+				SetAnimation("33");
+			}
+			if (type == 34)
+			{
+				SetAnimation("34");
 			}
 			base.Draw(gameTime, spriteBatch);
 		}

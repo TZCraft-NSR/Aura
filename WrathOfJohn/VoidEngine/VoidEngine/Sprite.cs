@@ -13,73 +13,78 @@ using Microsoft.Xna.Framework.Media;
 namespace VoidEngine
 {
 	/// <summary>
-	/// The Sprite class for VoidEngine
+	/// The sprite class for VoidEngine.
 	/// </summary>
 	public class Sprite
 	{
 		/// <summary>
-		/// The animation set for each type of animation in the player sprite sheet.
+		/// The sprites animation properties.
 		/// </summary>
 		public struct AnimationSet
 		{
 			/// <summary>
-			/// The name "In all caps" that is used in the animation
+			/// The name of the animation.
 			/// </summary>
 			public string name;
 			/// <summary>
-			/// The texture of the sprite sheet
+			/// The texture of the sprite sheet.
 			/// </summary>
 			public Texture2D texture;
 			/// <summary>
-			/// The size of each frame, all frames have to be the same size in one animation.
+			/// The size of the frame on the sprite sheet.
 			/// </summary>
 			public Point frameSize;
 			/// <summary>
-			/// The size of that animation in the sheet in frames.
+			/// The amount of the frames in the animation
 			/// </summary>
 			public Point sheetSize;
 			/// <summary>
-			/// The rate in milliseconds that the frames change
-			/// </summary>
-			public int framesPerMillisecond;
-			/// <summary>
-			/// The start Position in exact cordinates that the animation starts at.
+			/// The starting cordinates of the animation of the spritesheet.
 			/// </summary>
 			public Point startPosition;
+			/// <summary>
+			/// The tick of the animation.
+			/// </summary>
+			public int framesPerMillisecond;
 
 			/// <summary>
 			/// For creating a new animation set.
 			/// </summary>
-			/// <param name="name2">The name "In all caps" that is used in the animation</param>
-			/// <param name="texture2">The texture of the sprite sheet</param>
-			/// <param name="frameSize2">The size of each frame, all frames have to be the same size in one animation.</param>
-			/// <param name="sheetSize2">The size of that animation in the sheet in frames.</param>
-			/// <param name="startPosition2">The rate in milliseconds that the frames change</param>
-			/// <param name="name2"></param>
-			/// <param name="texture2"></param>
-			/// <param name="frameSize2"></param>
-			/// <param name="sheetSize2"></param>
-			/// <param name="startPosition2"></param>
-			/// <param name="framesPerMillisecond2"></param>
-			/// <param name="framesPerMillisecond2">The start Position in exact cordinates that the animation starts at.</param>
-			public AnimationSet(string name2, Texture2D texture2, Point frameSize2, Point sheetSize2, Point startPosition2, int framesPerMillisecond2)
+			/// <param name="name">The name of the animation.</param>
+			/// <param name="texture">The texture of the sprite sheet.</param>
+			/// <param name="frameSize">The size of the frame on the sprite sheet.</param>
+			/// <param name="sheetSize">The amount of frames in the animation.</param>
+			/// <param name="startPosition">The starting cordinates of the animation on the spritesheet.</param>
+			/// <param name="framesPerMillisecond">The tick of the animation.</param>
+			public AnimationSet(string name, Texture2D texture, Point frameSize, Point sheetSize, Point startPosition, int framesPerMillisecond)
 			{
-				name = name2;
-				texture = texture2;
-				frameSize = frameSize2;
-				sheetSize = sheetSize2;
-				framesPerMillisecond = framesPerMillisecond2;
-				startPosition = startPosition2;
+				this.name = name;
+				this.texture = texture;
+				this.frameSize = frameSize;
+				this.sheetSize = sheetSize;
+				this.startPosition = startPosition;
+				this.framesPerMillisecond = framesPerMillisecond;
 			}
+		}
+		
+		/// <summary>
+		/// The axis of the sprite to flip at.
+		/// </summary>
+		public enum Axis
+		{
+			X,
+			Y,
+			NONE
 		}
 
 		#region Animations
 		/// <summary>
-		/// Gets or sets the sprite's current animation.
+		/// Gets the current animation that the sprite is set to.
 		/// </summary>
 		public AnimationSet CurrentAnimation;
 		/// <summary>
 		/// Gets or sets the animation sets.
+		/// Can only be set by child or self.
 		/// </summary>
 		public List<AnimationSet> AnimationSets
 		{
@@ -87,21 +92,48 @@ namespace VoidEngine
 			protected set;
 		}
 		/// <summary>
-		/// Gets or sets the sprites current animation frame.
+		/// The current frame that the sprite is at in its animation.
 		/// </summary>
 		public Point CurrentFrame;
 		/// <summary>
-		/// Gets or sets the animations last frame time.
+		/// Gets or sets the animations frame tick time.
 		/// </summary>
-		public int LastFrameTime
+		protected int LastFrameTime
 		{
 			get;
-			protected set;
+			set;
 		}
 		/// <summary>
-		/// Gets or sets if the sprite is flipped.
+		/// Gets or sets the SpriteEffects value of the sprite.
 		/// </summary>
-		public SpriteEffects isFlipped
+		protected SpriteEffects flipEffect
+		{
+			get;
+			set;
+		}
+		/// <summary>
+		/// Gets if the sprite is flipped.
+		/// </summary>
+		public bool isFlipped
+		{
+			get
+			{
+				if (flipEffect != SpriteEffects.None)
+				{
+					return true;
+				}
+				
+				return false;
+			}
+		}
+		/// <summary>
+		/// The offset position of the sprite.
+		/// </summary>
+		public Vector2 Offset = Vector2.Zero;
+		/// <summary>
+		/// Gets ors sets the scale factor of the sprite.
+		/// </summary>
+		public float Scale
 		{
 			get;
 			protected set;
@@ -109,11 +141,13 @@ namespace VoidEngine
 		#endregion
 		#region Movement
 		/// <summary>
-		/// Gets or sets the direction that the sprite is moving towards.
+		/// The direction the player is moving twords.
+		/// Can only be used by child or self.
+		/// Only use -1, 0, or 1.
 		/// </summary>
 		protected Vector2 Direction;
 		/// <summary>
-		/// Gets the dirtection of the sprite, publicly.
+		/// Gets the dirtection of the sprite.
 		/// </summary>
 		public Vector2 GetDirection
 		{
@@ -123,11 +157,12 @@ namespace VoidEngine
 			}
 		}
 		/// <summary>
-		/// Gets or sets the position that the sprite is at.
+		/// The position that the player is at.
+		/// Can only be used by child or self.
 		/// </summary>
 		protected Vector2 Position;
 		/// <summary>
-		/// Gets the position that the sprite is at, publicly.
+		/// Gets the position that the sprite is at.
 		/// </summary>
 		public Vector2 GetPosition
 		{
@@ -138,6 +173,9 @@ namespace VoidEngine
 		}
 		/// <summary>
 		/// Gets or sets the Speed that the sprite moves at.
+		/// Can only be set by child or self.
+		/// Used for the movement speed of the sprite.
+		/// It is recomended to use values between -1 and 1.
 		/// <summary>
 		public float Speed
 		{
@@ -145,14 +183,36 @@ namespace VoidEngine
 			protected set;
 		}
 		/// <summary>
+		/// Gets or sets the rotation of the sprite.
+		/// Can only be set by child or self.
+		/// Use values between 0 and 1.
+		/// Ex. 'Rotation = $Degree$ * (float)Math.PI / 180;'
+		/// </summary>
+		public float Rotation
+		{
+			get;
+			protected set;
+		}
+		/// <summary>
+		/// The point to move the sprite from.
+		/// Other wise known as the origin.
+		/// </summary>
+		public Vector2 RotationCenter = Vector2.Zero;
+		/// <summary>
 		/// Gets or sets weither the spite can move or not.
+		/// Can be only set by child or self.
+		/// Used to stop the player from moving.
 		/// </summary>
 		public bool CanMove
 		{
 			get;
 			protected set;
 		}
-
+		/// <summary>
+		/// Gets or sets if the sprite is moving.
+		/// Can be only set by child or self.
+		/// Used to tell if the player is moving.
+		/// </summary>
 		public bool isMoving
 		{
 			get;
@@ -160,13 +220,19 @@ namespace VoidEngine
 		}
 		/// <summary>
 		/// Gets or sets the list of keys that the sprite uses.
+		/// Can be only set by child or self.
 		/// Indexes: [0]: Left | [1]: Up | [2]: Right | [3]: Down | [4]: Custom1 | [5]: Custom2 | [6]: Custom3 | [?]: etc.
 		/// </summary>
-		protected List<Keys> MovementKeys;
+		public List<Keys> MovementKeys
+		{
+			get;
+			protected set;
+		}
 		#endregion
 
 		/// <summary>
 		/// Gets or sets the sprites color.
+		/// Can be only set by child or self.
 		/// </summary>
 		public Color _Color
 		{
@@ -175,10 +241,11 @@ namespace VoidEngine
 		}
 
 		/// <summary>
-		/// Creates the sprite with custom properties
+		/// Creates a sprite.
 		/// </summary>
-		/// <param name="postion">The Position of the sprite.</param>
-		/// <param name="animationSetList">The list of animations.</param>
+		/// <param name="postion">The stating position of the sprite.</param>
+		/// <param name="color">The color to mask the sprite with.</param>
+		/// <param name="animationSetList">The animation set of the sprite.</param>
 		public Sprite(Vector2 position, Color color, List<AnimationSet> animationSetList)
 		{
 			MovementKeys = new List<Keys>();
@@ -187,12 +254,15 @@ namespace VoidEngine
 			Position = position;
 			LastFrameTime = 0;
 			_Color = color;
+			Scale = 1f;
 		}
 
 		/// <summary>
-		/// Put this in the Update function
+		/// Update's the sprites frames.
+		/// To make custom update functions, add the sprite class as
+		/// a child of a class. Be sure to use 'using VoidEngine;'.
 		/// </summary>
-		/// <param name="gameTime">The main GameTime</param>
+		/// <param name="gameTime">The game time that the game runs off of.</param>
 		public virtual void Update(GameTime gameTime)
 		{
 			LastFrameTime += gameTime.ElapsedGameTime.Milliseconds;
@@ -217,19 +287,20 @@ namespace VoidEngine
 		}
 
 		/// <summary>
+		/// Used to draw the sprite.
 		/// Put inbetween the spriteBatch.Begin and spriteBatch.End
 		/// </summary>
-		/// <param name="gameTime">The main GameTime</param>
-		/// <param name="spriteBatch">The main SpriteBatch</param>
+		/// <param name="gameTime">The game time, that the game runs off of.</param>
+		/// <param name="spriteBatch">The sprite batch to draw from.</param>
 		public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 		{
-			spriteBatch.Draw(CurrentAnimation.texture, this.Position, new Rectangle(CurrentAnimation.startPosition.X + (CurrentFrame.X * CurrentAnimation.frameSize.X), CurrentAnimation.startPosition.Y + (CurrentFrame.Y * CurrentAnimation.frameSize.Y), CurrentAnimation.frameSize.X, CurrentAnimation.frameSize.Y), _Color, 0f, Vector2.Zero, 1f, isFlipped, 0);
+			spriteBatch.Draw(CurrentAnimation.texture, Position - Offset, new Rectangle(CurrentAnimation.startPosition.X + (CurrentFrame.X * CurrentAnimation.frameSize.X), CurrentAnimation.startPosition.Y + (CurrentFrame.Y * CurrentAnimation.frameSize.Y), CurrentAnimation.frameSize.X, CurrentAnimation.frameSize.Y), _Color, Rotation, RotationCenter, Scale, flipEffect, 0);
 		}
 
 		/// <summary>
-		/// Set the currentAnimation.
+		/// Sets the current animation based off of it's name.
 		/// </summary>
-		/// <param name="setName">The name of the animation to set.</param>
+		/// <param name="setName">The name of the animation to set the sprite to.</param>
 		public void SetAnimation(string setName)
 		{
 			if (CurrentAnimation.name != setName)
@@ -246,18 +317,24 @@ namespace VoidEngine
 		}
 
 		/// <summary>
-		/// Flips the sprite texture based off a bool
+		/// Flips the sprite texture based off a bool and axis.
+		/// To flip back turn isFlip to false or use the second version.
 		/// </summary>
 		/// <param name="isFlip">The bool to flip</param>
-		protected void FlipSprite(bool isFlip)
+		/// <param name="axis">The axis to flip on</param>
+		protected void FlipSprite(Axis axis)
 		{
-			if (isFlip)
+			if (axis == Axis.Y)
 			{
-				isFlipped = SpriteEffects.FlipHorizontally;
+				flipEffect = SpriteEffects.FlipHorizontally;
 			}
-			else
+			if (axis == Axis.X)
 			{
-				isFlipped = SpriteEffects.None;
+				flipEffect = SpriteEffects.FlipVertically;
+			}
+			if (axis == Axis.NONE)
+			{
+				flipEffect = SpriteEffects.None;
 			}
 		}
 	}

@@ -84,6 +84,7 @@ namespace WrathOfJohn
 				myGame.gameManager.player.Lives = 3;
 				myGame.gameManager.level = 2;
 				myGame.gameManager.levelLoaded = false;
+				myGame.menuManager.title = false;
 			}
 			if (retry.Clicked())
 			{

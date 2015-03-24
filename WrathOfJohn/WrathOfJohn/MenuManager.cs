@@ -25,7 +25,8 @@ namespace WrathOfJohn
 		Button optionsButton;
 		Game1 myGame;
 		List<Sprite.AnimationSet> animationSpriteList;
-
+		Song titleSong;
+		public bool title = false;
 		public MenuManager(Game1 game)
 			: base(game)
 		{
@@ -47,6 +48,8 @@ namespace WrathOfJohn
 
 			background = Game.Content.Load<Texture2D>(@"images\screens\menu");
 			buttonTexture = Game.Content.Load<Texture2D>(@"images\gui\button");
+			titleSong = Game.Content.Load<Song>(@"sounds\music\title");
+
 
 			animationSpriteList.Add(new Sprite.AnimationSet("IDLE", buttonTexture, new Point(170, 46), new Point(0, 0), new Point(0, 0), 0));
 			animationSpriteList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 0), new Point(170, 0), 0));
@@ -64,6 +67,12 @@ namespace WrathOfJohn
 			exitButton.Update(gameTime);
 			playButton.Update(gameTime);
 			optionsButton.Update(gameTime);
+
+			if (!title && myGame.currentGameLevel == Game1.GameLevels.MENU)
+			{
+				MediaPlayer.Play(titleSong);
+				title = false;
+			}
 
 			if (exitButton.Clicked())
 			{

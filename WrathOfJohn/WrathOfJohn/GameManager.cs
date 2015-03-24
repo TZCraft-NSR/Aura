@@ -34,7 +34,6 @@ namespace WrathOfJohn
 		Song finalBossSong;
 		Song caveSong;
 		Song plainsvillagesSong;
-		Song titleSong;
 		public SoundEffect shootSFX;
 		public SoundEffect bosshitSFX;
 		public SoundEffect enemyhitSFX;
@@ -336,7 +335,7 @@ namespace WrathOfJohn
 			spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
 			playerTexture = Game.Content.Load<Texture2D>(@"images\players\mage");
-			debugDotTexture = Game.Content.Load<Texture2D>(@"images\debug\line");
+			debugDotTexture = Game.Content.Load<Texture2D>(@"images\other\line");
 			ProjectileTexture = Game.Content.Load<Texture2D>(@"images\projectiles\beam");
 			plainsParallax1 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground1");
 			plainsParallax2 = Game.Content.Load<Texture2D>(@"images\parallax\plainsbackground2");
@@ -362,7 +361,6 @@ namespace WrathOfJohn
 			finalBossSong = Game.Content.Load<Song>(@"sounds\music\finalboss");
 			caveSong = Game.Content.Load<Song>(@"sounds\music\cave");
 			plainsvillagesSong = Game.Content.Load<Song>(@"sounds\music\plains-villages");
-			titleSong = Game.Content.Load<Song>(@"sounds\music\title");
 			shootSFX = Game.Content.Load<SoundEffect>(@"sounds\sfx\projectiles");
 			bosshitSFX = Game.Content.Load<SoundEffect>(@"sounds\sfx\bosshit");
 			enemyhitSFX = Game.Content.Load<SoundEffect>(@"sounds\sfx\enemyhit");
@@ -728,6 +726,7 @@ namespace WrathOfJohn
 			spriteBatch.End();
 
 			// Debug Rectangles
+			/*
 			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
 			{
 				for (int i = 0; i < platformRectangles.Count; i++)
@@ -790,6 +789,7 @@ namespace WrathOfJohn
 				debugLabel.Draw(gameTime, spriteBatch);
 			}
 			spriteBatch.End();
+			*/
 
 			base.Draw(gameTime);
 		}

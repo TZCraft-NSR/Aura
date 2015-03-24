@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using VoidEngine;
 
-namespace WrathOfJohn
+namespace Aura
 {
 	/// <summary>
 	/// This is a game component that implements IUpdateable.
@@ -75,6 +75,7 @@ namespace WrathOfJohn
 
 			if (exit.Clicked())
 			{
+				MediaPlayer.Stop();
 				myGame.Exit();
 			}
 			if (mainMenu.Clicked())

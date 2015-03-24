@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using VoidEngine;
 
-namespace WrathOfJohn
+namespace Aura
 {
 	public class Player : Sprite
 	{
@@ -204,7 +204,7 @@ namespace WrathOfJohn
 
 			#region Set Movement and Collision Factors
 			MovementKeys = movementKeys;
-			Speed = 2.35f;
+			Speed = 2.6f;
 			GravityForce = gravity;
 			DefaultGravityForce = gravity;
 			SetAnimation("IDLE");
@@ -461,7 +461,7 @@ namespace WrathOfJohn
 			if (CreateNewProjectile && CanShootProjectile && _Mana.mana >= _Mana.maxMana / shootFactor - 1)
 			{
 				_Mana.mana -= shootFactor;
-				Projectile projectile = new Projectile(new Vector2(Position.X - 5, Position.Y - 10), Color.White, ProjectileAnimationSet, this, myGame);
+				Projectile projectile = new Projectile(new Vector2(Position.X - 5, Position.Y + 11), Color.White, ProjectileAnimationSet, this, myGame);
 				ProjectileList.Add(projectile);
 				projectile.Fire();
 				myGame.gameManager.shootSFX.Play(1f, 0f, 0f);
@@ -532,7 +532,7 @@ namespace WrathOfJohn
 		{
 			if (rectangle1.TouchTopOf(rectangle2))
 			{
-				Position.Y = rectangle2.Top - rectangle1.Height;
+				Position.Y = rectangle2.Top - rectangle1.Height - 2f;
 				Direction.Y = 0f;
 				isGrounded = true;
 				canFall = false;
@@ -540,15 +540,15 @@ namespace WrathOfJohn
 			}
 			if (rectangle1.TouchLeftOf(rectangle2))
 			{
-				Position.X = rectangle2.Left - rectangle1.Width;
+				Position.X = rectangle2.Left - rectangle1.Width - 2f;
 			}
 			if (rectangle1.TouchRightOf(rectangle2))
 			{
-				Position.X = rectangle2.Right;
+				Position.X = rectangle2.Right + 2f;
 			}
 			if (rectangle1.TouchBottomOf(rectangle2))
 			{
-				Direction.Y = 0f;
+				Position.Y = rectangle1.Bottom - 25f;
 				isJumping = false;
 				canFall = true;
 				isFalling = true;

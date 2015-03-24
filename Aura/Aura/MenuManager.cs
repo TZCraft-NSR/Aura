@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using VoidEngine;
 
-namespace WrathOfJohn
+namespace Aura
 {
 	/// <summary>
 	/// This is a game component that implements IUpdateable.
@@ -18,15 +18,24 @@ namespace WrathOfJohn
 	public class MenuManager : Microsoft.Xna.Framework.DrawableGameComponent
 	{
 		SpriteBatch spriteBatch;
+		Game1 myGame;
+
 		Texture2D background;
 		Texture2D buttonTexture;
+		Song titleSong;
+
 		Button playButton;
 		Button exitButton;
 		Button optionsButton;
-		Game1 myGame;
+
 		List<Sprite.AnimationSet> animationSpriteList;
-		Song titleSong;
-		public bool title = false;
+
+		public bool title
+		{
+			get;
+			set;
+		}
+
 		public MenuManager(Game1 game)
 			: base(game)
 		{
@@ -70,12 +79,14 @@ namespace WrathOfJohn
 
 			if (!title && myGame.currentGameLevel == Game1.GameLevels.MENU)
 			{
+				MediaPlayer.Stop();
 				MediaPlayer.Play(titleSong);
-				title = false;
+				title = true;
 			}
 
 			if (exitButton.Clicked())
 			{
+				MediaPlayer.Stop();
 				myGame.Exit();
 			}
 			if (playButton.Clicked())

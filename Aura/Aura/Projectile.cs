@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using VoidEngine;
 
-namespace WrathOfJohn
+namespace Aura
 {
 	public class Projectile : Sprite
 	{

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VoidEngine;
 
-namespace WrathOfJohn
+namespace Aura
 {
 	public class Enemy : Player
 	{
@@ -42,7 +42,7 @@ namespace WrathOfJohn
 
 			if (movementType == MovementType.BOSSHEAD)
 			{
-				Lives = 3;
+				Lives = 30;
 				SetAnimation("IDLE1");
 			}
 			else if (movementType == MovementType.FLY)
@@ -67,7 +67,15 @@ namespace WrathOfJohn
 			#endregion
 
 			ProjectileList = new List<Projectile>();
-			playerCollisions = new Rectangle((int)Position.X, (int)Position.Y, animationSetList[0].frameSize.X, animationSetList[0].frameSize.Y);
+
+			if (movementType != MovementType.HORIZONTAL)
+			{
+				playerCollisions = new Rectangle((int)Position.X, (int)Position.Y - 20, animationSetList[0].frameSize.X, animationSetList[0].frameSize.Y + 20);
+			}
+			else
+			{
+				playerCollisions = new Rectangle((int)Position.X, (int)Position.Y, animationSetList[0].frameSize.X, animationSetList[0].frameSize.Y);
+			}
 		}
 
 		public override void Update(GameTime gameTime)

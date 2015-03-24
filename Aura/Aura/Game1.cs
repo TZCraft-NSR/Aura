@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using VoidEngine;
 
-namespace WrathOfJohn
+namespace Aura
 {
 	/// <summary>
 	/// This is the main type for your game
@@ -109,7 +109,7 @@ namespace WrathOfJohn
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
-			Window.Title = "Wrath Of John: We are here!!!";
+			Window.Title = "Aura: We are here!!!";
 			Content.RootDirectory = "Content";
 			graphics.PreferredBackBufferWidth = (int)resolution.X;
 			graphics.PreferredBackBufferHeight = (int)resolution.Y;

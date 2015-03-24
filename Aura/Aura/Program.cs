@@ -1,6 +1,6 @@
 using System;
 
-namespace WrathOfJohn
+namespace Aura
 {
 #if WINDOWS || XBOX
 	static class Program

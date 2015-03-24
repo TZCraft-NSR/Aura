@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using VoidEngine;
 
-namespace WrathOfJohn
+namespace Aura
 {
 	/// <summary>
 	/// This is a game component that implements IUpdateable.
@@ -37,7 +37,9 @@ namespace WrathOfJohn
 		public SoundEffect shootSFX;
 		public SoundEffect bosshitSFX;
 		public SoundEffect enemyhitSFX;
+		public SpriteFont wintext;
 		bool musicStarted;
+		int timer = 10000;
 
 		#region Player Variables
 		/// <summary>
@@ -364,6 +366,7 @@ namespace WrathOfJohn
 			shootSFX = Game.Content.Load<SoundEffect>(@"sounds\sfx\projectiles");
 			bosshitSFX = Game.Content.Load<SoundEffect>(@"sounds\sfx\bosshit");
 			enemyhitSFX = Game.Content.Load<SoundEffect>(@"sounds\sfx\enemyhit");
+			wintext = Game.Content.Load<SpriteFont>(@"fonts\segoeuiregularlarge");
 
 			camera = new Camera(GraphicsDevice.Viewport, new Point(6400, 450), 1f);
 			camera.Position = new Vector2(0, 0);
@@ -599,13 +602,7 @@ namespace WrathOfJohn
 										DebugLines[6] + "\n" + DebugLines[7] + "\n" +
 										DebugLines[8] + "\n" + DebugLines[9]);
 
-			DebugLines[0] = "IsGrounded=" + player.isGrounded + " IsJumping=" + player.isJumping + " IsFalling=" + player.isFalling + " Direction=(" + player.GetDirection.X + "," + player.GetDirection.Y + ")";
-			DebugLines[3] = "mana=" + player._Mana.mana + " maxMana=" + player._Mana.maxMana + " manaRechargeTime=" + player._Mana.manaRechargeTime + " manaInterval=" + player._Mana.manaInterval;
-			DebugLines[4] = "CanShoot=" + player.CanShootProjectile + " CreateNew=" + player.CreateNewProjectile + " HasShot=" + player.HasShotProjectile + " projectileListCreated=" + player.ProjectileListCreated;
-			DebugLines[6] = "Player Dead=" + player.Dead + " Player Lives=" + player.Lives;
-			DebugLines[7] = "Boss Head Lives=" + bhEnemy.Lives + " is Boss Head Dead=" + bhEnemy.Dead + " Boss Head Cords=(" + bhEnemy.GetPosition.X + "," + bhEnemy.GetPosition.Y + ")";
-			DebugLines[8] = "Boss Fist Left Center=(" + bflEnemy.PositionCenter.X + "," + bflEnemy.PositionCenter.Y + ") Boss Fist Left Direction=(" + bflEnemy.PositionCenter.X + "," + bflEnemy.PositionCenter.Y + ") Boss Fist Left Direction=(" + bflEnemy.GetDirection.X + "," + bflEnemy.GetDirection.Y + ")";
-			DebugLines[9] = "Boss Fist Right Center=(" + bfrEnemy.PositionCenter.X + "," + bfrEnemy.PositionCenter.Y + ") Boss Fist Right Direction=(" + bfrEnemy.PositionCenter.X + "," + bfrEnemy.PositionCenter.Y + ") Boss Fist Right Direction=(" + bfrEnemy.GetDirection.X + "," + bfrEnemy.GetDirection.Y + ")";
+			DebugLines[0] = "Memory=" ;
 
 			base.Update(gameTime);
 		}
@@ -714,72 +711,90 @@ namespace WrathOfJohn
 			}
 			spriteBatch.End();
 
-			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
+			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null);
 			{
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)(camera.Position.X - 385), 15, (int)(player._Mana.mana * 2), 10), Color.Red);
+				spriteBatch.Draw(debugDotTexture, new Rectangle(15, 15, (int)(player._Mana.mana * 2), 10), Color.Red);
 
 				if (BossCreated && !bhEnemy.Dead)
 				{
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)((camera.Position.X + (myGame.WindowSize.X / 4)) - (27 * 2)), 15, (int)bhEnemy.Lives * 8, 10), Color.Purple);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)myGame.WindowSize.X - (27 * 2), 15, (int)bhEnemy.Lives * 8, 10), Color.Purple);
+				}
+			}
+			spriteBatch.End();
+
+			spriteBatch.Begin();
+			{
+				if (bhEnemy.Dead)
+				{
+					spriteBatch.DrawString(wintext, "Y O U  W I N ! ! !", new Vector2((myGame.WindowSize.X - wintext.MeasureString("Y O U  W I N ! ! !").X) / 2, 25), Color.OrangeRed);
+
+					timer -= gameTime.ElapsedGameTime.Milliseconds;
+
+					if (timer <= 0)
+					{
+						myGame.SetCurrentLevel(Game1.GameLevels.MENU);
+						timer = 10000;
+					}
 				}
 			}
 			spriteBatch.End();
 
 			// Debug Rectangles
-			/*
 			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
 			{
-				for (int i = 0; i < platformRectangles.Count; i++)
-				{
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X + (int)platformRectangles[i].Width, (int)platformRectangles[i].Y, 1, (int)platformRectangles[i].Height), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y + (int)platformRectangles[i].Height, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, 1, (int)platformRectangles[i].Height), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
-				}
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, (int)PlayerCollisions.Width, 1), Color.Blue);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X + (int)PlayerCollisions.Width, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Red);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y + (int)PlayerCollisions.Height, (int)PlayerCollisions.Width, 1), Color.Green);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Yellow);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y, (int)bhEnemy.playerCollisions.Width, 1), Color.Blue);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X + (int)bhEnemy.playerCollisions.Width, (int)bhEnemy.playerCollisions.Y, 1, (int)bhEnemy.playerCollisions.Height), Color.Red);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y + (int)bhEnemy.playerCollisions.Height, (int)bhEnemy.playerCollisions.Width, 1), Color.Green);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y, 1, (int)bhEnemy.playerCollisions.Height), Color.Yellow);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y, (int)bfrEnemy.playerCollisions.Width, 1), Color.Blue);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X + (int)bfrEnemy.playerCollisions.Width, (int)bfrEnemy.playerCollisions.Y, 1, (int)bfrEnemy.playerCollisions.Height), Color.Red);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y + (int)bfrEnemy.playerCollisions.Height, (int)bfrEnemy.playerCollisions.Width, 1), Color.Green);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y, 1, (int)bfrEnemy.playerCollisions.Height), Color.Yellow);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y, (int)bflEnemy.playerCollisions.Width, 1), Color.Blue);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X + (int)bflEnemy.playerCollisions.Width, (int)bflEnemy.playerCollisions.Y, 1, (int)bflEnemy.playerCollisions.Height), Color.Red);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y + (int)bflEnemy.playerCollisions.Height, (int)bflEnemy.playerCollisions.Width, 1), Color.Green);
-				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y, 1, (int)bflEnemy.playerCollisions.Height), Color.Yellow);
-				for (int i = 0; i < cEnemyList.Count; i++)
-				{
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y, (int)cEnemyList[i].playerCollisions.Width, 1), Color.Blue);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X + (int)cEnemyList[i].playerCollisions.Width, (int)cEnemyList[i].playerCollisions.Y, 1, (int)cEnemyList[i].playerCollisions.Height), Color.Red);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y + (int)cEnemyList[i].playerCollisions.Height, (int)cEnemyList[i].playerCollisions.Width, 1), Color.Green);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y, 1, (int)cEnemyList[i].playerCollisions.Height), Color.Yellow);
-				}
-				for (int i = 0; i < tEnemyList.Count; i++)
-				{
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y, (int)tEnemyList[i].playerCollisions.Width, 1), Color.Blue);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X + (int)tEnemyList[i].playerCollisions.Width, (int)tEnemyList[i].playerCollisions.Y, 1, (int)tEnemyList[i].playerCollisions.Height), Color.Red);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y + (int)tEnemyList[i].playerCollisions.Height, (int)tEnemyList[i].playerCollisions.Width, 1), Color.Green);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y, 1, (int)tEnemyList[i].playerCollisions.Height), Color.Yellow);
-				}
-				for (int i = 0; i < sEnemyList.Count; i++)
-				{
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y, (int)sEnemyList[i].playerCollisions.Width, 1), Color.Blue);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X + (int)sEnemyList[i].playerCollisions.Width, (int)sEnemyList[i].playerCollisions.Y, 1, (int)sEnemyList[i].playerCollisions.Height), Color.Red);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y + (int)sEnemyList[i].playerCollisions.Height, (int)sEnemyList[i].playerCollisions.Width, 1), Color.Green);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y, 1, (int)sEnemyList[i].playerCollisions.Height), Color.Yellow);
-				}
-				for (int i = 0; i < mapSegments.Count; i++)
-				{
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y, (int)mapSegments[i].Width, 1), Color.Blue);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X + (int)mapSegments[i].Width, (int)mapSegments[i].Y, 1, (int)mapSegments[i].Height), Color.Red);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y + (int)mapSegments[i].Height, (int)mapSegments[i].Width, 1), Color.Green);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y, 1, (int)mapSegments[i].Height), Color.Yellow);
-				}
+				/*
+					for (int i = 0; i < platformRectangles.Count; i++)
+					{
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X + (int)platformRectangles[i].Width, (int)platformRectangles[i].Y, 1, (int)platformRectangles[i].Height), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y + (int)platformRectangles[i].Height, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, 1, (int)platformRectangles[i].Height), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
+					}
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, (int)PlayerCollisions.Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X + (int)PlayerCollisions.Width, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y + (int)PlayerCollisions.Height, (int)PlayerCollisions.Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Yellow);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y, (int)bhEnemy.playerCollisions.Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X + (int)bhEnemy.playerCollisions.Width, (int)bhEnemy.playerCollisions.Y, 1, (int)bhEnemy.playerCollisions.Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y + (int)bhEnemy.playerCollisions.Height, (int)bhEnemy.playerCollisions.Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y, 1, (int)bhEnemy.playerCollisions.Height), Color.Yellow);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y, (int)bfrEnemy.playerCollisions.Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X + (int)bfrEnemy.playerCollisions.Width, (int)bfrEnemy.playerCollisions.Y, 1, (int)bfrEnemy.playerCollisions.Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y + (int)bfrEnemy.playerCollisions.Height, (int)bfrEnemy.playerCollisions.Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y, 1, (int)bfrEnemy.playerCollisions.Height), Color.Yellow);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y, (int)bflEnemy.playerCollisions.Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X + (int)bflEnemy.playerCollisions.Width, (int)bflEnemy.playerCollisions.Y, 1, (int)bflEnemy.playerCollisions.Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y + (int)bflEnemy.playerCollisions.Height, (int)bflEnemy.playerCollisions.Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y, 1, (int)bflEnemy.playerCollisions.Height), Color.Yellow);
+					for (int i = 0; i < cEnemyList.Count; i++)
+					{
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y, (int)cEnemyList[i].playerCollisions.Width, 1), Color.Blue);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X + (int)cEnemyList[i].playerCollisions.Width, (int)cEnemyList[i].playerCollisions.Y, 1, (int)cEnemyList[i].playerCollisions.Height), Color.Red);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y + (int)cEnemyList[i].playerCollisions.Height, (int)cEnemyList[i].playerCollisions.Width, 1), Color.Green);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y, 1, (int)cEnemyList[i].playerCollisions.Height), Color.Yellow);
+					}
+					for (int i = 0; i < tEnemyList.Count; i++)
+					{
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y, (int)tEnemyList[i].playerCollisions.Width, 1), Color.Blue);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X + (int)tEnemyList[i].playerCollisions.Width, (int)tEnemyList[i].playerCollisions.Y, 1, (int)tEnemyList[i].playerCollisions.Height), Color.Red);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y + (int)tEnemyList[i].playerCollisions.Height, (int)tEnemyList[i].playerCollisions.Width, 1), Color.Green);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y, 1, (int)tEnemyList[i].playerCollisions.Height), Color.Yellow);
+					}
+					for (int i = 0; i < sEnemyList.Count; i++)
+					{
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y, (int)sEnemyList[i].playerCollisions.Width, 1), Color.Blue);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X + (int)sEnemyList[i].playerCollisions.Width, (int)sEnemyList[i].playerCollisions.Y, 1, (int)sEnemyList[i].playerCollisions.Height), Color.Red);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y + (int)sEnemyList[i].playerCollisions.Height, (int)sEnemyList[i].playerCollisions.Width, 1), Color.Green);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y, 1, (int)sEnemyList[i].playerCollisions.Height), Color.Yellow);
+					}
+					for (int i = 0; i < mapSegments.Count; i++)
+					{
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y, (int)mapSegments[i].Width, 1), Color.Blue);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X + (int)mapSegments[i].Width, (int)mapSegments[i].Y, 1, (int)mapSegments[i].Height), Color.Red);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y + (int)mapSegments[i].Height, (int)mapSegments[i].Width, 1), Color.Green);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y, 1, (int)mapSegments[i].Height), Color.Yellow);
+					}
+				*/
 			}
 			spriteBatch.End();
 
@@ -789,7 +804,6 @@ namespace WrathOfJohn
 				debugLabel.Draw(gameTime, spriteBatch);
 			}
 			spriteBatch.End();
-			*/
 
 			base.Draw(gameTime);
 		}

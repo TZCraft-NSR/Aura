@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enemy.cs" />
+    <Compile Include="LoseManager.cs" />
     <Compile Include="Maps.cs" />
     <Compile Include="OptionsManager.cs" />
     <Compile Include="PlatformManager.cs" />

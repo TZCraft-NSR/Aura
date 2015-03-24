@@ -23,7 +23,7 @@ namespace WrathOfJohn
 			MENU,
 			OPTIONS,
 			GAME,
-			BOSS
+			LOSE
 		}
 		public enum Ratio
 		{
@@ -92,6 +92,7 @@ namespace WrathOfJohn
 		public GameManager gameManager;
 		public MenuManager menuManager;
 		public OptionsManager optionsManager;
+		public LoseManager loseManager;
 		public GameLevels currentGameLevel;
 		#endregion
 
@@ -150,11 +151,13 @@ namespace WrathOfJohn
 			menuManager = new MenuManager(this);
 			optionsManager = new OptionsManager(this);
 			gameManager = new GameManager(this);
+			loseManager = new LoseManager(this);
 
 			Components.Add(splashScreenManager);
 			Components.Add(menuManager);
 			Components.Add(optionsManager);
 			Components.Add(gameManager);
+			Components.Add(loseManager);
 
 			splashScreenManager.Enabled = true;
 			splashScreenManager.Visible = true;
@@ -164,6 +167,8 @@ namespace WrathOfJohn
 			optionsManager.Visible = false;
 			gameManager.Enabled = false;
 			gameManager.Visible = false;
+			loseManager.Enabled = false;
+			loseManager.Visible = false;
 
 			currentGameLevel = GameLevels.SPLASH;
 
@@ -250,6 +255,8 @@ namespace WrathOfJohn
 				gameManager.Visible = false;
 				optionsManager.Enabled = false;
 				optionsManager.Visible = false;
+				loseManager.Enabled = false;
+				loseManager.Visible = false;
 			}
 
 			switch (currentGameLevel)
@@ -269,6 +276,10 @@ namespace WrathOfJohn
 				case GameLevels.GAME:
 					gameManager.Enabled = true;
 					gameManager.Visible = true;
+					break;
+				case GameLevels.LOSE:
+					loseManager.Enabled = true;
+					loseManager.Visible = true;
 					break;
 				default:
 					break;

@@ -28,10 +28,16 @@ namespace WrathOfJohn
 		/// <summary>
 		/// The games camera
 		/// </summary>
-		Camera camera;
+		public Camera camera;
 
 		Song forestSong;
-		Song finalBoss;
+		Song finalBossSong;
+		Song caveSong;
+		Song plainsvillagesSong;
+		Song titleSong;
+		public SoundEffect shootSFX;
+		public SoundEffect bosshitSFX;
+		public SoundEffect enemyhitSFX;
 		bool musicStarted;
 
 		#region Player Variables
@@ -135,7 +141,7 @@ namespace WrathOfJohn
 		public int level
 		{
 			get;
-			protected set;
+			set;
 		}
 		/// <summary>
 		/// Gets or sets if the level has been set.
@@ -143,7 +149,7 @@ namespace WrathOfJohn
 		public bool levelLoaded
 		{
 			get;
-			protected set;
+			set;
 		}
 		/// <summary>
 		/// Gets or sets if the player won the current level.
@@ -249,12 +255,18 @@ namespace WrathOfJohn
 		List<Sprite.AnimationSet> cEnemyAnimationSetList;
 		List<Sprite.AnimationSet> sEnemyAnimationSetList;
 		List<Sprite.AnimationSet> tEnemyAnimationSetList;
+		List<Sprite.AnimationSet> bflEnemyAnimationSetList;
+		List<Sprite.AnimationSet> bfrEnemyAnimationSetList;
+		List<Sprite.AnimationSet> bhEnemyAnimationSetList;
 		/// <summary>
 		/// The player class' texture.
 		/// </summary>
 		Texture2D cEnemyTexture;
 		Texture2D sEnemyTexture;
 		Texture2D tEnemyTexture;
+		Texture2D bflEnemyTexture;
+		Texture2D bfrEnemyTexture;
+		Texture2D bhEnemyTexture;
 		/// <summary>
 		/// The player segment collisions.
 		/// </summary>
@@ -262,6 +274,10 @@ namespace WrathOfJohn
 		public List<Enemy> cEnemyList;
 		public List<Enemy> sEnemyList;
 		public List<Enemy> tEnemyList;
+		public Enemy bflEnemy;
+		public Enemy bfrEnemy;
+		public Enemy bhEnemy;
+		public bool BossCreated;
 		#endregion
 
 		/// <summary>
@@ -291,6 +307,10 @@ namespace WrathOfJohn
 			sEnemyAnimationSetList = new List<Sprite.AnimationSet>();
 			tEnemyList = new List<Enemy>();
 			tEnemyAnimationSetList = new List<Sprite.AnimationSet>();
+
+			bflEnemyAnimationSetList = new List<Sprite.AnimationSet>();
+			bfrEnemyAnimationSetList = new List<Sprite.AnimationSet>();
+			bhEnemyAnimationSetList = new List<Sprite.AnimationSet>();
 
 			platformList = new List<PlatformManager>();
 			platformAnimationSetList = new List<Sprite.AnimationSet>();
@@ -331,12 +351,21 @@ namespace WrathOfJohn
 			cEnemyTexture = Game.Content.Load<Texture2D>(@"images\enemies\CircleEnemy");
 			sEnemyTexture = Game.Content.Load<Texture2D>(@"images\enemies\SquareEnemy");
 			tEnemyTexture = Game.Content.Load<Texture2D>(@"images\enemies\TriangleEnemy");
+			bflEnemyTexture = Game.Content.Load<Texture2D>(@"images\boss\bossfistleft");
+			bfrEnemyTexture = Game.Content.Load<Texture2D>(@"images\boss\bossfistright");
+			bhEnemyTexture = Game.Content.Load<Texture2D>(@"images\boss\bosshead");
 			plainsPlatformTexture = Game.Content.Load<Texture2D>(@"images\tiles\plainsTiles");
 			forestPlatformTexture = Game.Content.Load<Texture2D>(@"images\tiles\forestTiles");
 			cavePlatformTexture = Game.Content.Load<Texture2D>(@"images\tiles\caveTiles");
 			villagePlatformTexture = Game.Content.Load<Texture2D>(@"images\tiles\villageTiles");
 			forestSong = Game.Content.Load<Song>(@"sounds\music\forest");
-			finalBoss = Game.Content.Load<Song>(@"sounds\music\finalboss");
+			finalBossSong = Game.Content.Load<Song>(@"sounds\music\finalboss");
+			caveSong = Game.Content.Load<Song>(@"sounds\music\cave");
+			plainsvillagesSong = Game.Content.Load<Song>(@"sounds\music\plains-villages");
+			titleSong = Game.Content.Load<Song>(@"sounds\music\title");
+			shootSFX = Game.Content.Load<SoundEffect>(@"sounds\sfx\projectiles");
+			bosshitSFX = Game.Content.Load<SoundEffect>(@"sounds\sfx\bosshit");
+			enemyhitSFX = Game.Content.Load<SoundEffect>(@"sounds\sfx\enemyhit");
 
 			camera = new Camera(GraphicsDevice.Viewport, new Point(6400, 450), 1f);
 			camera.Position = new Vector2(0, 0);
@@ -348,7 +377,7 @@ namespace WrathOfJohn
 			plainsParallax2Background = new ParallaxBackground(plainsParallax2, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
 			plainsParallax3Background = new ParallaxBackground(plainsParallax3, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.250f, camera);
 
-			villageParallax1Background = new ParallaxBackground(villageParallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
+			villageParallax1Background = new ParallaxBackground(villageParallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 0.750f, camera);
 
 			forestParallax1Background = new ParallaxBackground(forestParallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
 			forestParallax2Background = new ParallaxBackground(forestParallax2, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
@@ -372,6 +401,16 @@ namespace WrathOfJohn
 			//Needs edit ^
 			tEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", tEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1000));
 			//Needs edit ^
+
+			bflEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", bflEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 1600));
+			bfrEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", bfrEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 1600));
+			bflEnemyAnimationSetList.Add(new Sprite.AnimationSet("CHASE", bflEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100));
+			bfrEnemyAnimationSetList.Add(new Sprite.AnimationSet("CHASE", bfrEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100));
+			bflEnemyAnimationSetList.Add(new Sprite.AnimationSet("FALLING", bflEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100));
+			bfrEnemyAnimationSetList.Add(new Sprite.AnimationSet("FALLING", bfrEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100));
+			bhEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", bhEnemyTexture, new Point(180, 242), new Point(1, 1), new Point(0, 0), 1600));
+			bhEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE2", bhEnemyTexture, new Point(180, 242), new Point(1, 1), new Point(360, 0), 1600));
+			bhEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE3", bhEnemyTexture, new Point(180, 242), new Point(1, 1), new Point(720, 0), 1600));
 
 			platformAnimationSetList.Add(new Sprite.AnimationSet("1", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
 			platformAnimationSetList.Add(new Sprite.AnimationSet("2", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
@@ -419,7 +458,11 @@ namespace WrathOfJohn
 			_Mana = new Player.Mana(100, 5000, 100);
 			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 75), MovementKeys, 1.75f, _Mana, Color.White, playerAnimationSetList, myGame);
 
-			debugLabel = new Label(new Vector2(0, 00), myGame.segoeUIMonoDebug, 1f, Color.Black, "");
+			bhEnemy = new Enemy(new Vector2(0, 0), 0, Enemy.MovementType.BOSSHEAD, Color.White, bhEnemyAnimationSetList, player, platformRectangles, mapSegments);
+			bflEnemy = new Enemy(new Vector2(0, 0), 2.75f, Enemy.MovementType.BOSSBOUNCE, Color.White, bflEnemyAnimationSetList, player, platformRectangles, mapSegments);
+			bfrEnemy = new Enemy(new Vector2(0, 0), 2.75f, Enemy.MovementType.BOSSBOUNCE, Color.White, bfrEnemyAnimationSetList, player, platformRectangles, mapSegments);
+
+			debugLabel = new Label(new Vector2(0, 0), myGame.segoeUIMonoDebug, 1f, new Color(150, 150, 150), "");
 
 			base.LoadContent();
 		}
@@ -473,21 +516,26 @@ namespace WrathOfJohn
 			{
 				level += 1;
 
-				if (level > 6)
+				if (level > 7)
 				{
-					level = 1;
+					level = 2;
 				}
 
 				levelLoaded = false;
 
-				wonLevel = false;
+				player._Mana.maxMana += 20;
 
-				if (musicStarted)
+				if (!(level > 2 && level <= 3) && (level != 6))
 				{
-					MediaPlayer.Stop();
+					if (musicStarted)
+					{
+						MediaPlayer.Stop();
+					}
+
+					musicStarted = false;
 				}
 
-				musicStarted = false;
+				wonLevel = false;
 			}
 
 			PlayerCollisions = player.GetPlayerRectangles();
@@ -530,12 +578,21 @@ namespace WrathOfJohn
 					tEnemyList[i].Update(gameTime);
 				}
 			}
+			if (BossCreated && !bhEnemy.Dead)
+			{
+				bflEnemy.Update(gameTime);
+				bfrEnemy.Update(gameTime);
+				bhEnemy.Update(gameTime);
+			}
 			if (player.Dead)
 			{
-				level = 1;
 				levelLoaded = false;
 				wonLevel = false;
 				player.Dead = false;
+				player._Mana.mana = myGame.gameManager.player._Mana.maxMana;
+				player._Mana.manaRechargeTime = 5000;
+				player.CanShootProjectile = true;
+				player.HasShotProjectile = false;
 			}
 
 			debugLabel.Update(gameTime, DebugLines[0] + "\n" + DebugLines[1] + "\n" +
@@ -548,6 +605,9 @@ namespace WrathOfJohn
 			DebugLines[3] = "mana=" + player._Mana.mana + " maxMana=" + player._Mana.maxMana + " manaRechargeTime=" + player._Mana.manaRechargeTime + " manaInterval=" + player._Mana.manaInterval;
 			DebugLines[4] = "CanShoot=" + player.CanShootProjectile + " CreateNew=" + player.CreateNewProjectile + " HasShot=" + player.HasShotProjectile + " projectileListCreated=" + player.ProjectileListCreated;
 			DebugLines[6] = "Player Dead=" + player.Dead + " Player Lives=" + player.Lives;
+			DebugLines[7] = "Boss Head Lives=" + bhEnemy.Lives + " is Boss Head Dead=" + bhEnemy.Dead + " Boss Head Cords=(" + bhEnemy.GetPosition.X + "," + bhEnemy.GetPosition.Y + ")";
+			DebugLines[8] = "Boss Fist Left Center=(" + bflEnemy.PositionCenter.X + "," + bflEnemy.PositionCenter.Y + ") Boss Fist Left Direction=(" + bflEnemy.PositionCenter.X + "," + bflEnemy.PositionCenter.Y + ") Boss Fist Left Direction=(" + bflEnemy.GetDirection.X + "," + bflEnemy.GetDirection.Y + ")";
+			DebugLines[9] = "Boss Fist Right Center=(" + bfrEnemy.PositionCenter.X + "," + bfrEnemy.PositionCenter.Y + ") Boss Fist Right Direction=(" + bfrEnemy.PositionCenter.X + "," + bfrEnemy.PositionCenter.Y + ") Boss Fist Right Direction=(" + bfrEnemy.GetDirection.X + "," + bfrEnemy.GetDirection.Y + ")";
 
 			base.Update(gameTime);
 		}
@@ -567,7 +627,6 @@ namespace WrathOfJohn
 					cEnemyList.RemoveRange(0, cEnemyList.Count);
 					sEnemyList.RemoveRange(0, sEnemyList.Count);
 					tEnemyList.RemoveRange(0, tEnemyList.Count);
-
 
 					SpawnBricks(level);
 
@@ -599,16 +658,28 @@ namespace WrathOfJohn
 					caveParallax2Background.Draw(gameTime, spriteBatch);
 					caveParallax3Background.Draw(gameTime, spriteBatch);
 				}
+				if ((level >= 1 && level <= 3) && !musicStarted)
+				{
+					MediaPlayer.Stop();
+					MediaPlayer.Play(plainsvillagesSong);
+					musicStarted = true;
+				}
 				if (level == 4 && !musicStarted)
 				{
 					MediaPlayer.Stop();
 					MediaPlayer.Play(forestSong);
 					musicStarted = true;
 				}
-				if (level == 6 && !musicStarted)
+				if ((level >= 5 && level <= 6) && !musicStarted)
 				{
 					MediaPlayer.Stop();
-					MediaPlayer.Play(finalBoss);
+					MediaPlayer.Play(caveSong);
+					musicStarted = true;
+				}
+				if (level == 7 && !musicStarted)
+				{
+					MediaPlayer.Stop();
+					MediaPlayer.Play(finalBossSong);
 					musicStarted = true;
 				}
 
@@ -618,7 +689,7 @@ namespace WrathOfJohn
 				}
 			}
 			spriteBatch.End();
-			
+
 			// Draw the player and enemies.
 			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, camera.GetTransformation());
 			{
@@ -636,11 +707,27 @@ namespace WrathOfJohn
 				{
 					te.Draw(gameTime, spriteBatch);
 				}
+				if (BossCreated && !bhEnemy.Dead)
+				{
+					bhEnemy.Draw(gameTime, spriteBatch);
+					bflEnemy.Draw(gameTime, spriteBatch);
+					bfrEnemy.Draw(gameTime, spriteBatch);
+				}
 			}
 			spriteBatch.End();
-			
+
+			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
+			{
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)(camera.Position.X - 385), 15, (int)(player._Mana.mana * 2), 10), Color.Red);
+
+				if (BossCreated && !bhEnemy.Dead)
+				{
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)((camera.Position.X + (myGame.WindowSize.X / 4)) - (27 * 2)), 15, (int)bhEnemy.Lives * 8, 10), Color.Purple);
+				}
+			}
+			spriteBatch.End();
+
 			// Debug Rectangles
-			
 			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
 			{
 				for (int i = 0; i < platformRectangles.Count; i++)
@@ -654,6 +741,18 @@ namespace WrathOfJohn
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X + (int)PlayerCollisions.Width, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Red);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y + (int)PlayerCollisions.Height, (int)PlayerCollisions.Width, 1), Color.Green);
 				spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Yellow);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y, (int)bhEnemy.playerCollisions.Width, 1), Color.Blue);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X + (int)bhEnemy.playerCollisions.Width, (int)bhEnemy.playerCollisions.Y, 1, (int)bhEnemy.playerCollisions.Height), Color.Red);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y + (int)bhEnemy.playerCollisions.Height, (int)bhEnemy.playerCollisions.Width, 1), Color.Green);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y, 1, (int)bhEnemy.playerCollisions.Height), Color.Yellow);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y, (int)bfrEnemy.playerCollisions.Width, 1), Color.Blue);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X + (int)bfrEnemy.playerCollisions.Width, (int)bfrEnemy.playerCollisions.Y, 1, (int)bfrEnemy.playerCollisions.Height), Color.Red);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y + (int)bfrEnemy.playerCollisions.Height, (int)bfrEnemy.playerCollisions.Width, 1), Color.Green);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y, 1, (int)bfrEnemy.playerCollisions.Height), Color.Yellow);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y, (int)bflEnemy.playerCollisions.Width, 1), Color.Blue);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X + (int)bflEnemy.playerCollisions.Width, (int)bflEnemy.playerCollisions.Y, 1, (int)bflEnemy.playerCollisions.Height), Color.Red);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y + (int)bflEnemy.playerCollisions.Height, (int)bflEnemy.playerCollisions.Width, 1), Color.Green);
+				spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y, 1, (int)bflEnemy.playerCollisions.Height), Color.Yellow);
 				for (int i = 0; i < cEnemyList.Count; i++)
 				{
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y, (int)cEnemyList[i].playerCollisions.Width, 1), Color.Blue);
@@ -684,7 +783,6 @@ namespace WrathOfJohn
 				}
 			}
 			spriteBatch.End();
-			
 
 			spriteBatch.Begin();
 			{
@@ -734,7 +832,14 @@ namespace WrathOfJohn
 					height = Maps.Hell().Count;
 					width = Maps.Hell()[0].Length;
 					break;
+				case 7:
+					brickspawn = MapHelper.GetTileArray(Maps.Boss());
+					height = Maps.Boss().Count;
+					width = Maps.Boss()[0].Length;
+					break;
 			}
+
+			BossCreated = false;
 
 			camera.Size = new Point(width * 25, height * 25);
 
@@ -742,27 +847,43 @@ namespace WrathOfJohn
 			{
 				for (int y = 0; y < height; y++)
 				{
-					if (brickspawn[x, y] > 0 && brickspawn[x, y] < 79)
+					if (brickspawn[x, y] > 0 && brickspawn[x, y] < 75)
 					{
 						platformList.Add(new PlatformManager(new Vector2(x * 25, y * 25), myGame, (int)brickspawn[x, y], platformAnimationSetList));
 					}
-					if (brickspawn[x, y] == 79)
+
+					if (brickspawn[x, y] == 75)
+					{
+						bhEnemy.SetPosition(new Vector2((float)Math.Abs((x * 25) - (bflEnemy.CurrentAnimation.frameSize.X / 2)), (float)Math.Abs((y * 25) - (bflEnemy.CurrentAnimation.frameSize.Y / 2))));
+						BossCreated = true;
+					}
+					if (brickspawn[x, y] == 76)
+					{
+						bflEnemy.SetPosition(new Vector2((x * 25) - (bflEnemy.CurrentAnimation.frameSize.X / 4), (y * 25) - (bflEnemy.CurrentAnimation.frameSize.Y / 4)));
+						BossCreated = true;
+					}
+					if (brickspawn[x, y] == 77)
+					{
+						bfrEnemy.SetPosition(new Vector2((x * 25) - (bfrEnemy.CurrentAnimation.frameSize.X / 4), (y * 25) - (bfrEnemy.CurrentAnimation.frameSize.Y / 4)));
+						BossCreated = true;
+					}
+					if (brickspawn[x, y] == 78)
 					{
 						player.SetPosition(new Vector2(x * 25, y * 25));
 						camera.Position = new Vector2(player.GetPosition.X + 200f, player.GetPosition.Y);
 					}
-                    if (brickspawn[x, y] == 80)
-                    {
+					if (brickspawn[x, y] == 79)
+					{
 						cEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.75f, Enemy.MovementType.HORIZONTAL, Color.White, cEnemyAnimationSetList, player, platformRectangles, mapSegments));
-                    }
-                    if (brickspawn[x, y] == 81)
-                    {
+					}
+					if (brickspawn[x, y] == 80)
+					{
 						sEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.75f, Enemy.MovementType.BOUNCE, Color.White, sEnemyAnimationSetList, player, platformRectangles, mapSegments));
-                    }
-                    if (brickspawn[x, y] == 82)
-                    {
+					}
+					if (brickspawn[x, y] == 81)
+					{
 						tEnemyList.Add(new Enemy(new Vector2(x * 25 + 12.5f, y * 25 + 12.5f), 1.75f, Enemy.MovementType.FLY, Color.White, tEnemyAnimationSetList, player, platformRectangles, mapSegments));
-                    }
+					}
 				}
 			}
 

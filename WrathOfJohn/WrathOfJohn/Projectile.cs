@@ -47,6 +47,11 @@ namespace WrathOfJohn
 			set;
 		}
 
+		protected float test1;
+		protected float test2;
+		protected float test3;
+		protected float test4;
+
 		public Projectile(Vector2 startPosition, Color color, List<AnimationSet> animationSetList, Player player, Game1 game)
 			: base(startPosition, color, animationSetList)
 		{
@@ -78,30 +83,57 @@ namespace WrathOfJohn
 			}
 			foreach (Rectangle r in myGame.gameManager.platformRectangles)
 			{
-				if (projectileRectangle.TouchLeftOf(r) ||  projectileRectangle.TouchTopOf(r) || projectileRectangle.TouchBottomOf(r) || projectileRectangle.TouchRightOf(r))
+				if (projectileRectangle.TouchLeftOf(r) || projectileRectangle.TouchTopOf(r) || projectileRectangle.TouchBottomOf(r) || projectileRectangle.TouchRightOf(r))
 				{
 					visible = false;
 				}
 			}
 			foreach (Enemy er in myGame.gameManager.cEnemyList)
 			{
+				test1 = er.GetDirection.X * -1;
+				test1 = MathHelper.Clamp(test2, -1, 1);
+
 				if (projectileRectangle.TouchLeftOf(er.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(er.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(er.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(er.GetPlayerRectangles()))
 				{
 					visible = false;
+					er.DeleteMe = true;
+					myGame.gameManager.enemyhitSFX.Play(1f, 0f, test1);
 				}
 			}
 			foreach (Enemy er in myGame.gameManager.sEnemyList)
 			{
+				test2 = er.GetDirection.X * -1;
+				test2 = MathHelper.Clamp(test2, -1, 1);
+
 				if (projectileRectangle.TouchLeftOf(er.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(er.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(er.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(er.GetPlayerRectangles()))
 				{
 					visible = false;
+					er.DeleteMe = true;
+					myGame.gameManager.enemyhitSFX.Play(1f, 0f, test2);
 				}
 			}
 			foreach (Enemy er in myGame.gameManager.tEnemyList)
 			{
+				test3 = er.GetDirection.X * -1;
+				test3 = MathHelper.Clamp(test2, -1, 1);
+
 				if (projectileRectangle.TouchLeftOf(er.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(er.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(er.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(er.GetPlayerRectangles()))
 				{
 					visible = false;
+					er.DeleteMe = true;
+					myGame.gameManager.enemyhitSFX.Play(1f, 0f, test1);
+				}
+			}
+			if (myGame.gameManager.BossCreated && !myGame.gameManager.bhEnemy.Dead)
+			{
+				test4 = Collision.UnitVector(new Vector2((myGame.gameManager.player.GetPosition.X + myGame.gameManager.player.PositionCenter.X) - (myGame.gameManager.bhEnemy.GetPosition.X + myGame.gameManager.bhEnemy.PositionCenter.X), 0)).X * -1;
+				test4 = MathHelper.Clamp(test2, -1, 1);
+
+				if (projectileRectangle.TouchLeftOf(myGame.gameManager.bhEnemy.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(myGame.gameManager.bhEnemy.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(myGame.gameManager.bhEnemy.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(myGame.gameManager.bhEnemy.GetPlayerRectangles()))
+				{
+					myGame.gameManager.bhEnemy.Lives -= 1;
+					visible = false;
+					myGame.gameManager.enemyhitSFX.Play(1f, 0f, test4);
 				}
 			}
 			if (visible)

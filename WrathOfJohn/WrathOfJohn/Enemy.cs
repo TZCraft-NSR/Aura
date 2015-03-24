@@ -16,10 +16,12 @@ namespace WrathOfJohn
 			FLY,
 			HORIZONTAL,
 			BOUNCE,
+			BOSSBOUNCE,
+			BOSSHEAD,
 			NONE
 		}
 
-        public int HP;
+		public int HP;
 
 		public MovementType _MovementType;
 
@@ -28,9 +30,9 @@ namespace WrathOfJohn
 		public List<Rectangle> MapTiles;
 		public List<Rectangle> MapSides;
 
-        public bool DeleteMe = false;
-        public bool MoveCircle = false;
-        public bool DeleteCircle = false;
+		public bool DeleteMe = false;
+		public bool MoveCircle = false;
+		public bool DeleteCircle = false;
 
 		public Enemy(Vector2 position, float gravity, MovementType movementType, Color color, List<AnimationSet> animationSetList, Player player, List<Rectangle> mapTiles, List<Rectangle> mapSides)
 			: base(position, color, animationSetList)
@@ -38,7 +40,12 @@ namespace WrathOfJohn
 			this.myGame = myGame;
 			SetAnimation("IDLE");
 
-			if (movementType == MovementType.FLY)
+			if (movementType == MovementType.BOSSHEAD)
+			{
+				Lives = 3;
+				SetAnimation("IDLE1");
+			}
+			else if (movementType == MovementType.FLY)
 			{
 				RotationCenter = new Vector2(animationSetList[0].frameSize.X / 2, animationSetList[0].frameSize.Y / 2);
 				Offset = new Vector2(-(animationSetList[0].frameSize.X / 2), -(animationSetList[0].frameSize.Y / 2));
@@ -70,14 +77,18 @@ namespace WrathOfJohn
 
 			if (_MovementType == MovementType.FLY)
 			{
-				Direction = new Vector2(_Player.PositionCenter.X - 10 - Position.X, _Player.PositionCenter.Y - Position.Y);
+				Direction = new Vector2((_Player.GetPosition.X + (_Player.PositionCenter.X)) - (Position.X + (PositionCenter.X)), (_Player.GetPosition.Y + (_Player.PositionCenter.Y)) - (Position.Y + (PositionCenter.Y)));
 			}
-			else if (_MovementType == MovementType.HORIZONTAL || _MovementType == MovementType.BOUNCE)
+			else if (_MovementType == MovementType.HORIZONTAL || _MovementType == MovementType.BOUNCE || _MovementType == MovementType.BOSSBOUNCE)
 			{
-				Direction.X = _Player.PositionCenter.X - Position.X;
+				Direction.X = (_Player.GetPosition.X + (_Player.PositionCenter.X)) - (Position.X + (PositionCenter.X));
+			}
+			else
+			{
+				Direction = Vector2.Zero;
 			}
 
-			if (Collision.Magnitude(Direction) <= 200)
+			if (_MovementType != MovementType.BOSSHEAD && Collision.Magnitude(Direction) <= 200)
 			{
 				if (_MovementType != MovementType.FLY)
 				{
@@ -94,13 +105,13 @@ namespace WrathOfJohn
 					{
 						Direction = new Vector2(0, 0);
 					}
-					else if (_MovementType == MovementType.HORIZONTAL || _MovementType == MovementType.BOUNCE)
+					else
 					{
 						Direction.X = 0;
 					}
 				}
 
-				if (_MovementType != MovementType.BOUNCE)
+				if (_MovementType != MovementType.BOUNCE || _MovementType != MovementType.BOSSBOUNCE)
 				{
 					SetAnimation("CHASE");
 				}
@@ -114,18 +125,51 @@ namespace WrathOfJohn
 			}
 			else
 			{
-				if (_MovementType != MovementType.BOUNCE)
+				if (_MovementType != MovementType.BOUNCE || _MovementType != MovementType.BOSSBOUNCE)
 				{
 					SetAnimation("IDLE");
 				}
 			}
 
-			foreach (Projectile p in _Player.ProjectileList)
+			if (_MovementType != MovementType.BOSSBOUNCE)
 			{
-				if (playerCollisions.TouchLeftOf(p.projectileRectangle) || playerCollisions.TouchTopOf(p.projectileRectangle) || playerCollisions.TouchRightOf(p.projectileRectangle) || playerCollisions.TouchBottomOf(p.projectileRectangle))
+				foreach (Projectile p in _Player.ProjectileList)
 				{
-					DeleteMe = true;
+					if (playerCollisions.TouchLeftOf(p.projectileRectangle) || playerCollisions.TouchTopOf(p.projectileRectangle) || playerCollisions.TouchRightOf(p.projectileRectangle) || playerCollisions.TouchBottomOf(p.projectileRectangle))
+					{
+						DeleteMe = true;
+					}
 				}
+			}
+			else if (_MovementType == MovementType.BOSSHEAD)
+			{
+				foreach (Projectile p in _Player.ProjectileList)
+				{
+					if (playerCollisions.TouchLeftOf(p.projectileRectangle) || playerCollisions.TouchTopOf(p.projectileRectangle) || playerCollisions.TouchRightOf(p.projectileRectangle) || playerCollisions.TouchBottomOf(p.projectileRectangle))
+					{
+					}
+				}
+			}
+
+			if (_MovementType == MovementType.BOSSHEAD)
+			{
+				if (Lives <= 27 && Lives > 18)
+				{
+					SetAnimation("IDLE1");
+				}
+				else if (Lives <= 18 && Lives > 9)
+				{
+					SetAnimation("IDLE2");
+				}
+				else if (Lives <= 9)
+				{
+					SetAnimation("IDLE3");
+				}
+			}
+
+			if (Lives <= 0)
+			{
+				Dead = true;
 			}
 
 			foreach (Rectangle r in MapTiles)
@@ -136,7 +180,7 @@ namespace WrathOfJohn
 			{
 				CheckCollision(playerCollisions, r);
 			}
-			if (_MovementType == MovementType.BOUNCE)
+			if (_MovementType == MovementType.BOUNCE || _MovementType == MovementType.BOSSBOUNCE)
 			{
 				if (!isJumping && !canFall)
 				{
@@ -156,6 +200,7 @@ namespace WrathOfJohn
 			}
 
 			UpdateGravity();
+
 			LastFrameTime += gameTime.ElapsedGameTime.Milliseconds;
 
 			if (LastFrameTime >= CurrentAnimation.framesPerMillisecond)
@@ -181,6 +226,34 @@ namespace WrathOfJohn
 				}
 
 				LastFrameTime = 0;
+			}
+
+			PositionCenter = new Vector2((CurrentAnimation.frameSize.X / 2), (CurrentAnimation.frameSize.Y / 2));
+		}
+
+		protected override void CheckCollision(Rectangle rectangle1, Rectangle rectangle2)
+		{
+			if (rectangle1.TouchTopOf(rectangle2))
+			{
+				Position.Y = rectangle2.Top - rectangle1.Height - 2f;
+				isGrounded = true;
+				canFall = false;
+				GravityForce = DefaultGravityForce;
+			}
+			if (rectangle1.TouchLeftOf(rectangle2))
+			{
+				Position.X = rectangle2.Left - rectangle1.Width - 2f;
+			}
+			if (rectangle1.TouchRightOf(rectangle2))
+			{
+				Position.X = rectangle2.Right + 2f;
+			}
+			if (rectangle1.TouchBottomOf(rectangle2))
+			{
+				Position.Y = rectangle1.Bottom - 21f;
+				isJumping = false;
+				canFall = true;
+				isFalling = true;
 			}
 		}
 

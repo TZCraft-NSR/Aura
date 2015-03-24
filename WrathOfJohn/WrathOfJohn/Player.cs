@@ -154,7 +154,7 @@ namespace WrathOfJohn
 		public bool HasShotProjectile
 		{
 			get;
-			protected set;
+			set;
 		}
 		/// <summary>
 		/// Gets or sets if the player can shoot.
@@ -162,7 +162,7 @@ namespace WrathOfJohn
 		public bool CanShootProjectile
 		{
 			get;
-			protected set;
+			set;
 		}
 		/// <summary>
 		/// Gets or sets if a new projectile can be created.
@@ -204,7 +204,7 @@ namespace WrathOfJohn
 
 			#region Set Movement and Collision Factors
 			MovementKeys = movementKeys;
-			Speed = 2;
+			Speed = 2.35f;
 			GravityForce = gravity;
 			DefaultGravityForce = gravity;
 			SetAnimation("IDLE");
@@ -254,10 +254,21 @@ namespace WrathOfJohn
 			{
 				CheckCollision(playerCollisions, r);
 			}
-			if (playerCollisions.TouchLeftOf(myGame.gameManager.mapSegments[1]) || playerCollisions.TouchTopOf(myGame.gameManager.mapSegments[1]) || playerCollisions.TouchRightOf(myGame.gameManager.mapSegments[1]) || playerCollisions.TouchBottomOf(myGame.gameManager.mapSegments[1]))
+			if (myGame.gameManager.level != 7 && (playerCollisions.TouchLeftOf(myGame.gameManager.mapSegments[1]) || playerCollisions.TouchTopOf(myGame.gameManager.mapSegments[1]) || playerCollisions.TouchRightOf(myGame.gameManager.mapSegments[1]) || playerCollisions.TouchBottomOf(myGame.gameManager.mapSegments[1])))
 			{
 				myGame.gameManager.wonLevel = true;
 				Position = Vector2.Zero;
+			}
+			if (Position.Y >= myGame.gameManager.camera.Position.Y + myGame.gameManager.camera.Size.Y)
+			{
+				Dead = true;
+				Lives -= 1;
+			}
+			if (Lives <= 0)
+			{
+				myGame.SetCurrentLevel(Game1.GameLevels.LOSE);
+
+				SetPosition(new Vector2(0, 0));
 			}
 			foreach (Enemy e in myGame.gameManager.cEnemyList)
 			{
@@ -278,6 +289,19 @@ namespace WrathOfJohn
 			foreach (Enemy e in myGame.gameManager.tEnemyList)
 			{
 				if (playerCollisions.TouchLeftOf(e.playerCollisions) || playerCollisions.TouchTopOf(e.playerCollisions) || playerCollisions.TouchRightOf(e.playerCollisions) || playerCollisions.TouchBottomOf(e.playerCollisions))
+				{
+					Dead = true;
+					Lives -= 1;
+				}
+			}
+			if (myGame.gameManager.BossCreated && !myGame.gameManager.bhEnemy.Dead)
+			{
+				if (playerCollisions.TouchLeftOf(myGame.gameManager.bflEnemy.GetPlayerRectangles()) || playerCollisions.TouchTopOf(myGame.gameManager.bflEnemy.GetPlayerRectangles()) || playerCollisions.TouchRightOf(myGame.gameManager.bflEnemy.GetPlayerRectangles()) || playerCollisions.TouchBottomOf(myGame.gameManager.bflEnemy.GetPlayerRectangles()))
+				{
+					Dead = true;
+					Lives -= 1;
+				}
+				if (playerCollisions.TouchLeftOf(myGame.gameManager.bfrEnemy.GetPlayerRectangles()) || playerCollisions.TouchTopOf(myGame.gameManager.bfrEnemy.GetPlayerRectangles()) || playerCollisions.TouchRightOf(myGame.gameManager.bfrEnemy.GetPlayerRectangles()) || playerCollisions.TouchBottomOf(myGame.gameManager.bfrEnemy.GetPlayerRectangles()))
 				{
 					Dead = true;
 					Lives -= 1;
@@ -387,11 +411,21 @@ namespace WrathOfJohn
 			}
 			#endregion
 
+			foreach (Projectile p in ProjectileList)
+			{
+				if (!p.visible)
+				{
+					CreateNewProjectile = true;
+					ProjectileList.RemoveAt(0);
+					break;
+				}
+			}
+
 			base.Update(gameTime);
 
 			Position += Direction;
 
-			PositionCenter = new Vector2(Position.X, Position.Y + 21);
+			PositionCenter = new Vector2(playerCollisions.Width / 2, playerCollisions.Height / 2);
 		}
 
 		/// <summary>
@@ -424,22 +458,13 @@ namespace WrathOfJohn
 		/// <param name="shootFactor">The number of projectiles the player can shoot.</param>
 		public void ShootBeam(float shootFactor)
 		{
-			foreach (Projectile p in ProjectileList)
-			{
-				if (!p.visible)
-				{
-					CreateNewProjectile = true;
-					ProjectileList.RemoveAt(0);
-					break;
-				}
-			}
-
 			if (CreateNewProjectile && CanShootProjectile && _Mana.mana >= _Mana.maxMana / shootFactor - 1)
 			{
-				_Mana.mana -= _Mana.maxMana / shootFactor;
+				_Mana.mana -= shootFactor;
 				Projectile projectile = new Projectile(new Vector2(Position.X - 5, Position.Y - 10), Color.White, ProjectileAnimationSet, this, myGame);
 				ProjectileList.Add(projectile);
 				projectile.Fire();
+				myGame.gameManager.shootSFX.Play(1f, 0f, 0f);
 				HasShotProjectile = true;
 			}
 
@@ -458,7 +483,7 @@ namespace WrathOfJohn
 			if ((myGame.keyboardState.IsKeyDown(keyList[4]) || myGame.keyboardState.IsKeyDown(keyList[1])) && (!isJumping && !canFall))
 			{
 				isJumping = true;
-				Position.Y -= GravityForce * 1.5f;
+				Position.Y -= GravityForce * 5.5f;
 			}
 			if (myGame.keyboardState.IsKeyDown(keyList[0]))
 			{
@@ -493,7 +518,7 @@ namespace WrathOfJohn
 				if (CanShootProjectile)
 				{
 					SetAnimation("SHOOT");
-					ShootBeam(5);
+					ShootBeam(20);
 				}
 			}
 		}
@@ -552,7 +577,7 @@ namespace WrathOfJohn
 			if (!isJumping)
 			{
 				Direction.Y = GravityForce;
-				GravityForce += 0.06f;
+				GravityForce += 0.10f;
 			}
 
 			Direction.Y = MathHelper.Clamp(Direction.Y, -GravityForce - 1f, GravityForce);

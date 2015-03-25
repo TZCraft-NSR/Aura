@@ -108,6 +108,10 @@
     <Reference Include="System.Net">
       <Private>False</Private>
     </Reference>
+    <Reference Include="VoidEngine, Version=0.0.1.2, Culture=neutral, processorArchitecture=x86">
+      <HintPath>.\VoidEngine.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enemy.cs" />
@@ -129,10 +133,6 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VoidEngine\VoidEngine\VoidEngine.csproj">
-      <Project>{cf9853a6-a986-4fad-a2e6-6fe5307edf2f}</Project>
-      <Name>VoidEngine</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AuraContent\AuraContent.contentproj">
       <Name>AuraContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>

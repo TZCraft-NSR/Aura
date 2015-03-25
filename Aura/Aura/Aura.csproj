@@ -111,10 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enemy.cs" />
-<<<<<<< HEAD:Aura/Aura/Aura.csproj
     <Compile Include="LoseManager.cs" />
-=======
->>>>>>> master:WrathOfJohn/WrathOfJohn/WrathOfJohn.csproj
     <Compile Include="Maps.cs" />
     <Compile Include="OptionsManager.cs" />
     <Compile Include="PlatformManager.cs" />

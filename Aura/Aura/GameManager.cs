@@ -477,7 +477,7 @@ namespace Aura
 			#region Parallax Stuff
 			if (camera.IsInView(player.GetPosition, new Vector2(20, 49)))
 			{
-				DebugLines[5] = "true";
+				//DebugLines[5] = "true";
 				camera.Position = new Vector2(player.GetPosition.X + 200f, 0);
 			}
 			//
@@ -801,7 +801,7 @@ namespace Aura
 			spriteBatch.Begin();
 			{
 				// To debug variables.
-				debugLabel.Draw(gameTime, spriteBatch);
+				//debugLabel.Draw(gameTime, spriteBatch);
 			}
 			spriteBatch.End();
 

@@ -483,7 +483,8 @@ namespace Aura
 			if ((myGame.keyboardState.IsKeyDown(keyList[4]) || myGame.keyboardState.IsKeyDown(keyList[1])) && (!isJumping && !canFall))
 			{
 				isJumping = true;
-				Position.Y -= GravityForce * 5.5f;
+				//Position.Y -= GravityForce * 5.5f;
+				Direction.Y = -DefaultGravityForce;
 			}
 			if (myGame.keyboardState.IsKeyDown(keyList[0]))
 			{
@@ -564,8 +565,8 @@ namespace Aura
 			{
 				if (GravityForce > -DefaultGravityForce)
 				{
-					Direction.Y = -GravityForce;
-					GravityForce -= 0.03f;
+					Direction.Y -= GravityForce;
+					GravityForce -= 0.07f;
 				}
 				if (GravityForce <= 0f)
 				{
@@ -576,7 +577,7 @@ namespace Aura
 
 			if (!isJumping)
 			{
-				Direction.Y = GravityForce;
+				Direction.Y += GravityForce;
 				GravityForce += 0.10f;
 			}
 

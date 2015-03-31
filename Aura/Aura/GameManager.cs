@@ -457,7 +457,7 @@ namespace Aura
 			MovementKeys.Add(Keys.Q);
 
 			_Mana = new Player.Mana(100, 5000, 100);
-			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 75), MovementKeys, 1.75f, _Mana, Color.White, playerAnimationSetList, myGame);
+			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 75), MovementKeys, 2f, _Mana, Color.White, playerAnimationSetList, myGame);
 
 			bhEnemy = new Enemy(new Vector2(0, 0), 0, Enemy.MovementType.BOSSHEAD, Color.White, bhEnemyAnimationSetList, player, platformRectangles, mapSegments);
 			bflEnemy = new Enemy(new Vector2(0, 0), 2.75f, Enemy.MovementType.BOSSBOUNCE, Color.White, bflEnemyAnimationSetList, player, platformRectangles, mapSegments);
@@ -801,7 +801,7 @@ namespace Aura
 			spriteBatch.Begin();
 			{
 				// To debug variables.
-				debugLabel.Draw(gameTime, spriteBatch);
+				//debugLabel.Draw(gameTime, spriteBatch);
 			}
 			spriteBatch.End();
 

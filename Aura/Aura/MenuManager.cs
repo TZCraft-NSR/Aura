@@ -59,9 +59,9 @@ namespace Aura
 			buttonTexture = Game.Content.Load<Texture2D>(@"images\gui\button");
 			titleSong = Game.Content.Load<Song>(@"sounds\music\title");
 
-			animationSpriteList.Add(new Sprite.AnimationSet("IDLE", buttonTexture, new Point(170, 46), new Point(0, 0), new Point(0, 0), 0));
-			animationSpriteList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 0), new Point(170, 0), 0));
-			animationSpriteList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(2, 0), new Point(340, 0), 0));
+			animationSpriteList.Add(new Sprite.AnimationSet("IDLE", buttonTexture, new Point(170, 46), new Point(0, 0), new Point(0, 0), 0, false));
+			animationSpriteList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 0), new Point(170, 0), 0, false));
+			animationSpriteList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(2, 0), new Point(340, 0), 0, false));
 
 			exitButton = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 366), myGame.segoeUIRegular, 1f, Color.Black, "EXIT", Color.White, animationSpriteList);
 			playButton = new Button(new Vector2(100, 190), myGame.segoeUIRegular, 1f, Color.Black, "PLAY", Color.White, animationSpriteList);

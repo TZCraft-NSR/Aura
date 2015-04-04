@@ -52,9 +52,9 @@ namespace Aura
 			background = Game.Content.Load<Texture2D>(@"images\screens\lose");
 			buttonTexture = Game.Content.Load<Texture2D>(@"images\gui\button");
 
-			animationSpriteList.Add(new Sprite.AnimationSet("IDLE", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(0, 0), 0));
-			animationSpriteList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(170, 0), 0));
-			animationSpriteList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(340, 0), 0));
+			animationSpriteList.Add(new Sprite.AnimationSet("IDLE", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(0, 0), 0, false));
+			animationSpriteList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(170, 0), 0, false));
+			animationSpriteList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(340, 0), 0, false));
 
 			retry = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 366), myGame.segoeUIRegular, 1f, Color.Black, "RETRY?", Color.White, animationSpriteList);
 			mainMenu = new Button(new Vector2((myGame.WindowSize.X - 170) / 2, 190), myGame.segoeUIRegular, 1f, Color.Black, "MAIN MENU", Color.White, animationSpriteList);
@@ -82,21 +82,15 @@ namespace Aura
 			{
 				myGame.SetCurrentLevel(Game1.GameLevels.MENU);
 				myGame.gameManager.camera.Position = new Vector2(myGame.gameManager.player.GetPosition.X, myGame.gameManager.player.GetPosition.Y);
-				myGame.gameManager.player.Lives = 3;
-				myGame.gameManager.level = 2;
-				myGame.gameManager.levelLoaded = false;
+				myGame.gameManager.Level = 2;
+				myGame.gameManager.LevelLoaded = false;
 				myGame.menuManager.title = false;
 			}
 			if (retry.Clicked())
 			{
 				myGame.SetCurrentLevel(Game1.GameLevels.GAME);
 				myGame.gameManager.camera.Position = new Vector2(myGame.gameManager.player.GetPosition.X, myGame.gameManager.player.GetPosition.Y);
-				myGame.gameManager.player.Lives = 3;
-				myGame.gameManager.levelLoaded = false;
-				myGame.gameManager.player._Mana.mana = myGame.gameManager.player._Mana.maxMana;
-				myGame.gameManager.player._Mana.manaRechargeTime = 5000;
-				myGame.gameManager.player.CanShootProjectile = true;
-				myGame.gameManager.player.HasShotProjectile = false;
+				myGame.gameManager.LevelLoaded = false;
 			}
 
 

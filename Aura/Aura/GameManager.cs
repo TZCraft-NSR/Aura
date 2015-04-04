@@ -47,13 +47,13 @@ namespace Aura
 		/// </summary>
 		public Player player;
 		/// <summary>
-		/// The animation list for the player.
-		/// </summary>
-		List<Sprite.AnimationSet> playerAnimationSetList;
-		/// <summary>
 		/// The player class' texture.
 		/// </summary>
 		Texture2D playerTexture;
+		/// <summary>
+		/// The animation list for the player.
+		/// </summary>
+		List<Sprite.AnimationSet> playerAnimationSetList;
 		/// <summary>
 		/// The player segment collisions.
 		/// </summary>
@@ -61,11 +61,15 @@ namespace Aura
 		/// <summary>
 		/// The players list of movement keys.
 		/// </summary>
-		List<Keys> MovementKeys;
+		Keys[,] MovementKeys = new Keys[2, 15];
 		/// <summary>
 		/// The players projectile texture
 		/// </summary>
 		public Texture2D ProjectileTexture;
+		/// <summary>
+		/// 
+		/// </summary>
+		public List<Sprite.AnimationSet> ProjectileAnimationSet;
 		/// <summary>
 		/// The players mana class.
 		/// </summary>
@@ -91,7 +95,7 @@ namespace Aura
 		/// <summary>
 		/// The list of blocks.
 		/// </summary>
-		public List<PlatformManager> platformList
+		public List<Tile> TileList
 		{
 			get;
 			set;
@@ -115,7 +119,7 @@ namespace Aura
 		/// <summary>
 		/// The animation set list of the blocks.
 		/// </summary>
-		List<Sprite.AnimationSet> platformAnimationSetList
+		List<Sprite.AnimationSet> TileAnimationSet
 		{
 			get;
 			set;
@@ -131,7 +135,7 @@ namespace Aura
 		/// <summary>
 		/// The bounding boxes of the map.
 		/// </summary>
-		public List<Rectangle> mapSegments
+		public List<Rectangle> mapBoundries
 		{
 			get;
 			set;
@@ -139,7 +143,7 @@ namespace Aura
 		/// <summary>
 		/// The current level id.
 		/// </summary>
-		public int level
+		public int Level
 		{
 			get;
 			set;
@@ -147,7 +151,7 @@ namespace Aura
 		/// <summary>
 		/// Gets or sets if the level has been set.
 		/// </summary>
-		public bool levelLoaded
+		public bool LevelLoaded
 		{
 			get;
 			set;
@@ -155,7 +159,7 @@ namespace Aura
 		/// <summary>
 		/// Gets or sets if the player won the current level.
 		/// </summary>
-		public bool wonLevel
+		public bool WonLevel
 		{
 			get;
 			set;
@@ -272,9 +276,7 @@ namespace Aura
 		/// The player segment collisions.
 		/// </summary>
 		//protected Rectangle PlayerCollisions;
-		public List<Enemy> cEnemyList;
-		public List<Enemy> sEnemyList;
-		public List<Enemy> tEnemyList;
+		public List<Enemy> EnemyList;
 		public Enemy bflEnemy;
 		public Enemy bfrEnemy;
 		public Enemy bhEnemy;
@@ -299,27 +301,26 @@ namespace Aura
 		/// </summary>
 		public override void Initialize()
 		{
-			MovementKeys = new List<Keys>();
 			playerAnimationSetList = new List<Sprite.AnimationSet>();
 
-			cEnemyList = new List<Enemy>();
+			ProjectileAnimationSet = new List<Sprite.AnimationSet>();
+
+			EnemyList = new List<Enemy>();
 			cEnemyAnimationSetList = new List<Sprite.AnimationSet>();
-			sEnemyList = new List<Enemy>();
 			sEnemyAnimationSetList = new List<Sprite.AnimationSet>();
-			tEnemyList = new List<Enemy>();
 			tEnemyAnimationSetList = new List<Sprite.AnimationSet>();
 
 			bflEnemyAnimationSetList = new List<Sprite.AnimationSet>();
 			bfrEnemyAnimationSetList = new List<Sprite.AnimationSet>();
 			bhEnemyAnimationSetList = new List<Sprite.AnimationSet>();
 
-			platformList = new List<PlatformManager>();
-			platformAnimationSetList = new List<Sprite.AnimationSet>();
+			TileList = new List<Tile>();
+			TileAnimationSet = new List<Sprite.AnimationSet>();
 			platformRectangles = new List<Rectangle>();
 
-			mapSegments = new List<Rectangle>();
+			mapBoundries = new List<Rectangle>();
 
-			level = 2;
+			Level = 2;
 
 			for (int i = 0; i < DebugLines.Length; i++)
 			{
@@ -371,8 +372,8 @@ namespace Aura
 			camera = new Camera(GraphicsDevice.Viewport, new Point(6400, 450), 1f);
 			camera.Position = new Vector2(0, 0);
 
-			mapSegments.Add(new Rectangle(-5, 0, 5, (int)camera.Size.Y));
-			mapSegments.Add(new Rectangle((int)camera.Size.X, 0, 5, (int)camera.Size.Y));
+			mapBoundries.Add(new Rectangle(-5, 0, 5, (int)camera.Size.Y));
+			mapBoundries.Add(new Rectangle((int)camera.Size.X, 0, 5, (int)camera.Size.Y));
 
 			plainsParallax1Background = new ParallaxBackground(plainsParallax1, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.000f, camera);
 			plainsParallax2Background = new ParallaxBackground(plainsParallax2, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
@@ -388,80 +389,82 @@ namespace Aura
 			caveParallax2Background = new ParallaxBackground(caveParallax2, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.125f, camera);
 			caveParallax3Background = new ParallaxBackground(caveParallax3, new Vector2(camera.Position.X - (myGame.WindowSize.X / 2), 0), Color.White, 1.250f, camera);
 
-			playerAnimationSetList.Add(new Sprite.AnimationSet("IDLE", playerTexture, new Point(124, 148), new Point(4, 1), new Point(0, 2), 1600));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("WALK", playerTexture, new Point(100, 140), new Point(8, 1), new Point(0, 476), 100));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("JUMP", playerTexture, new Point(187, 174), new Point(4, 1), new Point(0, 302), 1600));
-			playerAnimationSetList.Add(new Sprite.AnimationSet("SHOOT", playerTexture, new Point(124, 148), new Point(5, 1), new Point(0, 154), 1600));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", playerTexture, new Point(124, 148), new Point(4, 1), new Point(0, 2), 1600, true));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("WALK1", playerTexture, new Point(100, 140), new Point(8, 1), new Point(0, 476), 100, true));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("JUMP1", playerTexture, new Point(187, 174), new Point(4, 1), new Point(0, 302), 1600, true));
+			playerAnimationSetList.Add(new Sprite.AnimationSet("ATK-1", playerTexture, new Point(124, 148), new Point(5, 1), new Point(0, 154), 1600, true));
 
-			cEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", cEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1600));
-			cEnemyAnimationSetList.Add(new Sprite.AnimationSet("CHASE", cEnemyTexture, new Point(25, 25), new Point(9, 1), new Point(25, 0), 100));
+			cEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", cEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1600, true));
+			cEnemyAnimationSetList.Add(new Sprite.AnimationSet("WALK1", cEnemyTexture, new Point(25, 25), new Point(9, 1), new Point(25, 0), 100, true));
 			//Needs rest of animations ^
-			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", sEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1600));
-			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("CHASE", sEnemyTexture, new Point(25, 25), new Point(5, 1), new Point(0, 0), 100));
-			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("FALLING", sEnemyTexture, new Point(25, 25), new Point(4, 1), new Point(150, 0), 100));
+			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", sEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1600, true));
+			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("WALK1", sEnemyTexture, new Point(25, 25), new Point(5, 1), new Point(0, 0), 100, true));
+			sEnemyAnimationSetList.Add(new Sprite.AnimationSet("FALLING", sEnemyTexture, new Point(25, 25), new Point(4, 1), new Point(150, 0), 100, true));
 			//Needs edit ^
-			tEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", tEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1000));
+			tEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", tEnemyTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 1000, false));
 			//Needs edit ^
 
-			bflEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", bflEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 1600));
-			bfrEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE", bfrEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 1600));
-			bflEnemyAnimationSetList.Add(new Sprite.AnimationSet("CHASE", bflEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100));
-			bfrEnemyAnimationSetList.Add(new Sprite.AnimationSet("CHASE", bfrEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100));
-			bflEnemyAnimationSetList.Add(new Sprite.AnimationSet("FALLING", bflEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100));
-			bfrEnemyAnimationSetList.Add(new Sprite.AnimationSet("FALLING", bfrEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100));
-			bhEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", bhEnemyTexture, new Point(180, 242), new Point(1, 1), new Point(0, 0), 1600));
-			bhEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE2", bhEnemyTexture, new Point(180, 242), new Point(1, 1), new Point(360, 0), 1600));
-			bhEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE3", bhEnemyTexture, new Point(180, 242), new Point(1, 1), new Point(720, 0), 1600));
+			bflEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", bflEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 1600, false));
+			bfrEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", bfrEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 1600, false));
+			bflEnemyAnimationSetList.Add(new Sprite.AnimationSet("WALK1", bflEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100, false));
+			bfrEnemyAnimationSetList.Add(new Sprite.AnimationSet("WALK1", bfrEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100, false));
+			bflEnemyAnimationSetList.Add(new Sprite.AnimationSet("FALLING", bflEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100, false));
+			bfrEnemyAnimationSetList.Add(new Sprite.AnimationSet("FALLING", bfrEnemyTexture, new Point(88, 100), new Point(1, 1), new Point(0, 0), 100, false));
+			bhEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE1", bhEnemyTexture, new Point(180, 242), new Point(1, 1), new Point(0, 0), 1600, false));
+			bhEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE2", bhEnemyTexture, new Point(180, 242), new Point(1, 1), new Point(360, 0), 1600, false));
+			bhEnemyAnimationSetList.Add(new Sprite.AnimationSet("IDLE3", bhEnemyTexture, new Point(180, 242), new Point(1, 1), new Point(720, 0), 1600, false));
 
-			platformAnimationSetList.Add(new Sprite.AnimationSet("1", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("2", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("3", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("4", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("5", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("6", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("7", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("8", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("9", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("10", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("11", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("12", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("13", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("14", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("15", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("16", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("17", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("18", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("19", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("20", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("21", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("22", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("23", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("24", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 25), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("25", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("26", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("27", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("28", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 50), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("29", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("30", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("31", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("32", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 75), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("33", cavePlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
-			platformAnimationSetList.Add(new Sprite.AnimationSet("34", villagePlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0));
+			TileAnimationSet.Add(new Sprite.AnimationSet("1", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("2", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("3", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("4", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 0), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("5", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("6", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("7", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 25), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("8", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 25), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("9", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 50), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("10", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 50), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("11", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 50), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("12", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 50), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("13", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 75), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("14", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 75), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("15", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 75), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("16", plainsPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 75), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("17", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("18", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 0), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("19", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 0), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("20", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 0), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("21", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 25), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("22", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 25), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("23", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 25), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("24", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 25), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("25", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 50), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("26", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 50), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("27", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 50), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("28", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 50), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("29", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 75), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("30", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(25, 75), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("31", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(50, 75), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("32", forestPlatformTexture, new Point(25, 25), new Point(1, 1), new Point(75, 75), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("33", cavePlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0, false));
+			TileAnimationSet.Add(new Sprite.AnimationSet("34", villagePlatformTexture, new Point(25, 25), new Point(1, 1), new Point(0, 0), 0, false));
 
-			MovementKeys.Add(Keys.A);
-			MovementKeys.Add(Keys.W);
-			MovementKeys.Add(Keys.D);
-			MovementKeys.Add(Keys.S);
-			MovementKeys.Add(Keys.Space);
-			MovementKeys.Add(Keys.E);
-			MovementKeys.Add(Keys.Q);
+			MovementKeys[0, 0] = Keys.A;
+			MovementKeys[0, 1] = Keys.W;
+			MovementKeys[0, 2] = Keys.D;
+			MovementKeys[0, 3] = Keys.S;
+			MovementKeys[0, 4] = Keys.Space;
+			MovementKeys[1, 0] = Keys.None;
+			MovementKeys[1, 1] = Keys.None;
+			MovementKeys[1, 2] = Keys.None;
+			MovementKeys[1, 3] = Keys.None;
 
-			_Mana = new Player.Mana(100, 5000, 100);
-			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 75), MovementKeys, 2f, _Mana, Color.White, playerAnimationSetList, myGame);
+			_Mana = new Player.Mana(100, 5000, 100, 20);
+			player = new Player(new Vector2(25, (myGame.WindowSize.Y - playerAnimationSetList[0].frameSize.Y) - 75), MovementKeys, myGame.keyboardState, 3f, _Mana, Color.White, playerAnimationSetList, ProjectileAnimationSet);
 
-			bhEnemy = new Enemy(new Vector2(0, 0), 0, Enemy.MovementType.BOSSHEAD, Color.White, bhEnemyAnimationSetList, player, platformRectangles, mapSegments);
-			bflEnemy = new Enemy(new Vector2(0, 0), 2.75f, Enemy.MovementType.BOSSBOUNCE, Color.White, bflEnemyAnimationSetList, player, platformRectangles, mapSegments);
-			bfrEnemy = new Enemy(new Vector2(0, 0), 2.75f, Enemy.MovementType.BOSSBOUNCE, Color.White, bfrEnemyAnimationSetList, player, platformRectangles, mapSegments);
+			bhEnemy = new Enemy(new Vector2(0, 0), 0, Enemy.MovementType.BOSSHEAD, Color.White, bhEnemyAnimationSetList, player);
+			bflEnemy = new Enemy(new Vector2(0, 0), 2.75f, Enemy.MovementType.BOSSBOUNCE, Color.White, bflEnemyAnimationSetList, player);
+			bfrEnemy = new Enemy(new Vector2(0, 0), 2.75f, Enemy.MovementType.BOSSBOUNCE, Color.White, bfrEnemyAnimationSetList, player);
 
 			debugLabel = new Label(new Vector2(0, 0), myGame.segoeUIMonoDebug, 1f, new Color(150, 150, 150), "");
 
@@ -506,27 +509,27 @@ namespace Aura
 			caveParallax3Background.Update(gameTime);
 			#endregion
 
-			mapSegments[1] = new Rectangle(camera.Size.X, mapSegments[1].Y, mapSegments[1].Width, mapSegments[1].Height);
+			mapBoundries[1] = new Rectangle(camera.Size.X, mapBoundries[1].Y, mapBoundries[1].Width, mapBoundries[1].Height);
 
-			if (myGame.CheckKey(Keys.G) && !wonLevel)
+			if (myGame.CheckKey(Keys.G) && !WonLevel)
 			{
-				wonLevel = true;
+				WonLevel = true;
 			}
 
-			if (wonLevel)
+			if (WonLevel)
 			{
-				level += 1;
+				Level += 1;
 
-				if (level > 7)
+				if (Level > 7)
 				{
-					level = 2;
+					Level = 2;
 				}
 
-				levelLoaded = false;
+				LevelLoaded = false;
 
-				player._Mana.maxMana += 20;
+				player.AddMana(20);
 
-				if (!(level > 2 && level <= 3) && (level != 6))
+				if (!(Level > 2 && Level <= 3) && (Level != 6))
 				{
 					if (musicStarted)
 					{
@@ -536,64 +539,38 @@ namespace Aura
 					musicStarted = false;
 				}
 
-				wonLevel = false;
+				WonLevel = false;
 			}
 
-			PlayerCollisions = player.GetPlayerRectangles();
+			PlayerCollisions = player.BoundingCollisions;
 
-			player.Update(gameTime);
 
-			for (int i = 0; i < cEnemyList.Count; i++)
+			player.UpdateBossParameters(BossCreated);
+			player.UpdateKeyboardState(gameTime, myGame.keyboardState);
+			player.Update(gameTime, camera, EnemyList, TileList, mapBoundries, bflEnemy, bfrEnemy, bhEnemy);
+
+			for (int i = 0; i < EnemyList.Count; i++)
 			{
-				if (cEnemyList[i].DeleteMe)
+				if (EnemyList[i].DeleteMe)
 				{
-					cEnemyList.RemoveAt(i);
+					EnemyList.RemoveAt(i);
 					i--;
 				}
 				else
 				{
-					cEnemyList[i].Update(gameTime);
+					EnemyList[i].Update(gameTime, player, TileList, mapBoundries);
 				}
 			}
-			for (int i = 0; i < sEnemyList.Count; i++)
+			if (BossCreated && !bhEnemy.isDead)
 			{
-				if (sEnemyList[i].DeleteMe)
-				{
-					sEnemyList.RemoveAt(i);
-					i--;
-				}
-				else
-				{
-					sEnemyList[i].Update(gameTime);
-				}
+				bflEnemy.Update(gameTime, player, TileList, mapBoundries);
+				bfrEnemy.Update(gameTime, player, TileList, mapBoundries);
+				bhEnemy.Update(gameTime, player, TileList, mapBoundries);
 			}
-			for (int i = 0; i < tEnemyList.Count; i++)
+			if (player.isDead)
 			{
-				if (tEnemyList[i].DeleteMe)
-				{
-					tEnemyList.RemoveAt(i);
-					i--;
-				}
-				else
-				{
-					tEnemyList[i].Update(gameTime);
-				}
-			}
-			if (BossCreated && !bhEnemy.Dead)
-			{
-				bflEnemy.Update(gameTime);
-				bfrEnemy.Update(gameTime);
-				bhEnemy.Update(gameTime);
-			}
-			if (player.Dead)
-			{
-				levelLoaded = false;
-				wonLevel = false;
-				player.Dead = false;
-				player._Mana.mana = myGame.gameManager.player._Mana.maxMana;
-				player._Mana.manaRechargeTime = 5000;
-				player.CanShootProjectile = true;
-				player.HasShotProjectile = false;
+				LevelLoaded = false;
+				WonLevel = false;
 			}
 
 			debugLabel.Update(gameTime, DebugLines[0] + "\n" + DebugLines[1] + "\n" +
@@ -615,72 +592,70 @@ namespace Aura
 		{
 			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
 			{
-				if (!levelLoaded)
+				if (!LevelLoaded)
 				{
 					platformRectangles.RemoveRange(0, platformRectangles.Count);
-					platformList.RemoveRange(0, platformList.Count);
-					cEnemyList.RemoveRange(0, cEnemyList.Count);
-					sEnemyList.RemoveRange(0, sEnemyList.Count);
-					tEnemyList.RemoveRange(0, tEnemyList.Count);
+					TileList.RemoveRange(0, TileList.Count);
+					EnemyList.RemoveRange(0, EnemyList.Count);
 
-					SpawnBricks(level);
+					SpawnBricks(Level);
 
-					levelLoaded = true;
+					LevelLoaded = true;
 				}
 
-				if (level <= 2)
+				if (Level <= 2)
 				{
 					plainsParallax1Background.Draw(gameTime, spriteBatch);
 					plainsParallax2Background.Draw(gameTime, spriteBatch);
 					plainsParallax3Background.Draw(gameTime, spriteBatch);
 				}
-				if (level == 3)
+				if (Level == 3)
 				{
 					plainsParallax1Background.Draw(gameTime, spriteBatch);
 					plainsParallax2Background.Draw(gameTime, spriteBatch);
 					plainsParallax3Background.Draw(gameTime, spriteBatch);
 					villageParallax1Background.Draw(gameTime, spriteBatch);
 				}
-				if (level == 4)
+				if (Level == 4)
 				{
 					forestParallax1Background.Draw(gameTime, spriteBatch);
 					forestParallax2Background.Draw(gameTime, spriteBatch);
 					forestParallax3Background.Draw(gameTime, spriteBatch);
 				}
-				if (level >= 5)
+				if (Level >= 5)
 				{
 					caveParallax1Background.Draw(gameTime, spriteBatch);
 					caveParallax2Background.Draw(gameTime, spriteBatch);
 					caveParallax3Background.Draw(gameTime, spriteBatch);
 				}
-				if ((level >= 1 && level <= 3) && !musicStarted)
+				if ((Level >= 1 && Level <= 3) && !musicStarted)
 				{
 					MediaPlayer.Stop();
 					MediaPlayer.Play(plainsvillagesSong);
 					musicStarted = true;
 				}
-				if (level == 4 && !musicStarted)
+				if (Level == 4 && !musicStarted)
 				{
 					MediaPlayer.Stop();
 					MediaPlayer.Play(forestSong);
 					musicStarted = true;
 				}
-				if ((level >= 5 && level <= 6) && !musicStarted)
+				if ((Level >= 5 && Level <= 6) && !musicStarted)
 				{
 					MediaPlayer.Stop();
 					MediaPlayer.Play(caveSong);
 					musicStarted = true;
 				}
-				if (level == 7 && !musicStarted)
+				if (Level == 7 && !musicStarted)
 				{
 					MediaPlayer.Stop();
 					MediaPlayer.Play(finalBossSong);
 					musicStarted = true;
 				}
 
-				foreach (PlatformManager pm in platformList)
+				foreach (Tile t in TileList)
 				{
-					pm.Draw(gameTime, spriteBatch);
+					t.Draw(gameTime, spriteBatch);
 				}
 			}
 			spriteBatch.End();
@@ -690,19 +665,11 @@ namespace Aura
 			{
 				player.Draw(gameTime, spriteBatch);
 
-				foreach (Enemy ce in cEnemyList)
+				foreach (Enemy ce in EnemyList)
 				{
 					ce.Draw(gameTime, spriteBatch);
 				}
-				foreach (Enemy se in sEnemyList)
-				{
-					se.Draw(gameTime, spriteBatch);
-				}
-				foreach (Enemy te in tEnemyList)
-				{
-					te.Draw(gameTime, spriteBatch);
-				}
-				if (BossCreated && !bhEnemy.Dead)
+				if (BossCreated && !bhEnemy.isDead)
 				{
 					bhEnemy.Draw(gameTime, spriteBatch);
 					bflEnemy.Draw(gameTime, spriteBatch);
@@ -713,18 +680,18 @@ namespace Aura
 
 			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null);
 			{
-				spriteBatch.Draw(debugDotTexture, new Rectangle(15, 15, (int)(player._Mana.mana * 2), 10), Color.Red);
+				spriteBatch.Draw(debugDotTexture, new Rectangle(15, 15, (int)(player.GetMana.mana * 2), 10), Color.Red);
 
-				if (BossCreated && !bhEnemy.Dead)
+				if (BossCreated && !bhEnemy.isDead)
 				{
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)myGame.WindowSize.X - (27 * 2), 15, (int)bhEnemy.Lives * 8, 10), Color.Purple);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)myGame.WindowSize.X - (35 * 2), 15, (int)bhEnemy.HP * 8, 10), Color.Purple);
 				}
 			}
 			spriteBatch.End();
 
 			spriteBatch.Begin();
 			{
-				if (bhEnemy.Dead)
+				if (bhEnemy.isDead)
 				{
 					spriteBatch.DrawString(wintext, "Y O U  W I N ! ! !", new Vector2((myGame.WindowSize.X - wintext.MeasureString("Y O U  W I N ! ! !").X) / 2, 25), Color.OrangeRed);
 
@@ -742,7 +709,6 @@ namespace Aura
 			// Debug Rectangles
 			spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, camera.GetTransformation());
 			{
-				/*
 					for (int i = 0; i < platformRectangles.Count; i++)
 					{
 						spriteBatch.Draw(debugDotTexture, new Rectangle((int)platformRectangles[i].X, (int)platformRectangles[i].Y, (int)platformRectangles[i].Width, 1), new Color(i % 2.2f, i % 2.1f, i % 2.0f));
@@ -754,54 +720,39 @@ namespace Aura
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X + (int)PlayerCollisions.Width, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Red);
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y + (int)PlayerCollisions.Height, (int)PlayerCollisions.Width, 1), Color.Green);
 					spriteBatch.Draw(debugDotTexture, new Rectangle((int)PlayerCollisions.X, (int)PlayerCollisions.Y, 1, (int)PlayerCollisions.Height), Color.Yellow);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y, (int)bhEnemy.playerCollisions.Width, 1), Color.Blue);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X + (int)bhEnemy.playerCollisions.Width, (int)bhEnemy.playerCollisions.Y, 1, (int)bhEnemy.playerCollisions.Height), Color.Red);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y + (int)bhEnemy.playerCollisions.Height, (int)bhEnemy.playerCollisions.Width, 1), Color.Green);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.playerCollisions.X, (int)bhEnemy.playerCollisions.Y, 1, (int)bhEnemy.playerCollisions.Height), Color.Yellow);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y, (int)bfrEnemy.playerCollisions.Width, 1), Color.Blue);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X + (int)bfrEnemy.playerCollisions.Width, (int)bfrEnemy.playerCollisions.Y, 1, (int)bfrEnemy.playerCollisions.Height), Color.Red);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y + (int)bfrEnemy.playerCollisions.Height, (int)bfrEnemy.playerCollisions.Width, 1), Color.Green);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.playerCollisions.X, (int)bfrEnemy.playerCollisions.Y, 1, (int)bfrEnemy.playerCollisions.Height), Color.Yellow);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y, (int)bflEnemy.playerCollisions.Width, 1), Color.Blue);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X + (int)bflEnemy.playerCollisions.Width, (int)bflEnemy.playerCollisions.Y, 1, (int)bflEnemy.playerCollisions.Height), Color.Red);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y + (int)bflEnemy.playerCollisions.Height, (int)bflEnemy.playerCollisions.Width, 1), Color.Green);
-					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.playerCollisions.X, (int)bflEnemy.playerCollisions.Y, 1, (int)bflEnemy.playerCollisions.Height), Color.Yellow);
-					for (int i = 0; i < cEnemyList.Count; i++)
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.BoundingCollisions.X, (int)bhEnemy.BoundingCollisions.Y, (int)bhEnemy.BoundingCollisions.Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.BoundingCollisions.X + (int)bhEnemy.BoundingCollisions.Width, (int)bhEnemy.BoundingCollisions.Y, 1, (int)bhEnemy.BoundingCollisions.Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.BoundingCollisions.X, (int)bhEnemy.BoundingCollisions.Y + (int)bhEnemy.BoundingCollisions.Height, (int)bhEnemy.BoundingCollisions.Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bhEnemy.BoundingCollisions.X, (int)bhEnemy.BoundingCollisions.Y, 1, (int)bhEnemy.BoundingCollisions.Height), Color.Yellow);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.BoundingCollisions.X, (int)bfrEnemy.BoundingCollisions.Y, (int)bfrEnemy.BoundingCollisions.Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.BoundingCollisions.X + (int)bfrEnemy.BoundingCollisions.Width, (int)bfrEnemy.BoundingCollisions.Y, 1, (int)bfrEnemy.BoundingCollisions.Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.BoundingCollisions.X, (int)bfrEnemy.BoundingCollisions.Y + (int)bfrEnemy.BoundingCollisions.Height, (int)bfrEnemy.BoundingCollisions.Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bfrEnemy.BoundingCollisions.X, (int)bfrEnemy.BoundingCollisions.Y, 1, (int)bfrEnemy.BoundingCollisions.Height), Color.Yellow);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.BoundingCollisions.X, (int)bflEnemy.BoundingCollisions.Y, (int)bflEnemy.BoundingCollisions.Width, 1), Color.Blue);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.BoundingCollisions.X + (int)bflEnemy.BoundingCollisions.Width, (int)bflEnemy.BoundingCollisions.Y, 1, (int)bflEnemy.BoundingCollisions.Height), Color.Red);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.BoundingCollisions.X, (int)bflEnemy.BoundingCollisions.Y + (int)bflEnemy.BoundingCollisions.Height, (int)bflEnemy.BoundingCollisions.Width, 1), Color.Green);
+					spriteBatch.Draw(debugDotTexture, new Rectangle((int)bflEnemy.BoundingCollisions.X, (int)bflEnemy.BoundingCollisions.Y, 1, (int)bflEnemy.BoundingCollisions.Height), Color.Yellow);
+					for (int i = 0; i < EnemyList.Count; i++)
 					{
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y, (int)cEnemyList[i].playerCollisions.Width, 1), Color.Blue);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X + (int)cEnemyList[i].playerCollisions.Width, (int)cEnemyList[i].playerCollisions.Y, 1, (int)cEnemyList[i].playerCollisions.Height), Color.Red);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y + (int)cEnemyList[i].playerCollisions.Height, (int)cEnemyList[i].playerCollisions.Width, 1), Color.Green);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)cEnemyList[i].playerCollisions.X, (int)cEnemyList[i].playerCollisions.Y, 1, (int)cEnemyList[i].playerCollisions.Height), Color.Yellow);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)EnemyList[i].BoundingCollisions.X, (int)EnemyList[i].BoundingCollisions.Y, (int)EnemyList[i].BoundingCollisions.Width, 1), Color.Blue);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)EnemyList[i].BoundingCollisions.X + (int)EnemyList[i].BoundingCollisions.Width, (int)EnemyList[i].BoundingCollisions.Y, 1, (int)EnemyList[i].BoundingCollisions.Height), Color.Red);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)EnemyList[i].BoundingCollisions.X, (int)EnemyList[i].BoundingCollisions.Y + (int)EnemyList[i].BoundingCollisions.Height, (int)EnemyList[i].BoundingCollisions.Width, 1), Color.Green);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)EnemyList[i].BoundingCollisions.X, (int)EnemyList[i].BoundingCollisions.Y, 1, (int)EnemyList[i].BoundingCollisions.Height), Color.Yellow);
 					}
-					for (int i = 0; i < tEnemyList.Count; i++)
+					for (int i = 0; i < mapBoundries.Count; i++)
 					{
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y, (int)tEnemyList[i].playerCollisions.Width, 1), Color.Blue);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X + (int)tEnemyList[i].playerCollisions.Width, (int)tEnemyList[i].playerCollisions.Y, 1, (int)tEnemyList[i].playerCollisions.Height), Color.Red);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y + (int)tEnemyList[i].playerCollisions.Height, (int)tEnemyList[i].playerCollisions.Width, 1), Color.Green);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)tEnemyList[i].playerCollisions.X, (int)tEnemyList[i].playerCollisions.Y, 1, (int)tEnemyList[i].playerCollisions.Height), Color.Yellow);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapBoundries[i].X, (int)mapBoundries[i].Y, (int)mapBoundries[i].Width, 1), Color.Blue);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapBoundries[i].X + (int)mapBoundries[i].Width, (int)mapBoundries[i].Y, 1, (int)mapBoundries[i].Height), Color.Red);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapBoundries[i].X, (int)mapBoundries[i].Y + (int)mapBoundries[i].Height, (int)mapBoundries[i].Width, 1), Color.Green);
+						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapBoundries[i].X, (int)mapBoundries[i].Y, 1, (int)mapBoundries[i].Height), Color.Yellow);
 					}
-					for (int i = 0; i < sEnemyList.Count; i++)
-					{
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y, (int)sEnemyList[i].playerCollisions.Width, 1), Color.Blue);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X + (int)sEnemyList[i].playerCollisions.Width, (int)sEnemyList[i].playerCollisions.Y, 1, (int)sEnemyList[i].playerCollisions.Height), Color.Red);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y + (int)sEnemyList[i].playerCollisions.Height, (int)sEnemyList[i].playerCollisions.Width, 1), Color.Green);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)sEnemyList[i].playerCollisions.X, (int)sEnemyList[i].playerCollisions.Y, 1, (int)sEnemyList[i].playerCollisions.Height), Color.Yellow);
-					}
-					for (int i = 0; i < mapSegments.Count; i++)
-					{
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y, (int)mapSegments[i].Width, 1), Color.Blue);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X + (int)mapSegments[i].Width, (int)mapSegments[i].Y, 1, (int)mapSegments[i].Height), Color.Red);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y + (int)mapSegments[i].Height, (int)mapSegments[i].Width, 1), Color.Green);
-						spriteBatch.Draw(debugDotTexture, new Rectangle((int)mapSegments[i].X, (int)mapSegments[i].Y, 1, (int)mapSegments[i].Height), Color.Yellow);
-					}
-				*/
 			}
 			spriteBatch.End();
 
 			spriteBatch.Begin();
 			{
 				// To debug variables.
-				//debugLabel.Draw(gameTime, spriteBatch);
+				debugLabel.Draw(gameTime, spriteBatch);
 			}
 			spriteBatch.End();
 
@@ -863,45 +814,45 @@ namespace Aura
 				{
 					if (brickspawn[x, y] > 0 && brickspawn[x, y] < 75)
 					{
-						platformList.Add(new PlatformManager(new Vector2(x * 25, y * 25), myGame, (int)brickspawn[x, y], platformAnimationSetList));
+						TileList.Add(new Tile(new Vector2(x * 25, y * 25), (int)brickspawn[x, y], Tile.TileCollisions.Impassable, new Rectangle(x * 25, y * 25, 25, 25), Color.White, TileAnimationSet));
 					}
 
 					if (brickspawn[x, y] == 75)
 					{
-						bhEnemy.SetPosition(new Vector2((float)Math.Abs((x * 25) - (bflEnemy.CurrentAnimation.frameSize.X / 2)), (float)Math.Abs((y * 25) - (bflEnemy.CurrentAnimation.frameSize.Y / 2))));
+						bhEnemy.SetPosition = new Vector2((float)Math.Abs((x * 25) - (bflEnemy.CurrentAnimation.frameSize.X / 2)), (float)Math.Abs((y * 25) - (bflEnemy.CurrentAnimation.frameSize.Y / 2)));
 						BossCreated = true;
 					}
 					if (brickspawn[x, y] == 76)
 					{
-						bflEnemy.SetPosition(new Vector2((x * 25) - (bflEnemy.CurrentAnimation.frameSize.X / 4), (y * 25) - (bflEnemy.CurrentAnimation.frameSize.Y / 4)));
+						bflEnemy.SetPosition = new Vector2((x * 25) - (bflEnemy.CurrentAnimation.frameSize.X / 4), (y * 25) - (bflEnemy.CurrentAnimation.frameSize.Y / 4));
 						BossCreated = true;
 					}
 					if (brickspawn[x, y] == 77)
 					{
-						bfrEnemy.SetPosition(new Vector2((x * 25) - (bfrEnemy.CurrentAnimation.frameSize.X / 4), (y * 25) - (bfrEnemy.CurrentAnimation.frameSize.Y / 4)));
+						bfrEnemy.SetPosition = new Vector2((x * 25) - (bfrEnemy.CurrentAnimation.frameSize.X / 4), (y * 25) - (bfrEnemy.CurrentAnimation.frameSize.Y / 4));
 						BossCreated = true;
 					}
 					if (brickspawn[x, y] == 78)
 					{
-						player.SetPosition(new Vector2(x * 25, y * 25));
+						player.SetPosition = new Vector2(x * 25, y * 25);
 						camera.Position = new Vector2(player.GetPosition.X + 200f, player.GetPosition.Y);
 					}
 					if (brickspawn[x, y] == 79)
 					{
-						cEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.75f, Enemy.MovementType.HORIZONTAL, Color.White, cEnemyAnimationSetList, player, platformRectangles, mapSegments));
+						EnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.75f, Enemy.MovementType.HORIZONTAL, Color.White, cEnemyAnimationSetList, player));
 					}
 					if (brickspawn[x, y] == 80)
 					{
-						sEnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.75f, Enemy.MovementType.BOUNCE, Color.White, sEnemyAnimationSetList, player, platformRectangles, mapSegments));
+						EnemyList.Add(new Enemy(new Vector2(x * 25, y * 25), 1.75f, Enemy.MovementType.BOUNCE, Color.White, sEnemyAnimationSetList, player));
 					}
 					if (brickspawn[x, y] == 81)
 					{
-						tEnemyList.Add(new Enemy(new Vector2(x * 25 + 12.5f, y * 25 + 12.5f), 1.75f, Enemy.MovementType.FLY, Color.White, tEnemyAnimationSetList, player, platformRectangles, mapSegments));
+						EnemyList.Add(new Enemy(new Vector2(x * 25 + 12.5f, y * 25 + 12.5f), 1.75f, Enemy.MovementType.FLY, Color.White, tEnemyAnimationSetList, player));
 					}
 				}
 			}
 
-			foreach (PlatformManager pm in platformList)
+			foreach (Tile pm in TileList)
 			{
 				platformRectangles.Add(new Rectangle((int)pm.GetPosition.X, (int)pm.GetPosition.Y + 3, 25, 22));
 			}

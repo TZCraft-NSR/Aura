@@ -53,9 +53,9 @@ namespace Aura
 			backgroundTexture = Game.Content.Load<Texture2D>(@"images\screens\menu");
 			buttonTexture = Game.Content.Load<Texture2D>(@"images\gui\button");
 
-			buttonAnimationSetList.Add(new Sprite.AnimationSet("IDLE", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(0, 0), 0));
-			buttonAnimationSetList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(170, 0), 0));
-			buttonAnimationSetList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(340, 0), 0));
+			buttonAnimationSetList.Add(new Sprite.AnimationSet("IDLE", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(0, 0), 0, false));
+			buttonAnimationSetList.Add(new Sprite.AnimationSet("HOVER", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(170, 0), 0, false));
+			buttonAnimationSetList.Add(new Sprite.AnimationSet("PRESSED", buttonTexture, new Point(170, 46), new Point(1, 1), new Point(340, 0), 0, false));
 
 			applyButton = new Button(new Vector2((myGame.WindowSize.X / 2) - (buttonAnimationSetList[0].frameSize.X + 50), myGame.WindowSize.Y - buttonTexture.Height - 25), myGame.segoeUIRegular, 1f, Color.Black, "APPLY", Color.White, buttonAnimationSetList);
 

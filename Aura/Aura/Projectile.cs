@@ -13,67 +13,39 @@ using VoidEngine;
 
 namespace Aura
 {
-	public class Projectile : Sprite
+	public class Projectile : VoidEngine.Projectile
 	{
-		public Rectangle projectileRectangle;
+		VoidEngine.Player player;
 
 		Game1 myGame;
-		Player player;
 
 		Vector2 startPosition;
-		public Vector2 GetStartPosition
-		{
-			get
-			{
-				return startPosition;
-			}
-		}
 
-		public float maxDistance
-		{
-			get;
-			protected set;
-		}
-
-		public float DirectionX
-		{
-			get;
-			protected set;
-		}
-
-		public bool visible
-		{
-			get;
-			set;
-		}
-
-		protected float test1;
-		protected float test2;
-		protected float test3;
-		protected float test4;
-
-		public Projectile(Vector2 startPosition, Color color, List<AnimationSet> animationSetList, Player player, Game1 game)
-			: base(startPosition, color, animationSetList)
+		public Projectile(Vector2 startPosition, Color color, List<AnimationSet> animationSetList, Game1 myGame, VoidEngine.Player player)
+			: base(startPosition, color, animationSetList, player)
 		{
 			this.startPosition = startPosition;
 			Position = startPosition;
-			color = Color.White;
-			AnimationSets = animationSetList;
+			this.myGame = myGame;
 			this.player = player;
-			this.myGame = game;
 
 			if (player.isFlipped)
 			{
-				Position.X = Position.X - 25;
-				Direction = new Vector2(-1, 0);
+				Position.X = startPosition.X - animationSetList[0].frameSize.X;
 			}
 			else
 			{
-				Direction = new Vector2(1, 0);
+				Position.X = startPosition.X + player.BoundingCollisions.Width;
 			}
 		}
 
-		public override void Update(GameTime gameTime)
+		public float EnemyClampedUnitVectorDistance;
+		public float EnemyUnitVectorDistance;
+
+		public float BossClampedUnitVectorDistance;
+		public float BossUnitVectorDistance;
+
+		public void Update(GameTime gameTime, Player player, List<Enemy> EnemyList, List<Tile> TileList, List<Rectangle> MapBoundries)
 		{
 			projectileRectangle = new Rectangle((int)Position.X, (int)Position.Y, 25, 3);
 
@@ -81,64 +53,41 @@ namespace Aura
 			{
 				visible = false;
 			}
-			foreach (Rectangle r in myGame.gameManager.platformRectangles)
+			foreach (Rectangle r in MapBoundries)
 			{
 				if (projectileRectangle.TouchLeftOf(r) || projectileRectangle.TouchTopOf(r) || projectileRectangle.TouchBottomOf(r) || projectileRectangle.TouchRightOf(r))
 				{
 					visible = false;
 				}
 			}
-			foreach (Enemy er in myGame.gameManager.cEnemyList)
+			foreach (Enemy er in EnemyList)
 			{
-				test1 = er.GetDirection.X * -1;
-				test1 = MathHelper.Clamp(test2, -1, 1);
+				EnemyUnitVectorDistance = Collision.UnitVector(new Vector2((player.GetPosition.X + myGame.gameManager.player.PositionCenter.X) - (myGame.gameManager.bhEnemy.GetPosition.X + myGame.gameManager.bhEnemy.PositionCenter.X), 0)).X * -1;
+				EnemyUnitVectorDistance = MathHelper.Clamp(EnemyClampedUnitVectorDistance, -1, 1);
 
-				if (projectileRectangle.TouchLeftOf(er.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(er.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(er.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(er.GetPlayerRectangles()))
+				if (projectileRectangle.TouchLeftOf(er.BoundingCollisions) || projectileRectangle.TouchTopOf(er.BoundingCollisions) || projectileRectangle.TouchBottomOf(er.BoundingCollisions) || projectileRectangle.TouchRightOf(er.BoundingCollisions))
 				{
 					visible = false;
 					er.DeleteMe = true;
-					myGame.gameManager.enemyhitSFX.Play(1f, 0f, test1);
+					myGame.gameManager.enemyhitSFX.Play(1f, 0f, EnemyUnitVectorDistance);
 				}
 			}
-			foreach (Enemy er in myGame.gameManager.sEnemyList)
+			if (myGame.gameManager.BossCreated && !myGame.gameManager.bhEnemy.isDead)
 			{
-				test2 = er.GetDirection.X * -1;
-				test2 = MathHelper.Clamp(test2, -1, 1);
+				BossUnitVectorDistance = Collision.UnitVector(new Vector2((myGame.gameManager.player.GetPosition.X + myGame.gameManager.player.PositionCenter.X) - (myGame.gameManager.bhEnemy.GetPosition.X + myGame.gameManager.bhEnemy.PositionCenter.X), 0)).X * -1;
+				BossUnitVectorDistance = MathHelper.Clamp(BossClampedUnitVectorDistance, -1, 1);
 
-				if (projectileRectangle.TouchLeftOf(er.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(er.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(er.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(er.GetPlayerRectangles()))
+				if (projectileRectangle.TouchLeftOf(myGame.gameManager.bhEnemy.BoundingCollisions) || projectileRectangle.TouchTopOf(myGame.gameManager.bhEnemy.BoundingCollisions) || projectileRectangle.TouchBottomOf(myGame.gameManager.bhEnemy.BoundingCollisions) || projectileRectangle.TouchRightOf(myGame.gameManager.bhEnemy.BoundingCollisions))
 				{
+					myGame.gameManager.bhEnemy.SetMainHP -= 1;
 					visible = false;
-					er.DeleteMe = true;
-					myGame.gameManager.enemyhitSFX.Play(1f, 0f, test2);
-				}
-			}
-			foreach (Enemy er in myGame.gameManager.tEnemyList)
-			{
-				test3 = er.GetDirection.X * -1;
-				test3 = MathHelper.Clamp(test2, -1, 1);
-
-				if (projectileRectangle.TouchLeftOf(er.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(er.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(er.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(er.GetPlayerRectangles()))
-				{
-					visible = false;
-					er.DeleteMe = true;
-					myGame.gameManager.enemyhitSFX.Play(1f, 0f, test1);
-				}
-			}
-			if (myGame.gameManager.BossCreated && !myGame.gameManager.bhEnemy.Dead)
-			{
-				test4 = Collision.UnitVector(new Vector2((myGame.gameManager.player.GetPosition.X + myGame.gameManager.player.PositionCenter.X) - (myGame.gameManager.bhEnemy.GetPosition.X + myGame.gameManager.bhEnemy.PositionCenter.X), 0)).X * -1;
-				test4 = MathHelper.Clamp(test2, -1, 1);
-
-				if (projectileRectangle.TouchLeftOf(myGame.gameManager.bhEnemy.GetPlayerRectangles()) || projectileRectangle.TouchTopOf(myGame.gameManager.bhEnemy.GetPlayerRectangles()) || projectileRectangle.TouchBottomOf(myGame.gameManager.bhEnemy.GetPlayerRectangles()) || projectileRectangle.TouchRightOf(myGame.gameManager.bhEnemy.GetPlayerRectangles()))
-				{
-					myGame.gameManager.bhEnemy.Lives -= 1;
-					visible = false;
-					myGame.gameManager.enemyhitSFX.Play(1f, 0f, test4);
+					myGame.gameManager.enemyhitSFX.Play(1f, 0f, BossUnitVectorDistance);
 				}
 			}
 			if (visible)
 			{
-				Position.X += Direction.X * Speed + 0.5f * (DirectionX) * (Speed * Speed);
+				velocity.X += Movement * MovementMultiples * AirDrag * (float)gameTime.ElapsedGameTime.TotalSeconds;
+				Position.X += velocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds;
 			}
 
 			base.Update(gameTime);
@@ -150,18 +99,6 @@ namespace Aura
 			{
 				base.Draw(gameTime, spriteBatch);
 			}
-		}
-
-		public void Fire()
-		{
-			Speed = 3;
-			maxDistance = 125;
-
-			DirectionX = player.GetDirection.X;
-
-			visible = true;
-
-			SetAnimation("IDLE");
 		}
 	}
 }

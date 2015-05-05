@@ -2,7 +2,8 @@
 ---
 Aura is a Action Platformer with Mana mechanics. Aura right now is in it's alpha stages, and will have a release to come out soon. It is also a project for the teams Animeme and Void Inc. in Sno-Isle Tech's Video Game Design class. I, Nire Inicana, will be maintaining the Github repo even after the project is done with. Once there is a stable version of the Void Engine, which is linked under [Game Details](#Game Details), I will post a version of this game that is ready to play on this repository's releases page.
 
-Aura takes place in a magical land, that is yet to be named, where a wizard lives in a house in the middle of a region named "The Plains", since of course in this land there is only one area that has the biome type, plains. The wizard leaves his home to go to the nearby village, where he finds that the village was abandoned and that there is baddies everywhere! So he goes into a forest where there is a cave. Once in the cave he has to go over many obsticals and finnally at the end of his journey he finds a boss! The boss had taken all of the people from the village and killed them. The wizard must beat the boss to free the people.
+Something something Enemies of US band together, send spys to disable US nuclear defences, then nuke US. Things have gone to anarchy prior to nuking, with number of foreign spies and looters/raiders rising massively.
+Player character is child, parents trying to protect him. Looters break in, execute parents, and are about to kill child when they see the nuclear flashes, instead opting to dive for the bomb shelters. Meanwhile, kid makes it to sewer. Safe from most radiation, unique gene in his DNA allows him to adapt and take from his enemies DNA, taking on the form of his common food, a rat. Some time later, he resurfaces, hellbent on killing his parents killers, now well stocked and armored marauders. Explains the much more deformed mutants when compared to character.
 
 ## Controls
 ---
@@ -18,7 +19,7 @@ Aura takes place in a magical land, that is yet to be named, where a wizard live
 Code: **C# XNA**   
 Genre: **Action Platformer**   
 Engine: **[Void Engine](http://github.com/TZCraft-NSR/VoidEngine)**   
-Graphic Artists: **Animus Mawnstar**, **Brandy Bigelow**, **Jan lee**   
-Coders: **Nire Inicana**, **Cap Crow**, **BeyondAll Portals**, **Braiden Braaten**   
+Graphic Artists: **Jonathan**, **Josh**, **Josh**   
+Coders: **Nire Inicana**, **Cap Crow**, **Devon Whitney**, **Fava**   
 Producer: **Cap Crow**   
-Team Leader: **Nire Inicana**   
+Team Leader: **Fava?**   

@@ -18,7 +18,7 @@ Aura takes place in a magical land, that is yet to be named, where a wizard live
 Code: **C# XNA**   
 Genre: **Action Platformer**   
 Engine: **[Void Engine](http://github.com/TZCraft-NSR/VoidEngine)**   
-Graphic Artists: **Jonathan**, **Josh**, **Josh**   
-Coders: **Nire Inicana**, **Cap Crow**, **Devon Whitney**, **Fava**   
+Graphic Artists: **Animus Mawnstar**, **Brandy Bigelow**, **Jan lee**   
+Coders: **Nire Inicana**, **Cap Crow**, **BeyondAll Portals**, **Braiden Braaten**   
 Producer: **Cap Crow**   
-Team Leader: **Fava?**   
+Team Leader: **Nire Inicana**   

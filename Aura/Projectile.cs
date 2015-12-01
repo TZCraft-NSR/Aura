@@ -18,9 +18,9 @@ namespace Aura
 
 		Vector2 velocity;
 
-		float maxDistance;
+		float maxDistance = 0;
 
-		float Movement;
+		float Movement = 0;
 
 		Vector2 startPosition;
 
@@ -47,8 +47,8 @@ namespace Aura
 
 		public float BossClampedUnitVectorDistance;
 		public float BossUnitVectorDistance;
-		private float MovementMultiples;
-		private float AirDrag;
+		private float MovementMultiples = 0;
+		private float AirDrag = 0;
 
 		public void Update(GameTime gameTime, Player player, List<Enemy> EnemyList, List<Tile> TileList, List<Rectangle> MapBoundries)
 		{

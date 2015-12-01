@@ -20,7 +20,6 @@ namespace Aura
 
 		//public Dialog dialog = null;
 		//public NPC npc = null;
-		int currentHandler = 0;
 
 		Game1 myGame;
 

@@ -1,46 +1,20 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuraContent", "Aura\AuraContent\AuraContent.contentproj", "{B9E56039-B1BB-4327-88F6-2ACF7EE07641}"
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aura", "Aura\Aura.csproj", "{E1DE4552-FABB-4F0C-9DFD-6BFC1E5B160B}"
 EndProject
-<<<<<<< HEAD
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidEngine", "Aura\VoidEngine\VoidEngine\VoidEngine.csproj", "{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aura", "Aura\Aura\Aura.csproj", "{33772B92-8B94-49AB-9006-3C8EE0F34FC1}"
-EndProject
-=======
->>>>>>> nire
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-<<<<<<< HEAD
-=======
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|x86.ActiveCfg = Debug|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|x86.Build.0 = Debug|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Release|Any CPU.ActiveCfg = Release|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Release|x86.ActiveCfg = Release|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Release|x86.Build.0 = Release|x86
-		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Debug|Any CPU.ActiveCfg = Debug|x86
->>>>>>> nire
-		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Debug|x86.ActiveCfg = Debug|x86
-		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Release|Any CPU.ActiveCfg = Release|x86
-		{B9E56039-B1BB-4327-88F6-2ACF7EE07641}.Release|x86.ActiveCfg = Release|x86
-<<<<<<< HEAD
-		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Debug|x86.ActiveCfg = Debug|x86
-		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Debug|x86.Build.0 = Debug|x86
-		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Release|x86.ActiveCfg = Release|x86
-		{CF9853A6-A986-4FAD-A2E6-6FE5307EDF2F}.Release|x86.Build.0 = Release|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|x86.ActiveCfg = Debug|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Debug|x86.Build.0 = Debug|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Release|x86.ActiveCfg = Release|x86
-		{33772B92-8B94-49AB-9006-3C8EE0F34FC1}.Release|x86.Build.0 = Release|x86
-=======
->>>>>>> nire
+		{E1DE4552-FABB-4F0C-9DFD-6BFC1E5B160B}.Debug|x86.ActiveCfg = Debug|x86
+		{E1DE4552-FABB-4F0C-9DFD-6BFC1E5B160B}.Debug|x86.Build.0 = Debug|x86
+		{E1DE4552-FABB-4F0C-9DFD-6BFC1E5B160B}.Release|x86.ActiveCfg = Release|x86
+		{E1DE4552-FABB-4F0C-9DFD-6BFC1E5B160B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
